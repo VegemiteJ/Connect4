@@ -1,7 +1,13 @@
 #include "Board.h"
 
-Board::Board()
+Board::Board(int numRowsi, int numColsi)
 {
+	numRows = numRowsi;
+	numCols = numColsi;
+	cell_array = new char*[numRows]();
+	for (int i = 0; i < numRows; i++) {
+		cell_array[i] = new char[numCols]();
+	}
 	resetBoard();
 	hasWon = false;
 }
@@ -11,20 +17,20 @@ void Board::print()
 {
 	// x axis labels
 	cout << "  ";
-	for (int i=1; i<COLUMNS+1; i++)
+	for (int i=1; i<numCols+1; i++)
 	{
 		cout << i << "   ";
 	} cout << endl;
 	
-	for (int x=0; x<ROWS; x++) 
+	for (int x=0; x<numRows; x++) 
 	{
 		// y axis labels
 		cout << x+1 << " ";
 		
 		// Column separators
-		for (int y=0; y<COLUMNS; y++) 
+		for (int y=0; y<numCols; y++) 
 		{
-			if (y<COLUMNS-1)
+			if (y<numCols-1)
 				cout << cell_array[x][y] << " | ";
 			else
 				cout << cell_array[x][y];
@@ -32,7 +38,7 @@ void Board::print()
 		
 		// Row separators
 		cout << endl << "  --";
-		for (int i=1; i<COLUMNS; i++)
+		for (int i=1; i<numCols; i++)
 			cout << "----";
 		cout << endl;
 		// cout << endl << "  --------------------------" << endl;
@@ -45,7 +51,7 @@ void Board::update_cell(int col, char tokenIn)
 {	
 	bool placed = false;
 	// for (int row=6; row>0; row--)
-	for (int row=ROWS; row>-1 && placed == false; row--)
+	for (int row = numRows-1; row>-1 && placed == false; row--)
 	{
 		if (cell_array[row][col] == ' ')
 		{
@@ -53,7 +59,6 @@ void Board::update_cell(int col, char tokenIn)
 			placed = true;
 		}
 	}
-	
 	// If the entire column is filled, output an error 
 	if (placed == false)
 		cout << "Error, that column is already full, pick another" << endl;
@@ -67,9 +72,11 @@ void Board::update_cell(int col, char tokenIn)
 // Sets the entire board to a space (empty)
 void Board::resetBoard()
 {
-	for (int i=0; i<ROWS; i++)
-		for (int j=0; j<COLUMNS; j++)
+	for (int i=0; i<numRows; i++){
+		for (int j=0; j<numCols; j++){
 			cell_array[i][j] = ' ';
+		}
+	}
 		
 	print();
 }
@@ -78,7 +85,7 @@ void Board::resetBoard()
 // Only checks the first (top) row, as all the bottom ones get filled first
 bool Board::checkFull()
 {
-	for (int i=0; i<COLUMNS; i++)
+	for (int i=0; i<numCols; i++)
 		if (cell_array[0][i] == ' ')
 			return false;
 
@@ -93,7 +100,7 @@ void Board::checkWin(int colIn, char tokenIn)
 {
 	// Navigate to current position from the colIn
 	int rowIn;
-	for (rowIn = ROWS; rowIn >-1; rowIn--)
+	for (rowIn = numRows-1; rowIn >-1; rowIn--)
 	{
 		if (cell_array[rowIn][colIn] == ' ')
 			break;
@@ -142,7 +149,7 @@ void Board::checkHorz(int rowIn, char tokenIn)
 		cout << "Checking horizontal wins" << endl;
 	
 	// Search any that still have 4 more
-	for (int i=0; i<COLUMNS-3; i++)
+	for (int i=0; i<numCols-3; i++)
 	{
 		if (cell_array[rowIn][i+0] == tokenIn && cell_array[rowIn][i+1] == tokenIn && 
 			cell_array[rowIn][i+2] == tokenIn && cell_array[rowIn][i+3] == tokenIn)

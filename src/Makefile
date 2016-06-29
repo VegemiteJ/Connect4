@@ -31,4 +31,4 @@ Human: Human.cpp Player.o
 # ----------------------------------------------------	
 # MAIN
 main: main.cpp $(CLASSES)
-	g++ -o ../bin/Connect4.exe $^
+	g++ -std=c++11 -o ../bin/Connect4.exe $^

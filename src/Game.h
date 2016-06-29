@@ -7,10 +7,13 @@
 class Game
 {
 public:
-
+	Game();
+	void play();
 
 private:
-	Board board;
+	int turnCounter;
+
+	Board* board;
 	Player* p1;
 	Player* p2;
 };
