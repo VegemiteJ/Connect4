@@ -5,7 +5,7 @@ CLASSES = Board.o Player.o Game.o
 all: main
 
 clean:
-	rm -f *.o *.exe main *.stackdump *.core
+	rm -f *.o ../bin/*
 # ----------------------------------------------------
 # BOARD STUFF	
 Board: Board.cpp
@@ -31,4 +31,4 @@ Human: Human.cpp Player.o
 # ----------------------------------------------------	
 # MAIN
 main: main.cpp $(CLASSES)
-	g++ -o main $^
+	g++ -o ../bin/Connect4.exe $^
