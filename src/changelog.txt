@@ -1,0 +1,40 @@
+a1689065
+Shits and Giggles
+Latest Version: 1.2
+
+Connect Four Project changelog:
+
+Upcoming:
+	- Check winning positions
+	- Choice for PvP or computer
+	- Computer class(es)
+
+	
+--- 1.2 ---
+Added: winning condition (vertical, horizontal)
+	
+	
+--- 1.1 ---
+Changed: Hard-coded board dimensions (6,7) to #define values
+	- Makes program more modular, easier to edit board size
+	- Applied to Board and main files
+Changed: checkWin() to boolean
+Corrected: Typo in makefile comment
+Added: Include of Game.h to Game.cpp
+
+	
+--- 1.0 --- 
+Created: all files except AI
+Created: include guards for existing files
+#included the appropriate files for the appropriate files
+Added: makefile, populated contents
+Verified Makefile functionality
+Created: UML diagram from draw.io	
+	- Some aspects still not confirmed, so not populated yet
+	- Saved as .XML and .PNG
+Added: Functionality to Board class (print, update_cell, resetBoard, checkFull)
+Added: Rudimentary testing of printing, filling and resetting the board
+Added: Some comments
+Added: Copy-pasted Board.h/.cpp from tic-tac-toe
+	- Changed numbers accordingly (Board dimensions, etc. )
+	- Changed output lines (pipes and dashes)
