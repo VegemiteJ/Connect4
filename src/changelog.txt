@@ -9,12 +9,23 @@ Upcoming:
 	- Choice for PvP or computer
 	- Computer class(es)
 
-	
---- 1.2 ---
+
+--- 1.0.4 ---
+Changed:
+	1.Moved Game running logic into Game class.
+	2.Players now instantiated in own class. Method play() returns a choice of move given board state...
+	... For human players it uses cin.
+	3.Checking if a column is full has been moved from updateCell() into new method checkValidMove();
+Added: Now performs diagonal checking via Board class checkDiag()
+TODO: Move valid input check into Game class
+	- In general it is a better idea to put correct state checks always serverside as well
+
+
+--- 1.0.3 ---
 Added: winning condition (vertical, horizontal)
 	
 	
---- 1.1 ---
+--- 1.0.2 ---
 Changed: Hard-coded board dimensions (6,7) to #define values
 	- Makes program more modular, easier to edit board size
 	- Applied to Board and main files
@@ -23,7 +34,7 @@ Corrected: Typo in makefile comment
 Added: Include of Game.h to Game.cpp
 
 	
---- 1.0 --- 
+--- 1.0.1 --- 
 Created: all files except AI
 Created: include guards for existing files
 #included the appropriate files for the appropriate files

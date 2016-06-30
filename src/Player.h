@@ -6,7 +6,7 @@ using namespace std;
 class Player
 {
 public:
-	Player(int, int);
+	Player(int numRows, int numCols);
 	int play();
 private:
 	int numColumns;

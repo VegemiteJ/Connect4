@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <iostream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -16,9 +17,12 @@ int Player::play() {
 	{
 		cout << "Enter a column in which to place your token (1 ... " << numColumns << "): " << endl;
 		cin >> choice;
+		if (choice == -1) {
+			exit(1);
+		}
 	} while (choice < 1 || choice > numColumns);
 	// Adjust so it fits with array indexing (0-COLUMNS-1)
 	choice--;
 
-	return choice;
+	return --choice;
 }
