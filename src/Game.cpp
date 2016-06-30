@@ -12,7 +12,7 @@ Game::Game() {
 	
 	int turnCounter = 0;
 
-	p1 = new Player(numRows, numCols, board);
+	p1 = new Player(numRows, numCols);
 	p2 = new Player(numRows, numCols);
 }
 
@@ -24,8 +24,10 @@ void Game::play() {
 		int choice;
 		bool win = false;
 		choice = p1->play();
+		choice--;
 		while(!board->checkValidMove(choice)){
 			choice = p1->play();
+			choice--;
 		}
 
 		// Place a token in the selected valid column
@@ -35,8 +37,10 @@ void Game::play() {
 		if (board->hasWon == true) {break;}
 		cout << "Player2 turn" << endl;
 		choice = p2->play();
+		choice--;
 		while(!board->checkValidMove(choice)){
 			choice = p2->play();
+			choice--;
 		}
 		board->update_cell(choice, 'O');
 		turnCounter++;

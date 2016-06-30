@@ -4,9 +4,10 @@ Board::Board(int numRowsi, int numColsi)
 {
 	numRows = numRowsi;
 	numCols = numColsi;
-	cell_array = new char*[numRows]();
+	cout << "Dimensions: " << numRows << " " << numCols << endl;
+	cell_array = new char*[numRows];
 	for (int i = 0; i < numRows; i++) {
-		cell_array[i] = new char[numCols]();
+		cell_array[i] = new char[numCols];
 	}
 	resetBoard();
 	hasWon = false;
@@ -76,6 +77,10 @@ bool Board::checkValidMove(int col) {
 		if (cell_array[row][col] == ' ')
 			placeable = true;
 	}
+
+	if (col < 0 || col > numCols)
+		return false;
+
 	// If the entire column is filled, output an error 
 	if (placeable == false) {
 		cout << "Error, that column is already full, pick another" << endl;
