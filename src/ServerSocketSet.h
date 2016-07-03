@@ -1,6 +1,12 @@
 #ifndef SERVERSOCKETSET_H
 #define SERVERSOCKETSET_H
 
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 #define DEFAULT_BUFLEN 512
 
 class ServerSocketSet 
@@ -13,8 +19,8 @@ public:
 
     //Returns null ptr on message receive fail, else ptr to the data
     //Must call zeroBuf on completion
-    char* receiveMessage();
-    void zeroBuf();
+    char* receiveMessage(void);
+    void zeroBuf(void);
 
 private:
     int errorFlag;

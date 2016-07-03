@@ -1,4 +1,10 @@
 #include "ServerSocketSet.h"
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 
 //Error Messages
 //----------------------------------------------
@@ -87,4 +93,53 @@ ServerSocketSet::ServerSocketSet(int port) {
 
     // No longer need server socket
     closesocket(ListenSocket);
+}
+
+
+//Returns: 0 if successful, any otherwise
+//Inputs: Message to send
+//Description: Sends a message to the already open client socket.
+//	If it fails, returns non-zero, otherwise returns zero if successful
+int ServerSocketSet::sendMessage(std::string msg) {
+
+	if(errorFlag!=0)
+		return -1;
+
+	char* sendBuf = new char[msg.length()](msg);	//Allocate the send buff
+
+	iSendResult = send( ClientSocket, sendBuf, msg.length());
+    if (iSendResult == SOCKET_ERROR) {
+        printf("send failed with error: %d\n", WSAGetLastError());
+        closesocket(ClientSocket);
+        WSACleanup();
+        return 1;
+    } else {
+    	printf("Bytes sent: %d\n", iSendResult);
+    	free(sendBuf);
+    	return 0;
+    }
+}
+
+//Returns: pointer to the received data. Null ptr if fail
+//Inputs: none
+//Description: Attempts to receive a message.
+char* ServerSocketSet::receiveMessage() {
+	char* toBuff = NULL;
+    iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+    if (iResult > 0) {
+        printf("Bytes received: %d\n", iResult);
+        toBuff = *recvbuf;
+        return toBuff;
+    } else {		//Received zero bytes
+    	//Return error
+    	return toBuff;
+    }
+}
+
+
+//Returns: none
+//Inputs: none
+//Description: Zeros the receive buffer
+void zeroBuf() {
+	ZeroMemory( &recvbuf, DEFAULT_BUFLEN );
 }
