@@ -1,10 +1,5 @@
 #include "ServerSocketSet.h"
-#include <windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <stdlib.h>
-#include <stdio.h>
-
+#include <iostream>
 
 //Error Messages
 //----------------------------------------------
@@ -19,11 +14,11 @@
 //Inputs: Port number to attempt assign on. Can fail with port bind exception
 //Returns: none
 //Description: Sets up TCP connection, leaves open awaiting new message
-ServerSocketSet::ServerSocketSet(int port) {
-	int errorFlag = 0;
+ServerSocketSet::ServerSocketSet(std::string port) {
+	errorFlag = 0;
     ListenSocket = INVALID_SOCKET;
     ClientSocket = INVALID_SOCKET;
-
+    recvbuflen = DEFAULT_BUFLEN;
     result = NULL;
     
     // Initialize Winsock
@@ -40,13 +35,21 @@ ServerSocketSet::ServerSocketSet(int port) {
     hints.ai_protocol = IPPROTO_TCP;
     hints.ai_flags = AI_PASSIVE;
 
+    const char* PortInUse;
+
+    if (std::stoi(port) < 1000 || std::stoi(port) > 65536) {
+        PortInUse = DEFAULT_PORT;
+    } else {
+        PortInUse = port.c_str();
+    }
+
     // Resolve the server address and port
-    iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
+    iResult = getaddrinfo(NULL, PortInUse, &hints, &result);
     if ( iResult != 0 ) {
         printf("getaddrinfo failed with error: %d\n", iResult);
         errorFlag = 2;
         WSACleanup();
-        return 1;
+        return;
     }
 
     // Create a SOCKET for connecting to server
@@ -56,7 +59,7 @@ ServerSocketSet::ServerSocketSet(int port) {
         errorFlag = 3;
         freeaddrinfo(result);
         WSACleanup();
-        return 1;
+        return;
     }
 
     // Setup the TCP listening socket
@@ -67,7 +70,7 @@ ServerSocketSet::ServerSocketSet(int port) {
         freeaddrinfo(result);
         closesocket(ListenSocket);
         WSACleanup();
-        return 1;
+        return;
     }
 
     freeaddrinfo(result);
@@ -78,7 +81,7 @@ ServerSocketSet::ServerSocketSet(int port) {
         errorFlag = 5;
         closesocket(ListenSocket);
         WSACleanup();
-        return 1;
+        return;
     }
 
     // Accept a client socket
@@ -88,7 +91,7 @@ ServerSocketSet::ServerSocketSet(int port) {
         errorFlag = 6;
         closesocket(ListenSocket);
         WSACleanup();
-        return 1;
+        return;
     }
 
     // No longer need server socket
@@ -101,13 +104,13 @@ ServerSocketSet::ServerSocketSet(int port) {
 //Description: Sends a message to the already open client socket.
 //	If it fails, returns non-zero, otherwise returns zero if successful
 int ServerSocketSet::sendMessage(std::string msg) {
-
 	if(errorFlag!=0)
 		return -1;
 
-	char* sendBuf = new char[msg.length()](msg);	//Allocate the send buff
+	char* sendBuf = new char[msg.length() + 1];	//Allocate the send buff
+    strcpy(sendBuf, msg.c_str());
 
-	iSendResult = send( ClientSocket, sendBuf, msg.length());
+	iSendResult = send( ClientSocket, sendBuf, msg.length()+1, 0);
     if (iSendResult == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
         closesocket(ClientSocket);
@@ -124,22 +127,32 @@ int ServerSocketSet::sendMessage(std::string msg) {
 //Inputs: none
 //Description: Attempts to receive a message.
 char* ServerSocketSet::receiveMessage() {
+    std::cout << "Called Receive\n";
 	char* toBuff = NULL;
-    iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-    if (iResult > 0) {
-        printf("Bytes received: %d\n", iResult);
-        toBuff = *recvbuf;
-        return toBuff;
-    } else {		//Received zero bytes
-    	//Return error
-    	return toBuff;
+    iResult = 1;
+    while (iResult > 0) 
+    {
+        std::string msg = std::string(toBuff);
+        std::cout << "Test" << std::endl;
+        iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+        std::cout << "iResult:[" << iResult << "], msg:[" << msg << "]" << std::endl;
+        if (iResult > 0) {
+            printf("Bytes received: %d\n", iResult);
+            toBuff = recvbuf;
+            return toBuff;
+        } else {		//Received zero bytes
+        	//Return error
+        	return toBuff;
+        }
     }
+    std::cout << "End reached\n";
+    return toBuff;
 }
 
 
 //Returns: none
 //Inputs: none
 //Description: Zeros the receive buffer
-void zeroBuf() {
+void ServerSocketSet::zeroBuf() {
 	ZeroMemory( &recvbuf, DEFAULT_BUFLEN );
 }

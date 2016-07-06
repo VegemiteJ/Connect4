@@ -1,11 +1,17 @@
 Connect Four Project changelog:
 
 Upcoming:
-	- Check winning positions
+	- Check winning positions: DONE
 	- Choice for PvP or computer
 	- Computer class(es)
 
-
+--- 1.0.5 ---
+Changed:
+	1. Makefile now modified to generate files correctly
+Added:
+	1. Networking support (Broken atm)
+		- Client and Server Classes with api call support
+	2. Some of the AI code
 
 
 --- 1.0.4 ---

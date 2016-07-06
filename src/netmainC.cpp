@@ -5,7 +5,7 @@
 
 int main(int argc, char const *argv[])
 {
-	ClientSocketSet client = ClientSocketSet("localhost", "21456");
+	ClientSocketSet client = ClientSocketSet("localhost", "23156");
 	std::string msg;
 	std::getline(std::cin,msg);
 	int status = client.sendMessage(msg);

@@ -6,13 +6,19 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string> 
+
+#ifndef DEFAULT_BUFLEN
+#define DEFAULT_BUFLEN 512
+#endif
 
 class ClientSocketSet {
 public:
-	ClientSocketSet(std::string addr, int destPort, int srcPort);
+	ClientSocketSet(std::string addr, std::string destPort);
 	int sendMessage(std::string msg);
 	char* receiveMessage(void);
 	void zeroMemory(void);
+
 private:
 	int errorFlag;
 
@@ -26,7 +32,6 @@ private:
     int iSendResult;
     char recvbuf[DEFAULT_BUFLEN];
     int recvbuflen;
-
 };
 
 
