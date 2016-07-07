@@ -56,7 +56,7 @@ ServerSocketSet::ServerSocketSet(std::string port) {
     // Create a SOCKET for connecting to server
     ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if (ListenSocket == INVALID_SOCKET) {
-        printf("socket failed with error: %ld\n", WSAGetLastError());
+        printf("socket failed with error: %d\n", WSAGetLastError());
         errorFlag = 3;
         freeaddrinfo(result);
         WSACleanup();

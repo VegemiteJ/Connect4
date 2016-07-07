@@ -40,7 +40,7 @@ ClientSocketSet::ClientSocketSet(std::string addr, std::string destPort) {
         ClientSocket = socket(ptr->ai_family, ptr->ai_socktype, 
             ptr->ai_protocol);
         if (ClientSocket == INVALID_SOCKET) {
-            printf("socket failed with error: %ld\n", WSAGetLastError());
+            printf("socket failed with error: %d\n", WSAGetLastError());
             WSACleanup();
             errorFlag = 3;
             return;
@@ -83,7 +83,7 @@ int ClientSocketSet::sendMessage(std::string msg) {
         return 0;
     }
 
-    printf("Bytes Sent: %ld\n", iResult);
+    printf("Bytes Sent: %d\n", iResult);
 
     // shutdown the connection since no more data will be sent
     iResult = shutdown(ClientSocket, SD_SEND);

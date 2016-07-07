@@ -8,9 +8,13 @@ int main(int argc, char const *argv[])
 	ClientSocketSet client = ClientSocketSet("localhost", "23156");
 	std::string msg;
 	std::getline(std::cin,msg);
-	int status = client.sendMessage(msg);
-	char* msg1 = client.receiveMessage();
+	int status;
+	char* msg1;
 
-	std::cout << "Status:[" << status << "], msg:[" << msg1 << "]" << std::endl;
+	for(int i = 0; i < 1000; i++) {
+		status = client.sendMessage(msg);
+		msg1 = client.receiveMessage();
+		std::cout << i << ": Status:[" << status << "], msg:[" << msg1 << "]" << std::endl;
+	}
 	return 0;
 }
