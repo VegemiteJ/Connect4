@@ -2,11 +2,12 @@
 #include <iostream>
 
 ClientSocketSet::ClientSocketSet(std::string addr, std::string destPort) {
-	SOCKET ClientSocket = INVALID_SOCKET;
+	ClientSocket = INVALID_SOCKET;
     struct addrinfo *result = NULL,
                     *ptr = NULL,
                     hints;
-    int recvbuflen = DEFAULT_BUFLEN;
+    recvbuflen = DEFAULT_BUFLEN;
+    recvbuf = new char[recvbuflen];
     errorFlag = 0;
 
     const char* host = addr.c_str();
@@ -52,6 +53,8 @@ ClientSocketSet::ClientSocketSet(std::string addr, std::string destPort) {
             ClientSocket = INVALID_SOCKET;
             errorFlag = 4;
             continue;
+        } else {
+        	errorFlag = 0;
         }
         break;
     }
@@ -67,7 +70,7 @@ ClientSocketSet::ClientSocketSet(std::string addr, std::string destPort) {
 }
 
 int ClientSocketSet::sendMessage(std::string msg) {
-	const char* sendbuf = msg.c_str();
+	char* sendbuf = (char*)msg.c_str();
 
     // Send an initial buffer
     std::cout << "Sending msg:[" << sendbuf << "] of length:" << (int)strlen(sendbuf) << std::endl;
@@ -96,20 +99,21 @@ int ClientSocketSet::sendMessage(std::string msg) {
 }
 
 char* ClientSocketSet::receiveMessage(void) {
-    // Receive until the peer closes the connection
-    char* returnVal = &recvbuf[0];
+    std::cout << "Called Receive\n";
+	char* toBuff = recvbuf;
+    std::cout << "Length of buffer: " << recvbuflen << std::endl;
     iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-    if ( iResult > 0 ){
+    std::string msg = std::string(toBuff);
+    std::cout << "iResult:[" << iResult << "], msg:[" << msg << "]" << std::endl;
+    if (iResult > 0) {
         printf("Bytes received: %d\n", iResult);
+        toBuff = recvbuf;
+        return toBuff;
+    } else {		//Received zero bytes
+    	//Return error
+    	return toBuff;
     }
-    else if ( iResult == 0 ){
-        printf("Connection closed\n");
-        returnVal = NULL;
-    } else {
-    	returnVal = NULL;
-    }
-
-    return returnVal;
+    return toBuff;
 }
 
 void ClientSocketSet::zeroMemory(void) {

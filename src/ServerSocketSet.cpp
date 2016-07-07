@@ -19,6 +19,7 @@ ServerSocketSet::ServerSocketSet(std::string port) {
     ListenSocket = INVALID_SOCKET;
     ClientSocket = INVALID_SOCKET;
     recvbuflen = DEFAULT_BUFLEN;
+    recvbuf = new char[recvbuflen];
     result = NULL;
     
     // Initialize Winsock
@@ -128,24 +129,19 @@ int ServerSocketSet::sendMessage(std::string msg) {
 //Description: Attempts to receive a message.
 char* ServerSocketSet::receiveMessage() {
     std::cout << "Called Receive\n";
-	char* toBuff = NULL;
-    iResult = 1;
-    while (iResult > 0) 
-    {
-        std::string msg = std::string(toBuff);
-        std::cout << "Test" << std::endl;
-        iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-        std::cout << "iResult:[" << iResult << "], msg:[" << msg << "]" << std::endl;
-        if (iResult > 0) {
-            printf("Bytes received: %d\n", iResult);
-            toBuff = recvbuf;
-            return toBuff;
-        } else {		//Received zero bytes
-        	//Return error
-        	return toBuff;
-        }
+	char* toBuff = recvbuf;
+    std::cout << "Length of buffer: " << recvbuflen << std::endl;
+    iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+    std::string msg = std::string(toBuff);
+    std::cout << "iResult:[" << iResult << "], msg:[" << msg << "]" << std::endl;
+    if (iResult > 0) {
+        printf("Bytes received: %d\n", iResult);
+        toBuff = recvbuf;
+        return toBuff;
+    } else {		//Received zero bytes
+    	//Return error
+    	return toBuff;
     }
-    std::cout << "End reached\n";
     return toBuff;
 }
 

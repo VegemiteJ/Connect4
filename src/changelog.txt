@@ -4,6 +4,15 @@ Upcoming:
 	- Check winning positions: DONE
 	- Choice for PvP or computer
 	- Computer class(es)
+--- 1.0.6 ---
+Fixed:
+	1. Networking errors. Should now work correctly. Bug finding stage for SocketSet classes.
+Added:
+	1. new make command "Network" for making network tests
+	2. Added 2 test main files for networking under netmainC[lient].cpp netmainS[erver].cpp
+TODO:
+	1. Add more unit tests for networking files
+
 
 --- 1.0.5 ---
 Changed:

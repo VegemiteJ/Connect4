@@ -30,7 +30,7 @@ private:
     WSADATA wsaData;
     int iResult;
     int iSendResult;
-    char recvbuf[DEFAULT_BUFLEN];
+    char* recvbuf;
     int recvbuflen;
 };
 
