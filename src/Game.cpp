@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "Board.h"
-#include "Player.h"
+#include "LocalPlayer.h"
 #include <iostream>
 
 using namespace std;
@@ -12,8 +12,8 @@ Game::Game() {
 	
 	int turnCounter = 0;
 
-	p1 = new Player(numRows, numCols);
-	p2 = new Player(numRows, numCols);
+	p1 = new LocalPlayer(numRows, numCols, board);
+	p2 = new LocalPlayer(numRows, numCols, board);
 }
 
 void Game::play() {

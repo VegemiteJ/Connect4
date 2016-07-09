@@ -1,6 +1,6 @@
 # Makefile for connect-four
 
-CLASSES = Board.o Player.o Game.o ClientSocketSet.o ServerSocketSet.o
+CLASSES = Board.o Player.o LocalPlayer.o Game.o ClientSocketSet.o ServerSocketSet.o
 VERSION = -std=c++11 -Wall -pedantic
 LIB = -lws2_32
 
@@ -15,6 +15,9 @@ Board.o: Board.cpp
 # ----------------------------------------------------
 # FUNDAMENTAL GAME STUFF
 Player.o: Player.cpp
+	g++ -c $^
+
+LocalPlayer.o: LocalPlayer.cpp
 	g++ -c $^
 	
 Game.o: Board.h Player.h Game.cpp
