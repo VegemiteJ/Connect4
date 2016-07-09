@@ -10,3 +10,8 @@ Player::Player(int Cols, int Rows, Board* iBoard)
 	numColumns = Cols;
 	board = iBoard;
 }
+
+Player::~Player() 
+{
+	delete board;
+}

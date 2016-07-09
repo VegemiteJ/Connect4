@@ -1,9 +1,22 @@
 Connect Four Project changelog:
 
 Upcoming:
-	- Check winning positions: DONE
+	- Add destructors
 	- Choice for PvP or computer
 	- Computer class(es)
+
+	
+--- 1.0.7 ---
+Added:
+	1. Networking support now in progress
+		- Completed connection setup and teardown
+		- Finished writing turn select protocol
+	2. Destructors for every relevant class. Some are still unpopulated
+TODO:
+	1. Game info exchange function then class update. When complete it will be possible to play games remotely
+
+
+
 --- 1.0.6 ---
 Fixed:
 	1. Networking errors. Should now work correctly. Bug finding stage for SocketSet classes.
@@ -30,7 +43,7 @@ Changed:
 	... For human players it uses cin.
 	3.Checking if a column is full has been moved from updateCell() into new method checkValidMove();
 Added: Now performs diagonal checking via Board class checkDiag()
-TODO: Move valid input check into Game class
+TODO: Move valid input check into Game class - > DONE
 	- In general it is a better idea to put correct state checks always serverside as well
 
 

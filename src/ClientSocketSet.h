@@ -18,6 +18,7 @@
 class ClientSocketSet {
 public:
 	ClientSocketSet(std::string addr, std::string destPort);
+    ~ClientSocketSet();
 	int sendMessage(std::string msg);
 	char* receiveMessage(void);
 	void zeroMemory(void);

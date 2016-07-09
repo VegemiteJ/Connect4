@@ -7,6 +7,8 @@ using namespace std;
 LocalPlayer::LocalPlayer(int numRows, int numCols, Board* iboard)
 	: Player(numRows, numCols, iboard) {}
 
+LocalPlayer::~LocalPlayer() {}
+
 int LocalPlayer::play(bool valid) 
 {
 	int choice = 0;

@@ -2,12 +2,13 @@
 #define GAME_H
 
 #include "Board.h"
-#include "Human.h"
+#include "Player.h"
 
 class Game
 {
 public:
-	Game();
+	Game(bool isServer);
+	~Game();
 	void play();
 
 private:

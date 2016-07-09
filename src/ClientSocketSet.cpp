@@ -69,6 +69,8 @@ ClientSocketSet::ClientSocketSet(std::string addr, std::string destPort) {
     }
 }
 
+ClientSocketSet::~ClientSocketSet() {}
+
 int ClientSocketSet::sendMessage(std::string msg) {
 	char* sendbuf = (char*)msg.c_str();
 

@@ -9,7 +9,8 @@ using namespace std;
 class Board
 {
 public:
-	Board(int, int);
+	Board(int numRows, int numCols);
+	~Board();
 	
 	void print();
 	void update_cell(int col, char tokenIn);

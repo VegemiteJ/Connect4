@@ -13,6 +13,8 @@ Board::Board(int numRowsi, int numColsi)
 	hasWon = false;
 }
 
+Board::~Board() {}
+
 // Prints the board layout and current move
 void Board::print()
 {
@@ -67,7 +69,6 @@ void Board::update_cell(int col, char tokenIn)
 		checkWin(col, tokenIn);
 	
 	cout << endl << endl;
-	print();
 }
 
 bool Board::checkValidMove(int col) {
@@ -98,8 +99,6 @@ void Board::resetBoard()
 			cell_array[i][j] = ' ';
 		}
 	}
-		
-	print();
 }
 
 // Checks whether the board is full or not 

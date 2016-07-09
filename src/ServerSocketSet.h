@@ -23,6 +23,7 @@ class ServerSocketSet
 {
 public:
 	ServerSocketSet(std::string port);  //Port to use, valid in range 1000:65535
+    ~ServerSocketSet();
 
     //Returns 0 on success, otherwise any
     int sendMessage(std::string);
