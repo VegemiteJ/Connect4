@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
 			std::cout << "MsgRecv:[" << "NULL" << "]" << std::endl;
 		}
 		status = socket.sendMessage(msg);
-		std::cout << i << ": ServerStatus: " << status << ", msg: " << msg << std::endl;
+		std::cout << i << ": ServerStatus: " << status << ", msg: " << msg << "\n" << std::endl;
 	}
 
 	return 0;

@@ -115,6 +115,7 @@ int ServerSocketSet::sendMessage(std::string msg) {
     if (iSendResult == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
         closesocket(ClientSocket);
+        free(sendBuf);
         WSACleanup();
         return 1;
     } else {
@@ -128,6 +129,7 @@ int ServerSocketSet::sendMessage(std::string msg) {
 //Inputs: none
 //Description: Attempts to receive a message.
 char* ServerSocketSet::receiveMessage() {
+    ZeroMemory( &(recvbuf[0]), DEFAULT_BUFLEN );
     std::cout << "Called Receive\n";
 	char* toBuff = recvbuf;
     std::cout << "Length of buffer: " << recvbuflen << std::endl;

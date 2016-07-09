@@ -10,7 +10,7 @@ Player::Player(int Cols, int Rows)
 	numColumns = Cols;
 }
 
-int Player::play() {
+int Player::play(bool valid) {
 	int choice = 0;
 
 	cout << "Enter a column in which to place your token (1 ... " << numColumns << "): " << endl;

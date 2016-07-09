@@ -85,20 +85,12 @@ int ClientSocketSet::sendMessage(std::string msg) {
 
     printf("Bytes Sent: %d\n", iResult);
 
-    // shutdown the connection since no more data will be sent
-    iResult = shutdown(ClientSocket, SD_SEND);
-    if (iResult == SOCKET_ERROR) {
-        printf("shutdown failed with error: %d\n", WSAGetLastError());
-        closesocket(ClientSocket);
-        WSACleanup();
-        return 0;
-    }
-
     //return number of bytes sent
     return (int)strlen(sendbuf);
 }
 
 char* ClientSocketSet::receiveMessage(void) {
+	ZeroMemory( &(recvbuf[0]), DEFAULT_BUFLEN );
     std::cout << "Called Receive\n";
 	char* toBuff = recvbuf;
     std::cout << "Length of buffer: " << recvbuflen << std::endl;

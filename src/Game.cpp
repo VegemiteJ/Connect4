@@ -23,10 +23,10 @@ void Game::play() {
 		cout << "Player1 turn" << endl;
 		int choice;
 		bool win = false;
-		choice = p1->play();
+		choice = p1->play(true);
 		choice--;
 		while(!board->checkValidMove(choice)){
-			choice = p1->play();
+			choice = p1->play(false);
 			choice--;
 		}
 
@@ -36,10 +36,10 @@ void Game::play() {
 
 		if (board->hasWon == true) {break;}
 		cout << "Player2 turn" << endl;
-		choice = p2->play();
+		choice = p2->play(true);
 		choice--;
 		while(!board->checkValidMove(choice)){
-			choice = p2->play();
+			choice = p2->play(false);
 			choice--;
 		}
 		board->update_cell(choice, 'O');
