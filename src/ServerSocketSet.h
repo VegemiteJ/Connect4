@@ -1,12 +1,15 @@
 #ifndef SERVERSOCKETSET_H
 #define SERVERSOCKETSET_H
 
-#include <windows.h>
 #include <winsock2.h>
+#define __USE_W32_SOCKETS
+#define USE_SYS_TYPES_FD_SET
+#define WIN32_LEAN_AND_MEAN
 #include <ws2tcpip.h>
+#include <windows.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string>
+#include <string> 
 
 #ifndef DEFAULT_BUFLEN
 #define DEFAULT_BUFLEN 512

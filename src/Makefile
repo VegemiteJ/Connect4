@@ -1,13 +1,15 @@
 # Makefile for connect-four
 
-CLASSES = Board.o Player.o LocalPlayer.o Game.o ClientSocketSet.o ServerSocketSet.o
+CLASSES = Board.o Player.o LocalPlayer.o NetworkPlayer.o Game.o ClientSocketSet.o ServerSocketSet.o
 VERSION = -std=c++11 -Wall -pedantic
+CYG = 
 LIB = -lws2_32
+INCLUDE = -I"/usr/include"
 
 all: main
 
 clean:
-	rm -f *.o ../bin/*
+	rm -f *.o ../bin/* *.h.gch
 # ----------------------------------------------------
 # BOARD STUFF	
 Board.o: Board.cpp
@@ -18,6 +20,9 @@ Player.o: Player.cpp
 	g++ -c $^
 
 LocalPlayer.o: LocalPlayer.cpp
+	g++ -c $^
+
+NetworkPlayer.o: NetworkPlayer.cpp
 	g++ -c $^
 	
 Game.o: Board.h Player.h Game.cpp
@@ -40,12 +45,12 @@ Network: ClientSocketSet.o ServerSocketSet.o
 	g++ netmainC.cpp $^ ${VERSION} ${LIB} -o ../bin/NetTestC.exe
 
 ClientSocketSet.o: ClientSocketSet.h ClientSocketSet.cpp
-	g++ -c ${VERSION} ClientSocketSet.cpp -o ClientSocketSet.o
+	g++ -c ${VERSION} ${INCLUDE} ClientSocketSet.cpp -o ClientSocketSet.o
 
 ServerSocketSet.o: ServerSocketSet.h ServerSocketSet.cpp
-	g++ -c ${VERSION} ServerSocketSet.cpp -o ServerSocketSet.o
+	g++ -c ${VERSION} ${INCLUDE} ServerSocketSet.cpp -o ServerSocketSet.o
 
 #-----------------------------------------------------
 # MAIN
 main: ${CLASSES}
-	g++ main.cpp ${CLASSES} ${LIB} ${VERSION} -o ../bin/Connect4.exe
+	g++ ${CYG} main.cpp ${CLASSES} ${LIB} ${VERSION} -o ../bin/Connect4.exe

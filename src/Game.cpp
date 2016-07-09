@@ -1,7 +1,9 @@
 #include "Game.h"
 #include "Board.h"
 #include "LocalPlayer.h"
+#include "NetworkPlayer.h"
 #include <iostream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -13,7 +15,8 @@ Game::Game() {
 	int turnCounter = 0;
 
 	p1 = new LocalPlayer(numRows, numCols, board);
-	p2 = new LocalPlayer(numRows, numCols, board);
+	p2 = new NetworkPlayer(numRows, numCols, board, true);
+	exit(0);
 }
 
 void Game::play() {

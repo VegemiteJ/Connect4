@@ -11,11 +11,12 @@ class NetworkPlayer: public Player
 {
 public:
 	NetworkPlayer(int numRows, int numCols, Board* iboard, bool isServer);
+	void Connect();
 	virtual int play(bool valid);
 
 private:
-	ServerSocketSet server;
-	ClientSocketSet client;
+	ServerSocketSet* server;
+	ClientSocketSet* client;
 	bool isServer;
 
 };
