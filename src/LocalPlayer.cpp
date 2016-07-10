@@ -5,9 +5,14 @@
 using namespace std;
 
 LocalPlayer::LocalPlayer(int numRows, int numCols, Board* iboard)
-	: Player(numRows, numCols, iboard) {}
+	: Player(numRows, numCols, iboard) 
+{
+	id = 0;
+}
 
 LocalPlayer::~LocalPlayer() {}
+
+void LocalPlayer::initialise() {}
 
 int LocalPlayer::play(bool valid) 
 {

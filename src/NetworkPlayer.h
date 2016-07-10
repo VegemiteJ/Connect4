@@ -15,8 +15,7 @@ public:
 	~NetworkPlayer();
 	void Connect();
 	virtual int play(bool valid);
-
-	bool turn;	//true if me, false if not
+	virtual void initialise();
 
 private:
 	LocalPlayer* player;

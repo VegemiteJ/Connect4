@@ -13,39 +13,43 @@ Game::Game(bool isServer) {
 	board = new Board(numRows, numCols);
 	
 	int turnCounter = 0;
+	int start;
+	p1 = new NetworkPlayer(numRows, numCols, board, isServer);
 
 	if (isServer)
 	{
-		int start = detStart();
+
+		start = detStart();				//User inputs player 1
 		cout << "Start: " << start << endl;
-
-		//p1 is me, p2 is connection layer to other player. I am Host
-		p1 = new LocalPlayer(numRows, numCols, board);
-		p2 = new NetworkPlayer(numRows, numCols, board, true);
-
-		p2->turn = (start == 0) ? false : true;
-
-		if(start == 1) {		//Swap order
+		p1->turn = start;
+		p1->initialise();
+		p2 = new LocalPlayer(numRows, numCols, board);
+		if (start == 0){		//Swap as ordering required is Local, Network
 			Player* ptemp = p2;
 			p2 = p1;
 			p1 = ptemp;
-			//Order is Now:
-			//p1 = NetworkPlayer
-			//p2 = LocalPlayer
-
-			cout << "Order: " << p1->turn << endl;
 		}
-		cout << "Order: " << p2->turn << endl;
-
+		//Ready to start the game
 	} 
 	else 
 	{
-		//p1 is me, p2 is connection layer to other player, I am not Host
-		p1 = new LocalPlayer(numRows, numCols, board);
-		p2 = new NetworkPlayer(numRows, numCols, board, false);
-		
+		p1->turn = 0;		//Turn unknown, get from server
+		p1->initialise();
+		p2 = new LocalPlayer(numRows, numCols, board);
+		start = p1->turn;
+		if (start == 1){		//Swap as ordering required is Local, Network
+			Player* ptemp = p2;
+			p2 = p1;
+			p1 = ptemp;
+		}
+		//Ready to start the game
 	}
 
+	//Verify status
+	cout << "p1 : Player id: " << ((p1->id == 0) ? "Local" : "Network") << " Turn: " << p1->turn << endl;
+	cout << "p1 : Player id: " << ((p2->id == 0) ? "Local" : "Network") << " Turn: " << p2->turn << endl;
+
+	exit(1);
 }
 
 Game::~Game() {}

@@ -12,9 +12,16 @@ NetworkPlayer::NetworkPlayer(int numRows, int numCols, Board* iboard, bool isS)
 	: Player(numRows, numCols, iboard) 
 {
 	isServer = isS;
+	id = 1;
 }
 
 NetworkPlayer::~NetworkPlayer() {}
+
+void NetworkPlayer::initialise() 
+{
+	cout << "Turn: " << turn << endl;
+	Connect();
+}
 
 void NetworkPlayer::Connect()
 {
@@ -26,16 +33,18 @@ void NetworkPlayer::Connect()
 		cout << "Port Selected: " << port << endl;
 		cout << "Waiting for client..." << endl;
 		server = new ServerSocketSet(port);
-		cout << "Connected!" << endl;
+		if (server->errorFlag == 0)
+			cout << "Connected!" << endl;
 
 		//Turn must be set by Game class before sending
-		string start = (turn) ? "0" : "1";
+		string start = (turn == 0) ? "0" : "1";
 
 		int status = server->sendMessage(start);
 		if (status != 0) { 
 			cout << "Error sending...";
 			exit(1);
 		}
+		cout << "Sent turn: " << start << endl;
 	}
 	else 
 	{
@@ -52,14 +61,15 @@ void NetworkPlayer::Connect()
 
 		cout << "Connecting..." << endl;
 		client = new ClientSocketSet(hostname, port);
-		cout << "Connected!" << endl;
+		if (client->errorFlag == 0)
+			cout << "Connected!" << endl;
 
 		//Start determination protocol
 		char* whoStarts = client->receiveMessage();
 		string start = string(whoStarts);
-		turn = (start == "0") ? false : true;
+		turn = (start == "0") ? 0 : 1;
 	}
-	string stat = turn ? "Me" : "Other";
+	string stat = (turn==0) ? "Server" : "Client";
 	cout << "Turn is: " << stat << endl;
 }
 

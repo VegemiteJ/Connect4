@@ -22,10 +22,9 @@ public:
 	int sendMessage(std::string msg);
 	char* receiveMessage(void);
 	void zeroMemory(void);
-
+    int errorFlag;
+    
 private:
-	int errorFlag;
-
 	SOCKET ClientSocket;
 
     struct addrinfo *result;
