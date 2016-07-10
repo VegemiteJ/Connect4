@@ -28,15 +28,8 @@ void NetworkPlayer::Connect()
 		server = new ServerSocketSet(port);
 		cout << "Connected!" << endl;
 
-		//Start determination protocol
-		string start;
-		cout << "Who starts? Enter 0 for this player, or 1 for the other player: ";
-		getline(cin, start);
-		if (start == "0") {
-			turn = true;
-		} else {
-			turn = false;
-		}
+		//Turn must be set by Game class before sending
+		string start = (turn) ? "0" : "1";
 
 		int status = server->sendMessage(start);
 		if (status != 0) { 
@@ -64,11 +57,7 @@ void NetworkPlayer::Connect()
 		//Start determination protocol
 		char* whoStarts = client->receiveMessage();
 		string start = string(whoStarts);
-		if (start == "0") {
-			turn = false;
-		} else {
-			turn = true;
-		}
+		turn = (start == "0") ? false : true;
 	}
 	string stat = turn ? "Me" : "Other";
 	cout << "Turn is: " << stat << endl;

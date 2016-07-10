@@ -16,7 +16,7 @@ public:
 	void Connect();
 	virtual int play(bool valid);
 
-	bool turn;	//0 if me, 1 if not
+	bool turn;	//true if me, false if not
 
 private:
 	LocalPlayer* player;

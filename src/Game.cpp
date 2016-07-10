@@ -16,20 +16,50 @@ Game::Game(bool isServer) {
 
 	if (isServer)
 	{
+		int start = detStart();
+		cout << "Start: " << start << endl;
+
 		//p1 is me, p2 is connection layer to other player. I am Host
 		p1 = new LocalPlayer(numRows, numCols, board);
-		p2 = new NetworkPlayer(numRows, numCols, board, true);		
+		p2 = new NetworkPlayer(numRows, numCols, board, true);
+
+		p2->turn = (start == 0) ? false : true;
+
+		if(start == 1) {		//Swap order
+			Player* ptemp = p2;
+			p2 = p1;
+			p1 = ptemp;
+			//Order is Now:
+			//p1 = NetworkPlayer
+			//p2 = LocalPlayer
+
+			cout << "Order: " << p1->turn << endl;
+		}
+		cout << "Order: " << p2->turn << endl;
+
 	} 
 	else 
 	{
 		//p1 is me, p2 is connection layer to other player, I am not Host
 		p1 = new LocalPlayer(numRows, numCols, board);
 		p2 = new NetworkPlayer(numRows, numCols, board, false);
+		
 	}
 
 }
 
 Game::~Game() {}
+
+int Game::detStart()
+{
+		//Start determination protocol
+		string start;
+		while (start != "0" && start != "1") {
+			cout << "Who starts? Enter 0 for this player, or 1 for the other player: ";
+			getline(cin, start);
+		}
+		return (start == "0") ? 0 : 1;
+}
 
 void Game::play() {
 	// Playing the actual game

@@ -12,6 +12,9 @@ public:
 	void play();
 
 private:
+
+	int detStart();
+
 	int turnCounter;
 
 	Board* board;
