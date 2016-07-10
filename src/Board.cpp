@@ -60,6 +60,7 @@ void Board::update_cell(int col, char tokenIn)
 		{
 			cell_array[row][col] = tokenIn;
 			placed = true;
+			lastMove = col;
 		}
 	}
 	// If the entire column is filled, output an error 
@@ -69,6 +70,11 @@ void Board::update_cell(int col, char tokenIn)
 		checkWin(col, tokenIn);
 	
 	cout << endl << endl;
+}
+
+int Board::getLast()
+{
+	return lastMove;
 }
 
 bool Board::checkValidMove(int col) {

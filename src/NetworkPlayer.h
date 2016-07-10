@@ -16,12 +16,17 @@ public:
 	void Connect();
 	virtual int play(bool valid);
 	virtual void initialise();
+	virtual void setFirst();
 
 private:
 	LocalPlayer* player;
 	ServerSocketSet* server;
 	ClientSocketSet* client;
 	bool isServer;
+	bool firstRun;
+
+	int receiveMove();
+	void updateOpponent();
 };
 
 

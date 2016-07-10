@@ -13,6 +13,7 @@ NetworkPlayer::NetworkPlayer(int numRows, int numCols, Board* iboard, bool isS)
 {
 	isServer = isS;
 	id = 1;
+	firstRun = true;
 }
 
 NetworkPlayer::~NetworkPlayer() {}
@@ -21,6 +22,11 @@ void NetworkPlayer::initialise()
 {
 	cout << "Turn: " << turn << endl;
 	Connect();
+}
+
+void NetworkPlayer::setFirst()
+{
+	firstRun = false;
 }
 
 void NetworkPlayer::Connect()
@@ -40,7 +46,7 @@ void NetworkPlayer::Connect()
 		string start = (turn == 0) ? "0" : "1";
 
 		int status = server->sendMessage(start);
-		if (status != 0) { 
+		if (status == 0) { 
 			cout << "Error sending...";
 			exit(1);
 		}
@@ -73,10 +79,47 @@ void NetworkPlayer::Connect()
 	cout << "Turn is: " << stat << endl;
 }
 
+void NetworkPlayer::updateOpponent()
+{
+	string update = to_string(board->getLast()+1);	//Get last move made
+	if(isServer)
+	{
+		int status = server->sendMessage(update);
+		if(status == 0) {
+			cout << "Error sending..." << endl;
+			exit(1);
+		}
+	}
+	else
+	{
+		int status = client->sendMessage(update);
+		if(status == 0) {
+			cout << "Error sending..." << endl;
+			exit(1);
+		}
+	}
+}
 
+int NetworkPlayer::receiveMove()
+{
+	char* msg;
+	if (isServer)
+		msg = server->receiveMessage();
+	else 
+		msg = client->receiveMessage();
+
+	cout << "msg recevied: " << msg << endl;
+	return atoi(msg);
+}
 
 int NetworkPlayer::play(bool valid) 
 {
-
-	return 0;
+	if(!firstRun) {
+		cout << "Not first run" << endl;
+		updateOpponent();
+	} else {
+		cout << "First run" << endl;
+		firstRun = false;
+	}
+	return receiveMove();
 }

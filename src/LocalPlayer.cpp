@@ -13,6 +13,7 @@ LocalPlayer::LocalPlayer(int numRows, int numCols, Board* iboard)
 LocalPlayer::~LocalPlayer() {}
 
 void LocalPlayer::initialise() {}
+void LocalPlayer::setFirst() {}
 
 int LocalPlayer::play(bool valid) 
 {

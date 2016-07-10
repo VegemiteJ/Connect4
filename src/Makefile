@@ -23,7 +23,7 @@ LocalPlayer.o: LocalPlayer.cpp
 	g++ -c $^
 
 NetworkPlayer.o: NetworkPlayer.cpp
-	g++ -c $^
+	g++ -c ${VERSION} $^
 	
 Game.o: Board.h Player.h Game.cpp
 	g++ -c $^

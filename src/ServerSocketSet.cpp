@@ -110,6 +110,7 @@ int ServerSocketSet::sendMessage(std::string msg) {
 
 	char* sendBuf = new char[msg.length() + 1];	//Allocate the send buff
     strcpy(sendBuf, msg.c_str());
+    std::cout << "Sending msg:[" << sendBuf << "] of length:" << (int)strlen(sendBuf) << std::endl;
 
 	iSendResult = send( ClientSocket, sendBuf, msg.length()+1, 0);
     if (iSendResult == SOCKET_ERROR) {
@@ -121,7 +122,7 @@ int ServerSocketSet::sendMessage(std::string msg) {
     } else {
     	printf("Bytes sent: %d\n", iSendResult);
     	free(sendBuf);
-    	return 0;
+    	return iSendResult;
     }
 }
 

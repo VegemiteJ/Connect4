@@ -12,6 +12,7 @@ public:
 	~LocalPlayer();
 	virtual int play(bool valid);
 	virtual void initialise();
+	virtual void setFirst();
 };
 
 

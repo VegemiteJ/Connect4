@@ -25,10 +25,13 @@ public:
 	bool doCheck(int row, int col, char token);
 	
 	bool hasWon;
+
+	int getLast();
 	
 private:
 	int numRows;
 	int numCols;
+	int lastMove;
 	char** cell_array;
 };
 

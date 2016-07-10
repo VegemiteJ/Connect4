@@ -5,6 +5,10 @@ Upcoming:
 	- Choice for PvP or computer
 	- Computer class(es)
 
+--- 1.0.8 ---
+Added:
+	1. Full networking support complete
+	2. BUG: Winning doesn't tell the loser... ez fix
 	
 --- 1.0.7 ---
 Added:

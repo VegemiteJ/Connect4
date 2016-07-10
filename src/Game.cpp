@@ -28,6 +28,10 @@ Game::Game(bool isServer) {
 			Player* ptemp = p2;
 			p2 = p1;
 			p1 = ptemp;
+			p2->setFirst();
+		}
+		else {
+
 		}
 		//Ready to start the game
 	} 
@@ -41,6 +45,7 @@ Game::Game(bool isServer) {
 			Player* ptemp = p2;
 			p2 = p1;
 			p1 = ptemp;
+			p2->setFirst();
 		}
 		//Ready to start the game
 	}
@@ -49,7 +54,6 @@ Game::Game(bool isServer) {
 	cout << "p1 : Player id: " << ((p1->id == 0) ? "Local" : "Network") << " Turn: " << p1->turn << endl;
 	cout << "p1 : Player id: " << ((p2->id == 0) ? "Local" : "Network") << " Turn: " << p2->turn << endl;
 
-	exit(1);
 }
 
 Game::~Game() {}

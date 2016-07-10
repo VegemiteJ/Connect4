@@ -88,7 +88,7 @@ int ClientSocketSet::sendMessage(std::string msg) {
     printf("Bytes Sent: %d\n", iResult);
 
     //return number of bytes sent
-    return (int)strlen(sendbuf);
+    return iResult;
 }
 
 char* ClientSocketSet::receiveMessage(void) {
