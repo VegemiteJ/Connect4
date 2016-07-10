@@ -18,15 +18,13 @@ Game::Game(bool isServer) {
 	{
 		//p1 is me, p2 is connection layer to other player. I am Host
 		p1 = new LocalPlayer(numRows, numCols, board);
-		p2 = new NetworkPlayer(numRows, numCols, board, true);
-		exit(0);		
+		p2 = new NetworkPlayer(numRows, numCols, board, true);		
 	} 
 	else 
 	{
 		//p1 is me, p2 is connection layer to other player, I am not Host
 		p1 = new LocalPlayer(numRows, numCols, board);
 		p2 = new NetworkPlayer(numRows, numCols, board, false);
-		exit(0);
 	}
 
 }

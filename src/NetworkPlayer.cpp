@@ -12,7 +12,6 @@ NetworkPlayer::NetworkPlayer(int numRows, int numCols, Board* iboard, bool isS)
 	: Player(numRows, numCols, iboard) 
 {
 	isServer = isS;
-	Connect();
 }
 
 NetworkPlayer::~NetworkPlayer() {}
@@ -79,5 +78,6 @@ void NetworkPlayer::Connect()
 
 int NetworkPlayer::play(bool valid) 
 {
+
 	return 0;
 }
