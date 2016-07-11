@@ -33,10 +33,14 @@ void Board::print()
 		// Column separators
 		for (int y=0; y<numCols; y++) 
 		{
-			if (y<numCols-1)
-				cout << cell_array[x][y] << " | ";
+			if (cell_array[x][y] == 'X')
+				cout << "\u001B[32m";
 			else
-				cout << cell_array[x][y];
+				cout << "\u001B[31m";
+			if (y<numCols-1)
+				cout << cell_array[x][y] << "\u001B[0m" << " | ";
+			else
+				cout << cell_array[x][y] << "\u001B[0m";
 		}
 		
 		// Row separators
