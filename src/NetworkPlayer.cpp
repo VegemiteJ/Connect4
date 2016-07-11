@@ -29,6 +29,14 @@ void NetworkPlayer::setFirst()
 	firstRun = false;
 }
 
+void NetworkPlayer::Exit(bool notify)
+{
+	if (notify) {
+		cout << "Now updating opponent..." << endl;
+		updateOpponent();
+	}
+}
+
 void NetworkPlayer::Connect()
 {
 	if (isServer)
@@ -82,6 +90,7 @@ void NetworkPlayer::Connect()
 void NetworkPlayer::updateOpponent()
 {
 	string update = to_string(board->getLast()+1);	//Get last move made
+	cout << "Sending update column: " << board->getLast()+1 << endl;
 	if(isServer)
 	{
 		int status = server->sendMessage(update);

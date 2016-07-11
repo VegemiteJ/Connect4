@@ -21,6 +21,7 @@ Game::Game(bool isServer) {
 
 		start = detStart();				//User inputs player 1
 		cout << "Start: " << start << endl;
+		started = start;
 		p1->turn = start;
 		p1->initialise();
 		p2 = new LocalPlayer(numRows, numCols, board);
@@ -30,9 +31,6 @@ Game::Game(bool isServer) {
 			p1 = ptemp;
 			p2->setFirst();
 		}
-		else {
-
-		}
 		//Ready to start the game
 	} 
 	else 
@@ -41,6 +39,7 @@ Game::Game(bool isServer) {
 		p1->initialise();
 		p2 = new LocalPlayer(numRows, numCols, board);
 		start = p1->turn;
+		started = start;
 		if (start == 1){		//Swap as ordering required is Local, Network
 			Player* ptemp = p2;
 			p2 = p1;
@@ -54,6 +53,17 @@ Game::Game(bool isServer) {
 	cout << "p1 : Player id: " << ((p1->id == 0) ? "Local" : "Network") << " Turn: " << p1->turn << endl;
 	cout << "p1 : Player id: " << ((p2->id == 0) ? "Local" : "Network") << " Turn: " << p2->turn << endl;
 
+}
+
+void Game::cleanup()
+{
+	cout << "Called Cleanup: " << p2->id <<  endl;
+	if (p2->id == 1)
+	{
+		cout << "Valid" << endl;
+		//NetworkPlayer* p = static_cast<NetworkPlayer*>(p1);
+		p2->Exit(true);
+	}
 }
 
 Game::~Game() {}
@@ -101,10 +111,12 @@ void Game::play() {
 		turnCounter++;
 		board->print();
 	}
-	
+
 	// Output winner
 	if (turnCounter%2 != 0)
 		cout << "X wins!" << endl;
 	else
 		cout << "O wins!" << endl;
+
+	cleanup();
 }

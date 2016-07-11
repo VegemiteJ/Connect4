@@ -17,6 +17,7 @@ public:
 	virtual int play(bool valid);
 	virtual void initialise();
 	virtual void setFirst();
+	virtual void Exit(bool notify);
 
 private:
 	LocalPlayer* player;

@@ -13,6 +13,7 @@ public:
 	virtual int play(bool valid);
 	virtual void initialise();
 	virtual void setFirst();
+	virtual void Exit(bool);
 };
 
 

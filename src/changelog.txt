@@ -5,6 +5,10 @@ Upcoming:
 	- Choice for PvP or computer
 	- Computer class(es)
 
+--- 1.0.8-a ---
+Fixed:
+	Winning now tells loser
+
 --- 1.0.8 ---
 Added:
 	1. Full networking support complete

@@ -14,6 +14,7 @@ LocalPlayer::~LocalPlayer() {}
 
 void LocalPlayer::initialise() {}
 void LocalPlayer::setFirst() {}
+void LocalPlayer::Exit(bool) {}
 
 int LocalPlayer::play(bool valid) 
 {

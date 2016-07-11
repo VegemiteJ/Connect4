@@ -14,8 +14,10 @@ public:
 private:
 
 	int detStart();
+	void cleanup();
 
 	int turnCounter;
+	int started;
 
 	Board* board;
 	Player* p1;
