@@ -13,6 +13,8 @@ public:
 
 private:
 
+	void setPlayers(int numRows, int numCols, bool isServer);
+
 	int detStart();
 	void cleanup();
 

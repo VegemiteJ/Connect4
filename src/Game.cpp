@@ -14,7 +14,8 @@ Game::Game(bool isServer) {
 	
 	int turnCounter = 0;
 	int start;
-	p1 = new NetworkPlayer(numRows, numCols, board, isServer);
+	
+	setPlayers(numRows, numCols, isServer);
 
 	if (isServer)
 	{
@@ -24,7 +25,6 @@ Game::Game(bool isServer) {
 		started = start;
 		p1->turn = start;
 		p1->initialise();
-		p2 = new LocalPlayer(numRows, numCols, board);
 		if (start == 0){		//Swap as ordering required is Local, Network
 			Player* ptemp = p2;
 			p2 = p1;
@@ -37,7 +37,6 @@ Game::Game(bool isServer) {
 	{
 		p1->turn = 0;		//Turn unknown, get from server
 		p1->initialise();
-		p2 = new LocalPlayer(numRows, numCols, board);
 		start = p1->turn;
 		started = start;
 		if (start == 1){		//Swap as ordering required is Local, Network
@@ -53,6 +52,13 @@ Game::Game(bool isServer) {
 	cout << "p1 : Player id: " << ((p1->id == 0) ? "Local" : "Network") << " Turn: " << p1->turn << endl;
 	cout << "p1 : Player id: " << ((p2->id == 0) ? "Local" : "Network") << " Turn: " << p2->turn << endl;
 
+}
+
+void Game::setPlayers(int numRows, int numCols, bool isServer)
+{
+	//p1 = new NetworkPlayer(numRows, numCols, board, isServer);
+	p1 = new LocalPlayer(numRows, numCols, board);
+	p2 = new LocalPlayer(numRows, numCols, board);
 }
 
 void Game::cleanup()
