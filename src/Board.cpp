@@ -1,4 +1,5 @@
 #include "Board.h"
+#include "ColourDef.h"
 
 Board::Board(int numRowsi, int numColsi)
 {
@@ -13,7 +14,15 @@ Board::Board(int numRowsi, int numColsi)
 	hasWon = false;
 }
 
-Board::~Board() {}
+Board::~Board() 
+{
+	cout << "Cleaning Board" << endl;
+	for(int i=0; i<numRows; i++)
+	{
+		delete[] cell_array[i];
+	}
+	delete[] cell_array;
+}
 
 // Prints the board layout and current move
 void Board::print()
@@ -34,13 +43,13 @@ void Board::print()
 		for (int y=0; y<numCols; y++) 
 		{
 			if (cell_array[x][y] == 'X')
-				cout << "\u001B[32m";
+				cout << ANSI_RED;
 			else
-				cout << "\u001B[31m";
+				cout << ANSI_GREEN;
 			if (y<numCols-1)
-				cout << cell_array[x][y] << "\u001B[0m" << " | ";
+				cout << cell_array[x][y] << ANSI_RESET << " | ";
 			else
-				cout << cell_array[x][y] << "\u001B[0m";
+				cout << cell_array[x][y] << ANSI_RESET;
 		}
 		
 		// Row separators
@@ -83,14 +92,15 @@ int Board::getLast()
 
 bool Board::checkValidMove(int col) {
 	bool placeable = false;
+	
+	if (col < 0 || col >= numCols)
+		return false;
+
 	for (int row = numRows-1; row>-1 && placeable == false; row--)
 	{
 		if (cell_array[row][col] == ' ')
 			placeable = true;
 	}
-
-	if (col < 0 || col > numCols)
-		return false;
 
 	// If the entire column is filled, output an error 
 	if (placeable == false) {
@@ -297,4 +307,17 @@ bool Board::doCheck(int row, int col, char tokenIn) {
 		cout << "Token: " << cell_array[row][col] << " does not match " << tokenIn << endl;
 		return false;
 	}
+}
+
+char** Board::getBoardState()
+{
+	return cell_array;
+}
+
+int* Board::getSize()
+{
+	int* size = new int[2];
+	size[0] = numRows;
+	size[1] = numCols;
+	return size;
 }

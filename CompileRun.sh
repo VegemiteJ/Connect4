@@ -2,4 +2,4 @@
 cd src
 make
 cd ../bin
-./Connect4.exe
+./Connect4.exe false

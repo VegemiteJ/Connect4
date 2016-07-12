@@ -27,6 +27,9 @@ public:
 	bool hasWon;
 
 	int getLast();
+
+	char** getBoardState();
+	int* getSize();
 	
 private:
 	int numRows;

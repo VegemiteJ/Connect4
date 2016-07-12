@@ -1,7 +1,7 @@
 # Makefile for connect-four
 
-CLASSES = Board.o Player.o LocalPlayer.o NetworkPlayer.o Game.o ClientSocketSet.o ServerSocketSet.o
-VERSION = -std=c++11 -Wall -pedantic
+CLASSES = GameState.o Node.o Board.o Player.o LocalPlayer.o NetworkPlayer.o RandomPlayer.o Game.o ClientSocketSet.o ServerSocketSet.o
+VERSION = -std=gnu++14 -Wall -pedantic
 CYG = 
 LIB = -lws2_32
 INCLUDE = -I"/usr/include"
@@ -12,6 +12,9 @@ clean:
 	rm -f *.o ../bin/* *.h.gch
 # ----------------------------------------------------
 # BOARD STUFF	
+GameState.o: GameState.cpp
+	g++ -c $^
+
 Board.o: Board.cpp
 	g++ -c $^
 # ----------------------------------------------------
@@ -24,9 +27,12 @@ LocalPlayer.o: LocalPlayer.cpp
 
 NetworkPlayer.o: NetworkPlayer.cpp
 	g++ -c ${VERSION} $^
+
+RandomPlayer.o: RandomPlayer.cpp
+	g++ -c ${VERSION} $^
 	
 Game.o: Board.h Player.h Game.cpp
-	g++ -c $^
+	g++ -c ${VERSION} $^
 # ----------------------------------------------------	
 # PLAYER TYPES
 Human.o: Player.h Human.cpp 
@@ -36,7 +42,8 @@ Human.o: Player.h Human.cpp
 #	g++ -c Computer.cpp
 # ----------------------------------------------------	
 # AI TYPES	
-
+Node.o: Node.cpp
+	g++ -c $^
 
 # ----------------------------------------------------	
 # NETWORKING
