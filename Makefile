@@ -14,11 +14,14 @@ all: gs ai
 
 gs: main
 
+aiTest: $(CLASSES)
+	g++ ${CYG} ${INCLUDE} tests/MiniMaxV01/aiTest.cpp $(OBJ) ${VERSION} -o tests/MiniMaxV01/output/aiTest.exe
+
 ai: $(CLASSES)
-	g++ ${CYG} ${INCLUDE} tests/MiniMaxV01/ai.cpp $(OBJ) ${VERSION} -o tests/MiniMaxV01/output/Test.exe
+	g++ ${CYG} ${INCLUDE} tests/MiniMaxV01/ai.cpp $(OBJ) ${VERSION} -o tests/MiniMaxV01/output/ai.exe
 
 clean:
-	rm -f $(OBJLOC)/*.o $(OBJLOC)/output/Test.exe $(OBJLOC)/*.h.gch
+	rm -f $(OBJLOC)/*.o $(OBJLOC)/output/ai.exe $(OBJLOC)/*.h.gch
 # ----------------------------------------------------
 # BOARD STUFF	
 GameState.o: src/GameState.cpp

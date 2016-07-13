@@ -1,5 +1,3 @@
 #!/bin/bash
-cd src
-make
-cd ../bin
-./Connect4.exe false
+make ai
+./tests/MiniMaxV01/output/Test.exe

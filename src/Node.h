@@ -6,29 +6,36 @@
 class Node
 {
 public:
-	Node(Node* parent, GameState* prev_board, int depth, int col, int turn);
+	Node(int id, GameState* initial, int iturn);
+	Node(int id, Node* parent, int depth, int col);
 	~Node();
 
-	void printNode();
+	void print();
+	GameState* getState();
+	int getTurn();
+
+	Node** discoverChildren();
+	int numChild;
 
 private:
 	Node();
 	
-	int numChild;
+	int id;
+
 	int* util;
 	int turn;		//0 for X, 1 for O
 
-	Node* myChildren;
-	Node* parent;
+	Node** myChildren;
+	Node* parent;			//Usually blank
 
 	int depth;
 
     //Tuple of [row, col] location to evaluation
-	int	row;
-	int col;
+	//int state->LastMoveRow;
+	//int state->LastMoveCol;
 
 	//Board state of me
-	GameState* board_GS;
+	GameState* state;
 	
 };
 

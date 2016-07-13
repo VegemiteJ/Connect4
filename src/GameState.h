@@ -14,7 +14,17 @@ public:
 
 	void print();
 
+	bool checkWin(char tokenIn);
+	bool checkWin(int colIn, char tokenIn);
+	bool checkVert(int rowIn, int colIn, char tokenIn);
+	bool checkDiag(int rowIn, int colIn, char tokenIn);
+	bool checkHorz(int rowIn, char tokenIn);
+	bool doCheck(int row, int col, char token);
+
 	bool checkValidMove(int col);
+
+	int LastMoveRow;
+	int LastMoveCol;
 
 	int numRows;
 	int numCols;
