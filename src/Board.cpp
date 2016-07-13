@@ -6,6 +6,8 @@ Board::Board(int numRowsi, int numColsi)
 	numRows = numRowsi;
 	numCols = numColsi;
 	cout << "Dimensions: " << numRows << " " << numCols << endl;
+	state = new GameState(numRows, numCols);
+
 	cell_array = new char*[numRows];
 	for (int i = 0; i < numRows; i++) {
 		cell_array[i] = new char[numCols];

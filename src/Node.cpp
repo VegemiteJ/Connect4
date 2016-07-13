@@ -5,11 +5,11 @@ Node::Node()
 
 }
 
-Node::Node(Node* iparent, GameState* iprev, int idepth, int irow, int icol, int iturn) :
-	parent(iparent), depth(idepth), row(irow), col(icol), turn(iturn)
+Node::Node(Node* iparent, GameState* iprev, int idepth, int icol, int iturn) :
+	parent(iparent), depth(idepth), col(icol), turn(iturn)
 {
-	//Board
-	board_GS = new GameState(iprev, row, col, turn);
+	//New Board State
+	board_GS = new GameState(iprev, col, turn);
 }
 
 Node::~Node() {}

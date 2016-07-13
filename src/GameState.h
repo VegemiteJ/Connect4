@@ -14,6 +14,8 @@ public:
 
 	void print();
 
+	bool checkValidMove(int col);
+
 	int numRows;
 	int numCols;
 	char** cell_array;

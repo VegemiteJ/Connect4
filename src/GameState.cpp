@@ -139,3 +139,23 @@ void GameState::print()
 		// cout << endl << "  --------------------------" << endl;
 	}
 }
+
+bool GameState::checkValidMove(int col) {
+	bool placeable = false;
+	
+	if (col < 0 || col >= numCols)
+		return false;
+
+	for (int row = numRows-1; row>-1 && placeable == false; row--)
+	{
+		if (cell_array[row][col] == ' ')
+			placeable = true;
+	}
+
+	// If the entire column is filled, output an error 
+	if (placeable == false) {
+		return false;
+	} else {
+		return true;
+	}
+}

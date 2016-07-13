@@ -4,6 +4,8 @@
 #define DEBUG true
 
 #include <iostream>
+#include "GameState.h"
+
 using namespace std;
 
 class Board
@@ -32,10 +34,12 @@ public:
 	int* getSize();
 	
 private:
+	Board();
+
 	int numRows;
 	int numCols;
 	int lastMove;
-	char** cell_array;
+	GameState* state;
 };
 
 #endif // BOARD_H

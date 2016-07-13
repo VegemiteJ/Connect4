@@ -1,8 +1,8 @@
 # Makefile for GameState Unit tests
 
 CLASSES = GameState.o Board.o Node.o
-OBJLOC = ./tests/GameStateTests
-OBJS = $(patsubst %,$(OBJLOC)/%,$(CLASSES))
+OBJLOC = ./src/Objs
+OBJ = $(patsubst %,$(OBJLOC)/%,$(CLASSES))
 VERSION = -std=gnu++14 -Wall -pedantic
 CYG = 
 LIB = -L./tests/GameStateTests
@@ -10,24 +10,29 @@ LIB = -L./tests/GameStateTests
 #Include files from src
 INCLUDE = -I./src -I./tests/GameStateTests
 
-all: main
+all: gs ai
+
+gs: main
+
+ai: $(CLASSES)
+	g++ ${CYG} ${INCLUDE} tests/MiniMaxV01/ai.cpp $(OBJ) ${VERSION} -o tests/MiniMaxV01/output/Test.exe
 
 clean:
-	rm -f tests/GameStateTests/*.o output/Test.exe *.h.gch
+	rm -f $(OBJLOC)/*.o $(OBJLOC)/output/Test.exe $(OBJLOC)/*.h.gch
 # ----------------------------------------------------
 # BOARD STUFF	
 GameState.o: src/GameState.cpp
-	g++ -c ${Include} $^ -o tests/GameStateTests/GameState.o
+	g++ -c ${Include} $^ -o $(OBJLOC)/GameState.o
 
 Board.o: src/Board.cpp
-	g++ -c ${INCLUDE} $^ -o tests/GameStateTests/Board.o
+	g++ -c ${INCLUDE} $^ -o $(OBJLOC)/Board.o
 
 # AI TYPES	
 Node.o: src/Node.cpp
-	g++ -c ${INCLUDE} $^ -o tests/GameStateTests/Node.o
+	g++ -c ${INCLUDE} $^ -o $(OBJLOC)/Node.o
 
 
 #-----------------------------------------------------
 # MAIN
 main: $(CLASSES)
-	g++ ${CYG} ${INCLUDE} tests/GameStateTests/GameStateTest.cpp $(OBJS) ${VERSION} -o tests/GameStateTests/output/Test.exe
+	g++ ${CYG} ${INCLUDE} tests/GameStateTests/GameStateTest.cpp $(OBJ) ${VERSION} -o tests/GameStateTests/output/Test.exe

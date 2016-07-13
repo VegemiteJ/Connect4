@@ -6,7 +6,7 @@
 class Node
 {
 public:
-	Node(Node* parent, GameState* prev_board, int depth, int row, int col, int turn);
+	Node(Node* parent, GameState* prev_board, int depth, int col, int turn);
 	~Node();
 
 	void printNode();
