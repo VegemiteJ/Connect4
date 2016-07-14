@@ -2,8 +2,9 @@
 #define MiniMaxPlayer_H
 
 #include "Player.h"
+#include "Node.h"
 
-class MiniMaxPlayer: public Player
+class MiniMaxPlayer// : public Player
 {
 public:
 	MiniMaxPlayer(Node* root);
@@ -13,7 +14,7 @@ public:
 	virtual void setFirst();
 	virtual void Exit(bool);
 
-	Node* EvalUtil(Node* current);
+	int EvalUtil(Node* current);
 
 private:
 	MiniMaxPlayer();

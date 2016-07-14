@@ -1,6 +1,5 @@
 #include "GameState.h"
 #include "Node.h"
-#include "MiniMaxPlayer.h"
 #include "board.h"
 #include "consts.h"
 #include "ColourDef.h"
@@ -23,15 +22,27 @@ int main(int argc, char** argv)
 	board->update_cell(1,'X');
 	board->update_cell(1,'X');
 	board->update_cell(1,'O');
+	board->print();
 
 	cout << "Now passing to GameState" << endl;
 	GameState* state = board->getBoardState(0);
 
-	cout << "Generating root node" << endl;
 	Node* test = new Node(global_id++, state, 1);
 	test->print();
-
-	MiniMaxPlayer* testPlayer = new MiniMaxPlayer(test);
-	cout << "Final Value: " << testPlayer->EvalUtil(test) << endl;
 	
+	cout << "\n\nPrinting children..." << endl;
+	Node** testChild = test->discoverChildren();
+	cout << "Number Children: " << test->numChild << endl;
+
+	for (int i=0; i< test->numChild; i++) {
+		testChild[i]->print();
+		cout << "Util: " << ANSI_CYAN << testChild[i]->computeUtil() << ANSI_RESET << endl;
+		
+		Node** testChild1 = testChild[i]->discoverChildren();
+		cout << "Number Children: " << testChild[i]->numChild << endl;
+		for (int j=0; j<testChild[i]->numChild; j++) {
+			testChild1[j]->print();
+			cout << "Util: " << ANSI_CYAN << testChild1[j]->computeUtil() << ANSI_RESET << endl;
+		}
+	}
 }

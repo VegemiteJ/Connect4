@@ -14,6 +14,7 @@ public:
 
 	void print();
 
+	bool completed();	//returns true if the game state has been completed
 	bool checkWin(char tokenIn);
 	bool checkWin(int colIn, char tokenIn);
 	bool checkVert(int rowIn, int colIn, char tokenIn);

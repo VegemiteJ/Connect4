@@ -58,6 +58,7 @@ GameState::GameState(GameState* prev, int row, int col, int turn)
 GameState::GameState(GameState* prev, int col, int turn)
 {
 	LastMoveRow = -1;
+	LastMoveCol = col;
 	numRows = prev->numRows;
 	numCols = prev->numCols;
 
@@ -89,7 +90,6 @@ GameState::GameState(GameState* prev, int col, int turn)
 		cout << "Error, that column is already full, pick another" << endl;
 	
 	cout << endl << endl;
-	LastMoveCol = col;
 }
 
 
@@ -205,7 +205,7 @@ bool GameState::checkVert(int rowIn, int colIn, char tokenIn)
 	//cout << "Checking vertical wins" << endl;
 	
 	// Only check if there are at least 4 in the current column
-	if (rowIn < 3)
+	if (rowIn <= numRows - 4)
 	{
 		bool sameToken = true;
 		// Check the cells below for consecutiveness
@@ -349,4 +349,14 @@ bool GameState::doCheck(int row, int col, char tokenIn) {
 		//cout << "Token: " << cell_array[row][col] << " does not match " << tokenIn << endl;
 		return false;
 	}
+}
+
+bool GameState::completed()
+{
+	//For all columns, only check topmost row
+	for(int i=0; i<numCols; i++) {
+		if (cell_array[0][i] != 'X' && cell_array[0][i] != 'O')
+			return false;
+	}
+	return true;
 }

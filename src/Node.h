@@ -15,6 +15,7 @@ public:
 	int getTurn();
 
 	Node** discoverChildren();
+	int computeUtil();
 	int numChild;
 
 private:
