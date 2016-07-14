@@ -1,6 +1,6 @@
 # Makefile for GameState Unit tests
 
-CLASSES = GameState.o Board.o Node.o MiniMaxPlayer.o
+CLASSES = GameState.o Board.o Node.o Player.o MiniMaxPlayer.o
 OBJLOC = ./src/Objs
 OBJ = $(patsubst %,$(OBJLOC)/%,$(CLASSES))
 VERSION = -std=gnu++14 -Wall -pedantic
@@ -27,17 +27,20 @@ clean:
 # ----------------------------------------------------
 # BOARD STUFF	
 GameState.o: src/GameState.cpp
-	g++ -c ${Include} $^ ${FLAGS} -o $(OBJLOC)/GameState.o
+	g++ -c ${Include} $^ ${FLAGS} -o $(OBJLOC)/$@
 
 Board.o: src/Board.cpp
-	g++ -c ${INCLUDE} $^ ${FLAGS} -o $(OBJLOC)/Board.o
+	g++ -c ${INCLUDE} $^ ${FLAGS} -o $(OBJLOC)/$@
 
 # AI TYPES	
 Node.o: src/Node.cpp
-	g++ -c ${INCLUDE} $^ ${FLAGS} -o $(OBJLOC)/Node.o
+	g++ -c ${INCLUDE} $^ ${FLAGS} -o $(OBJLOC)/$@
+
+Player.o: src/Player.cpp
+	g++ -c $^ -o $(OBJLOC)/$@
 
 MiniMaxPlayer.o: src/MiniMaxPlayer.cpp
-	g++ -c ${INCLUDE} $^ ${FLAGS} -o $(OBJLOC)/MiniMaxPlayer.o
+	g++ -c ${INCLUDE} $^ ${FLAGS} -o $(OBJLOC)/$@
 
 #-----------------------------------------------------
 # MAIN

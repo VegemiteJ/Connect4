@@ -3,6 +3,8 @@
 #include "LocalPlayer.h"
 #include "NetworkPlayer.h"
 #include "RandomPlayer.h"
+#include "MiniMaxPlayer.h"
+#include "consts.h"
 #include <iostream>
 #include <cstdlib>
 
@@ -59,7 +61,7 @@ void Game::setPlayers(int numRows, int numCols, bool isServer)
 {
 	//p1 = new NetworkPlayer(numRows, numCols, board, isServer);
 	p1 = new LocalPlayer(numRows, numCols, board);
-	p2 = new RandomPlayer(numRows, numCols, board);
+	p2 = new MiniMaxPlayer(numCols, numRows, board, NULL, 1);
 }
 
 void Game::cleanup()

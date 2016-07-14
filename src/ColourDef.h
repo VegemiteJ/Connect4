@@ -8,6 +8,7 @@
 #define ANSI_PURPLE "\u001B[35m"
 #define ANSI_WHITE "\u001B[37m"
 #define ANSI_CYAN "\u001B[36m"
+#define ANSI_YELLOW "\u001B[33m"
 
 
 #endif

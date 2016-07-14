@@ -1,6 +1,6 @@
 # Makefile for connect-four
 
-CLASSES = GameState.o Node.o Board.o Player.o LocalPlayer.o NetworkPlayer.o RandomPlayer.o Game.o ClientSocketSet.o ServerSocketSet.o
+CLASSES = GameState.o Node.o Board.o Player.o MiniMaxPlayer.o LocalPlayer.o NetworkPlayer.o RandomPlayer.o Game.o ClientSocketSet.o ServerSocketSet.o
 NETCLASSES = ClientSocketSet.o ServerSocketSet.o
 OBJLOC = ./Objs
 OBJS = $(patsubst %,$(OBJLOC)/%,$(CLASSES))
@@ -34,6 +34,9 @@ NetworkPlayer.o: NetworkPlayer.cpp
 
 RandomPlayer.o: RandomPlayer.cpp
 	g++ -c ${VERSION} $^ -o $(OBJLOC)/$@
+
+MiniMaxPlayer.o: MiniMaxPlayer.cpp
+	g++ -c ${INCLUDE} $^ -o $(OBJLOC)/$@
 	
 Game.o: Game.cpp
 	g++ -c ${VERSION} $^ -o $(OBJLOC)/$@

@@ -11,12 +11,17 @@ public:
 	~Node();
 
 	void print();
+
+	int numChild;
 	GameState* getState();
 	int getTurn();
+	int getDepth();
+	int* getUtil();
+	void setUtil(int i, int value);
+	Node** getChildren();
 
 	Node** discoverChildren();
 	int computeUtil();
-	int numChild;
 
 private:
 	Node();

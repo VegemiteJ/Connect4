@@ -8,21 +8,16 @@
 
 using namespace std;
 
-int global_id = 0;
-
 int main(int argc, char** argv)
 {
 	Board* board = new Board(4,4);
 	board->print();
-	board->update_cell(0,'O');
+	board->update_cell(0,'X');
+	board->update_cell(0,'X');
+	board->update_cell(0,'X');
+	board->update_cell(1,'O');
 	board->update_cell(1,'O');
 	board->update_cell(2,'O');
-	board->update_cell(0,'X');
-	board->update_cell(0,'X');
-	board->update_cell(0,'O');
-	board->update_cell(1,'X');
-	board->update_cell(1,'X');
-	board->update_cell(1,'O');
 
 	cout << "Now passing to GameState" << endl;
 	GameState* state = board->getBoardState(0);
@@ -31,7 +26,7 @@ int main(int argc, char** argv)
 	Node* test = new Node(global_id++, state, 1);
 	test->print();
 
-	MiniMaxPlayer* testPlayer = new MiniMaxPlayer(test);
-	cout << "Final Value: " << testPlayer->EvalUtil(test) << endl;
+	MiniMaxPlayer* testPlayer = new MiniMaxPlayer(4, 4, board, test);
+	cout << "Move Selected: " << testPlayer->play(false) << endl;
 	
 }

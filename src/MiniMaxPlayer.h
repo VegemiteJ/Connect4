@@ -1,13 +1,14 @@
 #ifndef MiniMaxPlayer_H
 #define MiniMaxPlayer_H
 
+#include "Board.h"
 #include "Player.h"
 #include "Node.h"
 
-class MiniMaxPlayer// : public Player
+class MiniMaxPlayer : public Player
 {
 public:
-	MiniMaxPlayer(Node* root);
+	MiniMaxPlayer(int Cols, int Rows, Board* iBoard, Node* root, int iturn);
 	~MiniMaxPlayer();
 	virtual int play(bool valid);
 	virtual void initialise();
@@ -17,8 +18,8 @@ public:
 	int EvalUtil(Node* current);
 
 private:
+	int turnReference;
 	MiniMaxPlayer();
-
 	Node* root;
 };
 

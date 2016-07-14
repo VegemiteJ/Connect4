@@ -3,6 +3,8 @@
 #include "ColourDef.h"
 #include <iostream>
 
+int global_id = 0;
+
 using namespace std;
 
 Node::Node() {}
@@ -20,9 +22,9 @@ Node::Node(int iid, Node* iparent, int idepth, int icol) :
 
 Node::~Node() 
 {
-	delete[] myChildren;
-	delete[] util;
-	delete state;
+	//delete[] myChildren;
+	/*delete util;
+	delete state;*/
 }
 
 void Node::print() 
@@ -82,7 +84,6 @@ Node** Node::discoverChildren()
 
 int Node::computeUtil()
 {
-	int util;
 	char thisTurnToken = (turn==0) ? 'X' : 'O';
 	
 	char currentCheckToken1 = 'X';
@@ -105,4 +106,24 @@ int Node::computeUtil()
 
 	//Neither player Won
 	return 0;
+}
+
+void Node::setUtil(int i, int value)
+{
+	util[i] = value;
+}
+
+int Node::getDepth()
+{
+	return depth;
+}
+
+int* Node::getUtil()
+{
+	return util;
+}
+
+Node** Node::getChildren()
+{
+	return myChildren;
 }

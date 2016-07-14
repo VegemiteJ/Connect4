@@ -89,7 +89,7 @@ GameState::GameState(GameState* prev, int col, int turn)
 	if (placed == false)
 		cout << "Error, that column is already full, pick another" << endl;
 	
-	cout << endl << endl;
+	//cout << endl << endl;
 }
 
 
@@ -103,10 +103,11 @@ GameState::GameState(int inumRows, int inumCols) :
 
 GameState::~GameState()
 {
+	/*
 	for (int i=0; i<numRows; i++)
 	{
-		delete[] cell_array[i];	
-	}
+		delete[] cell_array[i];
+	} */
 	delete[] cell_array;
 	
 }
