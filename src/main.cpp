@@ -3,8 +3,11 @@
 #include "Player.h"
 #include "ServerSocketSet.h"
 #include "ClientSocketSet.h"
+#include "consts.h"
 #include <iostream>
 #include <string>
+
+int verbose = 0;
 
 using namespace std;
 

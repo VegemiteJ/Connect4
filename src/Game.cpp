@@ -66,10 +66,12 @@ void Game::setPlayers(int numRows, int numCols, bool isServer)
 
 void Game::cleanup()
 {
-	cout << "Called Cleanup: " << p2->id <<  endl;
+	if (verbose >3)
+		cout << "Called Cleanup: " << p2->id <<  endl;
 	if (p2->id == 1)
 	{
-		cout << "Valid" << endl;
+		if (verbose >3)
+			cout << "Valid" << endl;
 		//NetworkPlayer* p = static_cast<NetworkPlayer*>(p1);
 		p2->Exit(true);
 	}

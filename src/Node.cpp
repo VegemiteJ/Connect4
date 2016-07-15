@@ -16,7 +16,8 @@ Node::Node(int iid, Node* iparent, int idepth, int icol) :
 	id(iid), parent(iparent), depth(idepth), turn( (iparent->getTurn()+1)%2 )
 {
 	//New Board State
-	cout << "New Node off previous with new turn: " << turn << endl;
+	if (verbose >3)
+		cout << "New Node off previous with new turn: " << turn << endl;
 	state = new GameState(iparent->getState(), icol, turn);
 }
 
@@ -48,8 +49,10 @@ GameState* Node::getState()
 
 Node** Node::discoverChildren()
 {
-	cout << "Discover Children..." << endl;
-	cout << "Num Rows: " << state->numRows << "Num Cols: " << state->numCols << endl;
+	if (verbose >3)
+		cout << "Discover Children..." << endl;
+	if (verbose >3)
+		cout << "Num Rows: " << state->numRows << "Num Cols: " << state->numCols << endl;
 	numChild = 0;
 	int children[state->numCols];
 	//Discover number of children
@@ -57,11 +60,13 @@ Node** Node::discoverChildren()
 		if (state->checkValidMove(i)){
 			children[numChild] = i;
 			numChild++;
-			cout << "Column: " << i << " " << children[numChild-1];
+			if (verbose >3)
+				cout << "Column: " << i << " " << children[numChild-1];
 		}
 	}
 
-	cout << "NumChild: " << numChild << endl;
+	if (verbose >3)
+		cout << "NumChild: " << numChild << endl;
 	if (numChild != 0) {
 		myChildren = new Node*[numChild];
 		util = new int[numChild]();
@@ -74,7 +79,8 @@ Node** Node::discoverChildren()
 	for (int i = 0; i<numChild; ++i){
 		if (state->checkValidMove(children[i]))
 		{
-			cout << "Making node: " << i << endl;
+			if (verbose >3)
+				cout << "Making node: " << i << endl;
 			myChildren[i] = new Node(global_id++, this, depth+1, children[i]);
 		}
 	}
@@ -89,19 +95,28 @@ int Node::computeUtil()
 	char currentCheckToken1 = 'X';
 	char currentCheckToken2 = 'O';
 
-	cout << "thisTurnToken = " << thisTurnToken << endl;
-	cout << "Stat1: " << state->checkWin(currentCheckToken1) << " " << (currentCheckToken1==thisTurnToken) << endl;
-	cout << "Stat2: " << state->checkWin(currentCheckToken2) << " " << (currentCheckToken2==thisTurnToken) << endl;
+	if (verbose >3)
+		cout << "thisTurnToken = " << thisTurnToken << endl;
+	if (verbose >3)
+		cout << "Stat1: " << state->checkWin(currentCheckToken1) << " " << (currentCheckToken1==thisTurnToken) << endl;
+	if (verbose >3)
+		cout << "Stat2: " << state->checkWin(currentCheckToken2) << " " << (currentCheckToken2==thisTurnToken) << endl;
 	// If this turn has won, return max util
 	if (state->checkWin(currentCheckToken1) && currentCheckToken1 == thisTurnToken)
 	{
-		cout << "Player X Appears to have won, returning max utility" << endl;
-		return 999;
+		if (verbose >3)
+			cout << "Player X Appears to have won, returning max utility" << endl;
+		int base = 900;
+		int retVal = base + (100-depth);
+		return retVal;
 	}
 	else if (state->checkWin(currentCheckToken2) && currentCheckToken2 == thisTurnToken)
 	{
-		cout << "Player O Appears to have won, returning min utility" << endl;
-		return -999;
+		if (verbose >3)
+			cout << "Player O Appears to have won, returning min utility" << endl;
+		int base = -900;
+		int retVal = base - (100-depth);
+		return retVal;
 	}
 
 	//Neither player Won
