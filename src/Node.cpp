@@ -10,22 +10,90 @@ using namespace std;
 Node::Node() {}
 
 Node::Node(int iid, GameState* iinitial, int iturn) :
-	id(iid), state(iinitial), depth(0), numChild(-1), turn(iturn) {}
+	id(iid), state(iinitial), depth(0), numChild(-1), turn(iturn), allocated(0) 
+{
+	allocated |= 1;
+}
 
-Node::Node(int iid, Node* iparent, int idepth, int icol) :
-	id(iid), parent(iparent), depth(idepth), turn( (iparent->getTurn()+1)%2 )
+Node::Node(int iid, Node* iparent, int icol) :
+	id(iid), parent(iparent), depth(iparent->getDepth()+1), turn( (iparent->getTurn()+1)%2 ), allocated(0)
 {
 	//New Board State
 	if (verbose >3)
 		cout << "New Node off previous with new turn: " << turn << endl;
 	state = new GameState(iparent->getState(), icol, turn);
+	allocated |= 1;
+	allocated |= 2;
 }
 
 Node::~Node() 
 {
-	//delete[] myChildren;
-	/*delete util;
-	delete state;*/
+	if (verbose > 3) {
+		cout << ANSI_RED;
+		cout << "Called Node Destructor - id: " << id << ANSI_RESET << endl;
+		cout << "Allocated: " << ANSI_PURPLE << allocated << ANSI_RESET << endl;
+		cout << "BitField: " << endl;
+		cout << "X--X--X--X" << endl;
+		cout << ANSI_PURPLE;
+		cout << ((allocated >> 3) & 1) << "--";		//Util
+		cout << ((allocated >> 2) & 1) << "--";		//MyChildren
+		cout << ((allocated >> 1) & 1) << "--";		//Parent
+		cout << ((allocated >> 0) & 1) << endl;		//State
+		cout << ANSI_RESET;
+	}
+
+	if ((allocated >> 0) & 1) {
+		if (verbose>3)
+			cout << "Deleting state..." << endl;
+		delete state;
+	}
+	if ((allocated >> 1) & 1) {
+		//Ignore, we don't want to ever delete parent. At this point
+		//	May change in future
+	}
+	if ((allocated >> 2) & 1) {
+		//Tree disassemble saved for special destructor deleteTree()
+	}
+	if ((allocated >> 3) & 1) {
+		if (verbose>3)
+			cout << "Deleting util..." << endl;
+		delete util;
+	}
+
+}
+
+void Node::deleteTree()
+{
+	if (verbose > 3) {
+		cout << ANSI_RED;
+		cout << "Called Node Full Tree Destructor - id: " << id << ANSI_RESET << endl;
+		cout << "Allocated: " << ANSI_PURPLE << allocated << ANSI_RESET << endl;
+		cout << "BitField: " << endl;
+		cout << "X--X--X--X" << endl;
+		cout << ANSI_PURPLE;
+		cout << ((allocated >> 3) & 1) << "--";		//Util
+		cout << ((allocated >> 2) & 1) << "--";		//MyChildren
+		cout << ((allocated >> 1) & 1) << "--";		//Parent
+		cout << ((allocated >> 0) & 1) << endl;		//State
+		cout << ANSI_RESET;
+		cout << "Self wont be fully deleted, only children" << endl;
+	}
+	if ((allocated >> 1) & 1) {
+		//Ignore, we don't want to ever delete parent. At this point
+		//	May change in future
+	}
+	if ((allocated >> 2) & 1) {
+		if (verbose>3)
+			cout << "Deleting children..." << endl;
+		for (int i=0; i<numChild; i++)
+		{
+			if (verbose>3)
+				cout << "Deleting child: " << i << endl;
+			delete myChildren[i];
+		}
+		delete myChildren;
+		allocated &= 11;
+	}
 }
 
 void Node::print() 
@@ -70,6 +138,8 @@ Node** Node::discoverChildren()
 	if (numChild != 0) {
 		myChildren = new Node*[numChild];
 		util = new int[numChild]();
+		allocated |= 4;
+		allocated |= 8;
 	} else {
 		myChildren = NULL;
 		util = NULL;
@@ -81,7 +151,7 @@ Node** Node::discoverChildren()
 		{
 			if (verbose >3)
 				cout << "Making node: " << i << endl;
-			myChildren[i] = new Node(global_id++, this, depth+1, children[i]);
+			myChildren[i] = new Node(global_id++, this, children[i]);
 		}
 	}
 

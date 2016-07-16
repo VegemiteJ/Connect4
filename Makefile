@@ -22,8 +22,20 @@ aiTest: $(CLASSES)
 ai: $(CLASSES)
 	g++ ${CYG} ${INCLUDE} tests/MiniMaxV01/ai.cpp $(OBJ) ${VERSION} ${FLAGS} -o tests/MiniMaxV01/output/ai.exe
 
-clean:
-	rm -f $(OBJLOC)/*.o $(OBJLOC)/output/ai.exe $(OBJLOC)/*.h.gch
+node: $(CLASSES)
+		g++ ${CYG} ${INCLUDE} tests/NodeTests/nodeT.cpp $(OBJ) ${VERSION} ${FLAGS} -o tests/NodeTests/output/Node.exe
+
+clean: cleanai cleangs cleannode
+
+cleanai:
+	rm -f $(OBJLOC)/*.o tests/MiniMaxV01/output/*.exe $(OBJLOC)/*.h.gch
+
+cleangs:
+	rm -f $(OBJLOC)/*.o tests/GameStateTests/output/*.exe $(OBJLOC)/*.h.gch
+
+cleannode:
+	rm -f $(OBJLOC)/*.o tests/NodeTests/output/*.exe $(OBJLOC)/*.h.gch
+
 # ----------------------------------------------------
 # BOARD STUFF	
 GameState.o: src/GameState.cpp

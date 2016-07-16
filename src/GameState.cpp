@@ -1,5 +1,6 @@
 #include "GameState.h"
 #include "ColourDef.h"
+#include "consts.h"
 #include <iostream>
 
 using namespace std;
@@ -103,13 +104,16 @@ GameState::GameState(int inumRows, int inumCols) :
 
 GameState::~GameState()
 {
-	/*
-	for (int i=0; i<numRows; i++)
-	{
+	if (verbose > 3)
+		cout << "Called GameState Destructor" << endl;
+	for (int i=0; i<numRows; i++) {
+		if (verbose > 3)
+			cout << "Deleting row: " << i << endl;
 		delete[] cell_array[i];
-	} */
+	}
+	if (verbose > 3)
+		cout << "Deleting Host Array" << endl;
 	delete[] cell_array;
-	
 }
 
 void GameState::print()
@@ -150,7 +154,8 @@ void GameState::print()
 	}
 }
 
-bool GameState::checkValidMove(int col) {
+bool GameState::checkValidMove(int col)
+{
 	bool placeable = false;
 	
 	if (col < 0 || col >= numCols)
@@ -336,7 +341,8 @@ bool GameState::checkDiag(int rowIn, int colIn, char tokenIn)
 	return hasWon;
 }
 
-bool GameState::doCheck(int row, int col, char tokenIn) {
+bool GameState::doCheck(int row, int col, char tokenIn)
+{
 	//Check if in bounds
 	if (row >= numRows || col >= numCols || row < 0 || col < 0) {
 		return false;
