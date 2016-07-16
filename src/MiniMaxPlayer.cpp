@@ -2,8 +2,10 @@
 #include "consts.h"
 #include "ColourDef.h"
 
+#include <chrono>
+
 #ifndef MAX_DEPTH
-#define MAX_DEPTH 4
+#define MAX_DEPTH 5
 #endif
 
 MiniMaxPlayer::MiniMaxPlayer(int Cols, int Rows, Board* iBoard, Node* iroot, int iturn) : 
@@ -22,7 +24,9 @@ int MiniMaxPlayer::play(bool valid)
 		cout << "Generating root node" << endl;
 	Node* test = new Node(global_id++, state, turnReference);	//Last parameter 1 assuming computer goes 2ND always
 	
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	int optimalPlay = EvalUtil(test);
+	std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
 
 	if (verbose >3)
 		cout << "Retrieving possible moves..." << endl;
@@ -34,29 +38,31 @@ int MiniMaxPlayer::play(bool valid)
 	int* utilVals = test->getUtil();
 	//Determine  move to make:
 	cout << "\n\nChoosing Move..." << endl;
-	if (turnReference==1) {
+	
 		for (int i=0; i<test->numChild; i++)
 		{
-			if (utilVals[i] >= max) {
-				max = utilVals[i];
-				play = possibleMoves[i]->getState()->LastMoveCol;
-				if (verbose >3)
-					cout << "New Maximum Move -- Util: " << max << " -- Move: " << play << endl;
+			if (turnReference==1) {
+				if (utilVals[i] >= max) {
+					max = utilVals[i];
+					play = possibleMoves[i]->getState()->LastMoveCol;
+					if (verbose >3)
+						cout << "New Maximum Move -- Util: " << max << " -- Move: " << play << endl;
+				}
+			} else {		//Turn reference = 0
+				if (utilVals[i] <= min) {
+					min = utilVals[i];
+					play = possibleMoves[i]->getState()->LastMoveCol;
+					if (verbose >3)
+						cout << "New Maximum Move -- Util: " << min << " -- Move: " << play << endl;
+				}
 			}
+			//Purge the search tree
+			cout << "Deleting Search Tree..." << endl;
+			possibleMoves[i]->deleteTree();
 		}
-	} else {		//Turn reference = 0
-		for (int i=0; i<test->numChild; i++)
-		{
-			if (utilVals[i] <= min) {
-				min = utilVals[i];
-				play = possibleMoves[i]->getState()->LastMoveCol;
-				if (verbose >3)
-					cout << "New Maximum Move -- Util: " << min << " -- Move: " << play << endl;
-			}
-		}
-	}
 
-	cout << "Chose move: " << play << " after " << global_id << " state evaluations" << endl;
+	cout << "Chose move: " << play+1 << " after " << global_id << " state evaluations in ";
+	cout << (std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()) / 1000000.0 << " seconds" << endl;
 
 	//Expects a column i.e. 1-indexed
 	return play+1;

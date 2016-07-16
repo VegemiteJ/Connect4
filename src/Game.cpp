@@ -60,7 +60,8 @@ Game::Game(bool isServer) {
 void Game::setPlayers(int numRows, int numCols, bool isServer)
 {
 	//p1 = new NetworkPlayer(numRows, numCols, board, isServer);
-	p1 = new LocalPlayer(numRows, numCols, board);
+	//p1 = new LocalPlayer(numRows, numCols, board);
+	p1 = new MiniMaxPlayer(numCols, numRows, board, NULL, 0);
 	p2 = new MiniMaxPlayer(numCols, numRows, board, NULL, 1);
 }
 

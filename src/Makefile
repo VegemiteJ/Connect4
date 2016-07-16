@@ -6,7 +6,7 @@ OBJLOC = ./Objs
 OBJS = $(patsubst %,$(OBJLOC)/%,$(CLASSES))
 NOBJS = $(patsubst %,$(OBJLOC)/%,$(NETCLASSES))
 VERSION = -std=gnu++14 -Wall -pedantic
-CYG = 
+CYG = -g
 LIB = -lws2_32
 INCLUDE = -I"/usr/include"
 
@@ -17,40 +17,40 @@ clean:
 # ----------------------------------------------------
 # BOARD STUFF	
 GameState.o: GameState.cpp
-	g++ -c $^ -o $(OBJLOC)/$@
+	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
 
 Board.o: Board.cpp
-	g++ -c $^ -o $(OBJLOC)/$@
+	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
 # ----------------------------------------------------
 # FUNDAMENTAL GAME STUFF
 Player.o: Player.cpp
-	g++ -c $^ -o $(OBJLOC)/$@
+	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
 
 LocalPlayer.o: LocalPlayer.cpp
-	g++ -c $^ -o $(OBJLOC)/$@
+	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
 
 NetworkPlayer.o: NetworkPlayer.cpp
-	g++ -c ${VERSION} $^ -o $(OBJLOC)/$@
+	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
 
 RandomPlayer.o: RandomPlayer.cpp
-	g++ -c ${VERSION} $^ -o $(OBJLOC)/$@
+	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
 
 MiniMaxPlayer.o: MiniMaxPlayer.cpp
-	g++ -c ${INCLUDE} $^ -o $(OBJLOC)/$@
+	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
 	
 Game.o: Game.cpp
-	g++ -c ${VERSION} $^ -o $(OBJLOC)/$@
+	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
 # ----------------------------------------------------	
 # PLAYER TYPES
 Human.o: Player.h Human.cpp 
-	g++ -c $^ -o $(OBJLOC)/$@
+	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
 
 # Computer: Player Computer.cpp
 #	g++ -c Computer.cpp
 # ----------------------------------------------------	
 # AI TYPES	
 Node.o: Node.cpp
-	g++ -c $^ -o $(OBJLOC)/$@
+	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
 
 # ----------------------------------------------------	
 # NETWORKING

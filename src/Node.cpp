@@ -89,11 +89,12 @@ void Node::deleteTree()
 		{
 			if (verbose>3)
 				cout << "Deleting child: " << i << endl;
-			delete myChildren[i];
+			myChildren[i]->deleteTree();
 		}
 		delete myChildren;
 		allocated &= 11;
 	}
+	delete this;
 }
 
 void Node::print() 
