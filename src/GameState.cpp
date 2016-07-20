@@ -19,9 +19,9 @@ void GameState::initCellArray()
 }
 
 GameState::GameState(char** prev_cell_array, int inumRows, int inumCols) :
-	numRows(inumRows), numCols(inumCols)
+	LastMoveRow(-1), LastMoveCol(-1), numRows(inumRows),
+	numCols(inumCols), cell_array(NULL), connectLength(4)
 {
-	LastMoveRow = -1;
 	initCellArray();
 	//New copy
 	for (int i=0; i<numRows; i++)
@@ -33,9 +33,10 @@ GameState::GameState(char** prev_cell_array, int inumRows, int inumCols) :
 	}
 }
 
-GameState::GameState(GameState* prev, int row, int col, int turn)
+GameState::GameState(GameState* prev, int row, int col, int turn) :
+	LastMoveRow(-1), LastMoveCol(-1), numRows(-1),
+	numCols(-1), cell_array(NULL), connectLength(4)
 {
-	LastMoveRow = -1;
 	numRows = prev->numRows;
 	numCols = prev->numCols;
 
@@ -56,10 +57,10 @@ GameState::GameState(GameState* prev, int row, int col, int turn)
 	LastMoveCol = col;
 }
 
-GameState::GameState(GameState* prev, int col, int turn)
+GameState::GameState(GameState* prev, int col, int turn) :
+	LastMoveRow(-1), LastMoveCol(col), numRows(-1),
+	numCols(-1), cell_array(NULL), connectLength(4)
 {
-	LastMoveRow = -1;
-	LastMoveCol = col;
 	numRows = prev->numRows;
 	numCols = prev->numCols;
 
@@ -95,23 +96,22 @@ GameState::GameState(GameState* prev, int col, int turn)
 
 
 GameState::GameState(int inumRows, int inumCols) :
-	numRows(inumRows), numCols(inumCols)
+	LastMoveRow(-1), LastMoveCol(-1), numRows(inumRows),
+	numCols(inumCols), cell_array(NULL), connectLength(4)
 {
-	LastMoveRow = -1;
-	LastMoveCol = -1;
 	initCellArray();
 }
 
 GameState::~GameState()
 {
-	if (verbose > 3)
+	if (verbose > 4)
 		cout << "Called GameState Destructor" << endl;
 	for (int i=0; i<numRows; i++) {
-		if (verbose > 3)
+		if (verbose > 4)
 			cout << "Deleting row: " << i << endl;
 		delete[] cell_array[i];
 	}
-	if (verbose > 3)
+	if (verbose > 4)
 		cout << "Deleting Host Array" << endl;
 	delete[] cell_array;
 }
@@ -154,25 +154,14 @@ void GameState::print()
 	}
 }
 
-bool GameState::checkValidMove(int col)
+bool GameState::completed()
 {
-	bool placeable = false;
-	
-	if (col < 0 || col >= numCols)
-		return false;
-
-	for (int row = numRows-1; row>-1 && placeable == false; row--)
-	{
-		if (cell_array[row][col] == ' ')
-			placeable = true;
+	//For all columns, only check topmost row
+	for(int i=0; i<numCols; i++) {
+		if (cell_array[0][i] != 'X' && cell_array[0][i] != 'O')
+			return false;
 	}
-
-	// If the entire column is filled, output an error 
-	if (placeable == false) {
-		return false;
-	} else {
-		return true;
-	}
+	return true;
 }
 
 bool GameState::checkWin(char tokenIn)
@@ -211,11 +200,11 @@ bool GameState::checkVert(int rowIn, int colIn, char tokenIn)
 	//cout << "Checking vertical wins" << endl;
 	
 	// Only check if there are at least 4 in the current column
-	if (rowIn <= numRows - 4)
+	if (rowIn <= numRows - connectLength)
 	{
 		bool sameToken = true;
 		// Check the cells below for consecutiveness
-		for (int i=rowIn; i<rowIn+4; i++)
+		for (int i=rowIn; i<rowIn+connectLength; i++)
 		{
 			if (cell_array[i][colIn] != tokenIn)
 			{
@@ -236,13 +225,17 @@ bool GameState::checkVert(int rowIn, int colIn, char tokenIn)
 bool GameState::checkHorz(int rowIn, char tokenIn)
 {
 	// Search any that still have 4 more
-	for (int i=0; i<numCols-3; i++)
+	for (int i=0; i<numCols-(connectLength-1); i++)
 	{
-		if (cell_array[rowIn][i+0] == tokenIn && cell_array[rowIn][i+1] == tokenIn && 
-			cell_array[rowIn][i+2] == tokenIn && cell_array[rowIn][i+3] == tokenIn)
-		{
-			return true;
+		bool status = true;
+		for (int j=0; j<connectLength; j++) {
+			status = status && (cell_array[rowIn][i+j] == tokenIn);
+			if (!status)	//Slight speedup by not performing rest of the checks
+				break;
 		}
+		//If all still true, must have that many in a row
+		if (status)
+			return true;
 	}
 	return false;
 }
@@ -251,6 +244,8 @@ bool GameState::checkHorz(int rowIn, char tokenIn)
 // If either the sum of tokens matching tokenIn along LU,RD or along RU,LD is equal to 4 there is a winner
 bool GameState::checkDiag(int rowIn, int colIn, char tokenIn) 
 {
+	if (!doCheck(rowIn,colIn,tokenIn))
+		return false;
 	bool hasWon = false;
 
 	//Check leftUp/DownRight diagonals
@@ -290,7 +285,7 @@ bool GameState::checkDiag(int rowIn, int colIn, char tokenIn)
 		}
 	}
 	//cout << "Left upper results: " << rightLowerCount << ", " << leftRun << endl;
-	if (leftRun == 4) {
+	if (leftRun >= connectLength) {
 		hasWon = true;
 		return true;
 	}
@@ -334,7 +329,7 @@ bool GameState::checkDiag(int rowIn, int colIn, char tokenIn)
 		}
 	}
 	//cout << "Left Lower results: " << leftLowerCount << ", " << rightRun << endl;
-	if (rightRun == 4) {
+	if (rightRun >= connectLength) {
 		hasWon = true;
 		return true;
 	}
@@ -358,12 +353,28 @@ bool GameState::doCheck(int row, int col, char tokenIn)
 	}
 }
 
-bool GameState::completed()
+bool GameState::checkValidMove(int col)
 {
-	//For all columns, only check topmost row
-	for(int i=0; i<numCols; i++) {
-		if (cell_array[0][i] != 'X' && cell_array[0][i] != 'O')
-			return false;
+	bool placeable = false;
+	
+	if (col < 0 || col >= numCols)
+		return false;
+
+	for (int row = numRows-1; row>-1 && placeable == false; row--)
+	{
+		if (cell_array[row][col] == ' ')
+			placeable = true;
 	}
-	return true;
+
+	// If the entire column is filled, output an error 
+	if (placeable == false) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+void GameState::setLength(int length)
+{
+	connectLength = length;
 }

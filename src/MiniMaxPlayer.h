@@ -17,9 +17,11 @@ public:
 
 	int EvalUtil(Node* current);
 
+	int Minimax(Node* current, int depth, bool MaxPlayer);
+
 private:
-	int turnReference;
 	MiniMaxPlayer();
+	int turnReference;
 	Node* root;
 };
 

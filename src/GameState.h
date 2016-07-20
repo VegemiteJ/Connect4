@@ -4,25 +4,51 @@
 class GameState
 {
 public:
+	//Initialise new state given raw ptr to state and dimensions
 	GameState(char** prev_cell_array, int numRows, int numCols);
+	
+	//Initialise new state given previous gamestate and col/row, turn.
+	// Caller must ensure column is a valid move..
+	// For DEBUG use only...
+	// Normal usage uses GameState(GS*, int, int) constructor
 	GameState(GameState* prev, int row, int col, int turn);
 
-	//When valid row is not known.
+	//Initialise new state given previous gamestate and col,turn.
+	// Caller must ensure column is a valid move via checkValidMove(desired)
 	GameState(GameState* prev, int col, int turn);
+	
+	//Initialise blank board with numRows, numCols dimensions
 	GameState(int numRows, int numCols);
 	~GameState();
 
+	//Prints the board state
 	void print();
 
-	bool completed();	//returns true if the game state has been completed
+	//Returns true if the game state has been completed
+	bool completed();
+	
+	//Determines if last move tokenIn at state->LastMoveRow||LastMoveCol wins
 	bool checkWin(char tokenIn);
+
+	//Determines if last move tokenIn in column colIn wins through any metric
 	bool checkWin(int colIn, char tokenIn);
+	
+	//Determines if last move tokenIn at position rowIn, colIn wins horizontally
 	bool checkVert(int rowIn, int colIn, char tokenIn);
-	bool checkDiag(int rowIn, int colIn, char tokenIn);
+	
+	//Determines if last token tokenIn wins in rowIn
 	bool checkHorz(int rowIn, char tokenIn);
+
+	//Determines if last move tokenIn at position rowIn, colIn wins diagonally
+	bool checkDiag(int rowIn, int colIn, char tokenIn);
+
+	//Check if token is present at position row, col. Performs bounds check
 	bool doCheck(int row, int col, char token);
 
 	bool checkValidMove(int col);
+
+	//Sets the number of winning elements to check (usually 4)
+	void setLength(int length);
 
 	int LastMoveRow;
 	int LastMoveCol;
@@ -32,6 +58,8 @@ public:
 	char** cell_array;
 
 private:
+	//Value is 4 for connect 4
+	int connectLength;
 	void initCellArray();
 };
 

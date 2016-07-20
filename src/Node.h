@@ -14,9 +14,8 @@ public:
 	~Node();
 	void deleteTree();
 
-	void print();
-
 	int numChild;
+
 	GameState* getState();
 	int getTurn();
 	int getDepth();
@@ -26,9 +25,16 @@ public:
 
 	Node** discoverChildren();
 	int computeUtil();
+	void print();
 
 private:
 	Node();
+
+	//Utility of [900,1000] or [-900,-1000] for wins, 0 otherwise
+	int winUtil();
+
+	//Utility of [800,899] or [-800, -899] for 3 in row
+	int h1Util();
 	
 	//Bitmask of what items are allocated
 	//           LSB
@@ -43,19 +49,15 @@ private:
 	int allocated;
 
 	int id;
-
 	int* util;
 	int turn;		//0 for X, 1 for O
-
 	Node** myChildren;
 	Node* parent;			//Usually blank
-
 	int depth;
 
-    //Tuple of [row, col] location to evaluation
+    //Tuple of [row, col] location to evaluation present in GameState
 	//int state->LastMoveRow;
 	//int state->LastMoveCol;
-
 	//Board state of me
 	GameState* state;
 	

@@ -78,7 +78,7 @@ bool Board::checkFull()
 
 bool Board::checkValidMove(int col) 
 {
-	state->checkValidMove(col);
+	return state->checkValidMove(col);
 }
 
 // Needs to check for four consecutive tokens
@@ -94,7 +94,7 @@ void Board::checkWin(int colIn, char tokenIn)
 
 bool Board::doCheck(int row, int col, char tokenIn) 
 {
-	state->doCheck(row, col, tokenIn);
+	return state->doCheck(row, col, tokenIn);
 }
 
 char** Board::getBoardState()

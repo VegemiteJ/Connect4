@@ -7,6 +7,11 @@
 #include "consts.h"
 #include <iostream>
 #include <cstdlib>
+#include <random>
+#include <memory>
+#include <chrono>
+#include <functional>
+#include <time.h>
 
 using namespace std;
 
@@ -15,7 +20,18 @@ Game::Game(bool isServer) {
 	const int numCols = 7;
 	board = new Board(numRows, numCols);
 	
-	int turnCounter = 0;
+	/*
+	srand(time(NULL));
+
+	default_random_engine generator(rand());
+	uniform_int_distribution<int> distribution;
+	function<int()> dice;
+	distribution = uniform_int_distribution<int>(0,numCols-1);
+	dice = bind(distribution, generator);
+
+	board->update_cell(dice(), 'O');
+	*/
+	turnCounter = 0;
 	int start;
 	
 	setPlayers(numRows, numCols, isServer);
@@ -60,8 +76,8 @@ Game::Game(bool isServer) {
 void Game::setPlayers(int numRows, int numCols, bool isServer)
 {
 	//p1 = new NetworkPlayer(numRows, numCols, board, isServer);
-	//p1 = new LocalPlayer(numRows, numCols, board);
-	p1 = new MiniMaxPlayer(numCols, numRows, board, NULL, 0);
+	p1 = new LocalPlayer(numRows, numCols, board);
+	//p1 = new MiniMaxPlayer(numCols, numRows, board, NULL, 0);
 	p2 = new MiniMaxPlayer(numCols, numRows, board, NULL, 1);
 }
 
@@ -98,7 +114,6 @@ void Game::play() {
 	{
 		cout << "Player1 turn" << endl;
 		int choice;
-		bool win = false;
 		choice = p1->play(true);
 		choice--;
 		while(!board->checkValidMove(choice)){

@@ -16,6 +16,9 @@ all: gs ai
 
 gs: main
 
+gswin: $(CLASSES)
+	g++ ${CYG} ${INCLUDE} tests/GameStateTests/GSWinTests.cpp $(OBJ) ${VERSION} ${FLAGS} -o tests/GameStateTests/output/gsWin.exe
+
 aiTest: $(CLASSES)
 	g++ ${CYG} ${INCLUDE} tests/MiniMaxV01/aiTest.cpp $(OBJ) ${VERSION} ${FLAGS} -o tests/MiniMaxV01/output/aiTest.exe
 
@@ -39,20 +42,20 @@ cleannode:
 # ----------------------------------------------------
 # BOARD STUFF	
 GameState.o: src/GameState.cpp
-	g++ -c ${Include} $^ ${FLAGS} -o $(OBJLOC)/$@
+	g++ -c ${Include} $^ ${FLAGS} ${VERSION} -o $(OBJLOC)/$@
 
 Board.o: src/Board.cpp
-	g++ -c ${INCLUDE} $^ ${FLAGS} -o $(OBJLOC)/$@
+	g++ -c ${INCLUDE} $^ ${FLAGS} ${VERSION} -o $(OBJLOC)/$@
 
 # AI TYPES	
 Node.o: src/Node.cpp
-	g++ -c ${INCLUDE} $^ ${FLAGS} -o $(OBJLOC)/$@
+	g++ -c ${INCLUDE} $^ ${FLAGS} ${VERSION} -o $(OBJLOC)/$@
 
 Player.o: src/Player.cpp
-	g++ -c $^ -o $(OBJLOC)/$@
+	g++ -c $^ ${VERSION} -o $(OBJLOC)/$@
 
 MiniMaxPlayer.o: src/MiniMaxPlayer.cpp
-	g++ -c ${INCLUDE} $^ ${FLAGS} -o $(OBJLOC)/$@
+	g++ -c ${INCLUDE} $^ ${FLAGS} ${VERSION} -o $(OBJLOC)/$@
 
 #-----------------------------------------------------
 # MAIN

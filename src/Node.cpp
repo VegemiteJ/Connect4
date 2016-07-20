@@ -7,16 +7,16 @@ int global_id = 0;
 
 using namespace std;
 
-Node::Node() {}
-
 Node::Node(int iid, GameState* iinitial, int iturn) :
-	id(iid), state(iinitial), depth(0), numChild(-1), turn(iturn), allocated(0) 
+	 numChild(-1), allocated(0), id(iid), util(NULL), turn(iturn), 
+	 myChildren(NULL), parent(NULL), depth(0), state(iinitial)
 {
 	allocated |= 1;
 }
 
 Node::Node(int iid, Node* iparent, int icol) :
-	id(iid), parent(iparent), depth(iparent->getDepth()+1), turn( (iparent->getTurn()+1)%2 ), allocated(0)
+	numChild(-1), allocated(0), id(iid), util(NULL), turn((iparent->getTurn()+1)%2), 
+	myChildren(NULL), parent(iparent), depth(iparent->getDepth()+1), state(NULL)
 {
 	//New Board State
 	if (verbose >3)
@@ -26,9 +26,12 @@ Node::Node(int iid, Node* iparent, int icol) :
 	allocated |= 2;
 }
 
+//Unused Node Constructor
+Node::Node() {}
+
 Node::~Node() 
 {
-	if (verbose > 3) {
+	if (verbose > 4) {
 		cout << ANSI_RED;
 		cout << "Called Node Destructor - id: " << id << ANSI_RESET << endl;
 		cout << "Allocated: " << ANSI_PURPLE << allocated << ANSI_RESET << endl;
@@ -43,7 +46,7 @@ Node::~Node()
 	}
 
 	if ((allocated >> 0) & 1) {
-		if (verbose>3)
+		if (verbose>4)
 			cout << "Deleting state..." << endl;
 		delete state;
 	}
@@ -55,7 +58,7 @@ Node::~Node()
 		//Tree disassemble saved for special destructor deleteTree()
 	}
 	if ((allocated >> 3) & 1) {
-		if (verbose>3)
+		if (verbose>4)
 			cout << "Deleting util..." << endl;
 		delete util;
 	}
@@ -64,7 +67,7 @@ Node::~Node()
 
 void Node::deleteTree()
 {
-	if (verbose > 3) {
+	if (verbose > 4) {
 		cout << ANSI_RED;
 		cout << "Called Node Full Tree Destructor - id: " << id << ANSI_RESET << endl;
 		cout << "Allocated: " << ANSI_PURPLE << allocated << ANSI_RESET << endl;
@@ -83,11 +86,11 @@ void Node::deleteTree()
 		//	May change in future
 	}
 	if ((allocated >> 2) & 1) {
-		if (verbose>3)
+		if (verbose>4)
 			cout << "Deleting children..." << endl;
 		for (int i=0; i<numChild; i++)
 		{
-			if (verbose>3)
+			if (verbose>4)
 				cout << "Deleting child: " << i << endl;
 			myChildren[i]->deleteTree();
 		}
@@ -97,13 +100,11 @@ void Node::deleteTree()
 	delete this;
 }
 
-void Node::print() 
+//Private Member access
+//-------------------------------------------
+GameState* Node::getState()
 {
-	cout << "ID: " << ANSI_PURPLE << id << ANSI_RESET << " Number of Children: " << ANSI_PURPLE << numChild << ANSI_RESET;
-	cout << " Turn: " << ANSI_PURPLE << turn << ANSI_RESET << " Depth: " << ANSI_PURPLE << depth << ANSI_RESET << endl;
-	state->print();
-	cout << "Last Move: " << state->LastMoveRow << " " << state->LastMoveCol << endl;
-	cout << "X Win?: " << state->checkWin('X') << ", O Win?: " << state->checkWin('O') << endl;
+	return state;
 }
 
 int Node::getTurn()
@@ -111,10 +112,27 @@ int Node::getTurn()
 	return turn;
 }
 
-GameState* Node::getState()
+int Node::getDepth()
 {
-	return state;
+	return depth;
 }
+
+int* Node::getUtil()
+{
+	return util;
+}
+
+void Node::setUtil(int i, int value)
+{
+	util[i] = value;
+}
+
+Node** Node::getChildren()
+{
+	return myChildren;
+}
+
+//-------------------------------------------
 
 Node** Node::discoverChildren()
 {
@@ -123,9 +141,17 @@ Node** Node::discoverChildren()
 	if (verbose >3)
 		cout << "Num Rows: " << state->numRows << "Num Cols: " << state->numCols << endl;
 	numChild = 0;
-	int children[state->numCols];
+	int* children = new int[state->numCols];
 	//Discover number of children
-	for (int i=0; i<state->numCols; i++) {
+	for (int i=(state->numCols)/2 + 1; i<state->numCols; i++) {
+		if (state->checkValidMove(i)){
+			children[numChild] = i;
+			numChild++;
+			if (verbose >3)
+				cout << "Column: " << i << " " << children[numChild-1];
+		}
+	}
+	for (int i=0; i<(state->numCols)/2 + 1; i++) {
 		if (state->checkValidMove(i)){
 			children[numChild] = i;
 			numChild++;
@@ -156,10 +182,13 @@ Node** Node::discoverChildren()
 		}
 	}
 
+	//Free local scope children array
+	delete[] children;
+
 	return myChildren;
 }
 
-int Node::computeUtil()
+int Node::winUtil()
 {
 	char thisTurnToken = (turn==0) ? 'X' : 'O';
 	
@@ -189,27 +218,67 @@ int Node::computeUtil()
 		int retVal = base - (100-depth);
 		return retVal;
 	}
-
-	//Neither player Won
 	return 0;
 }
 
-void Node::setUtil(int i, int value)
+int Node::h1Util()
 {
-	util[i] = value;
+	char thisTurnToken = (turn==0) ? 'X' : 'O';
+	
+	char currentCheckToken1 = 'X';
+	char currentCheckToken2 = 'O';
+
+	state->setLength(3);
+
+	if (verbose >3)
+		cout << "thisTurnToken = " << thisTurnToken << endl;
+	if (verbose >3)
+		cout << "Stat1: " << state->checkWin(currentCheckToken1) << " " << (currentCheckToken1==thisTurnToken) << endl;
+	if (verbose >3)
+		cout << "Stat2: " << state->checkWin(currentCheckToken2) << " " << (currentCheckToken2==thisTurnToken) << endl;
+	// If this turn has won, return max util
+	if (state->checkWin(currentCheckToken1) && currentCheckToken1 == thisTurnToken)
+	{
+		if (verbose >3)
+			cout << "Player X Appears to have won, returning max utility" << endl;
+		int base = 800;
+		int retVal = base + (99-depth);
+		state->setLength(4);
+		return retVal;
+	}
+	else if (state->checkWin(currentCheckToken2) && currentCheckToken2 == thisTurnToken)
+	{
+		if (verbose >3)
+			cout << "Player O Appears to have won, returning min utility" << endl;
+		int base = -800;
+		int retVal = base - (99-depth);
+		state->setLength(4);
+		return retVal;
+	}
+
+	state->setLength(4);
+	return 0;
 }
 
-int Node::getDepth()
+int Node::computeUtil()
 {
-	return depth;
+	int winStat = winUtil();
+	if (winStat != 0) {
+		return winStat;
+	}
+	int h1Stat = h1Util();
+	if (h1Stat != 0) {
+		return h1Stat;
+	}
+	//Purely neutral statistic
+	return 0;
 }
 
-int* Node::getUtil()
+void Node::print() 
 {
-	return util;
-}
-
-Node** Node::getChildren()
-{
-	return myChildren;
+	cout << "ID: " << ANSI_PURPLE << id << ANSI_RESET << " Number of Children: " << ANSI_PURPLE << numChild << ANSI_RESET;
+	cout << " Turn: " << ANSI_PURPLE << turn << ANSI_RESET << " Depth: " << ANSI_PURPLE << depth << ANSI_RESET << endl;
+	state->print();
+	cout << "Last Move: " << state->LastMoveRow << " " << state->LastMoveCol << endl;
+	cout << "X Win?: " << state->checkWin('X') << ", O Win?: " << state->checkWin('O') << endl;
 }

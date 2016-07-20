@@ -5,15 +5,15 @@
 #include <chrono>
 
 #ifndef MAX_DEPTH
-#define MAX_DEPTH 5
+#define MAX_DEPTH 7
 #endif
 
 MiniMaxPlayer::MiniMaxPlayer(int Cols, int Rows, Board* iBoard, Node* iroot, int iturn) : 
-	Player(Cols, Rows, iBoard), root(iroot), turnReference(iturn) {}
+	Player(Cols, Rows, iBoard), turnReference(iturn), root(iroot) {}
 
 MiniMaxPlayer::~MiniMaxPlayer() 
 {
-	delete root;
+	//delete root;
 }
 
 int MiniMaxPlayer::play(bool valid)
@@ -25,15 +25,15 @@ int MiniMaxPlayer::play(bool valid)
 	Node* test = new Node(global_id++, state, turnReference);	//Last parameter 1 assuming computer goes 2ND always
 	
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-	int optimalPlay = EvalUtil(test);
+	(void) EvalUtil(test);
 	std::chrono::steady_clock::time_point end= std::chrono::steady_clock::now();
 
 	if (verbose >3)
 		cout << "Retrieving possible moves..." << endl;
 	Node** possibleMoves = test->getChildren();
 	
-	int max = -999;
-	int min = 999;
+	int max = -65536;
+	int min = 65536;
 	int play = possibleMoves[0]->getState()->LastMoveCol;
 	int* utilVals = test->getUtil();
 	//Determine  move to make:
@@ -63,6 +63,7 @@ int MiniMaxPlayer::play(bool valid)
 
 	cout << "Chose move: " << play+1 << " after " << global_id << " state evaluations in ";
 	cout << (std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()) / 1000000.0 << " seconds" << endl;
+	cout << "Utility: " << ((turnReference==1) ? max : min) << endl;
 
 	//Expects a column i.e. 1-indexed
 	return play+1;
@@ -85,13 +86,13 @@ int MiniMaxPlayer::EvalUtil(Node* current)
 	int retVal = current->computeUtil();
 	int depth = current->getDepth();
 	//If leaf node OR a winning/losing state OR depth maximum hit
-	if (numChildren == 0 || retVal > 800 || retVal < -800 || depth >= MAX_DEPTH) {
+	if (numChildren == 0 || retVal >= 900 || retVal <= -900 || depth >= MAX_DEPTH) {
 		//delete current;
 		return retVal;
 	}
 	
-	int max = -999;
-	int min = 999;
+	int max = -65536;
+	int min = 65536;
 
 	//For each child, detemine util
 	for (int i=0; i<numChildren; i++) {
@@ -120,4 +121,34 @@ int MiniMaxPlayer::EvalUtil(Node* current)
 		return max;
 	else
 		return min;
+}
+
+int MiniMaxPlayer::Minimax(Node* current, int depth, bool MaxPlayer)
+{
+	bool xWins = current->getState()->checkWin('X');
+	bool oWins = current->getState()->checkWin('O');
+	if (depth == 0 || xWins || oWins)
+		return current->computeUtil();
+
+	Node** children = current->discoverChildren();
+	if (MaxPlayer)
+	{
+		int bestValue = -65536;
+		for (int i=0; i<current->numChild; i++) {
+			int cValue = Minimax(children[i], depth-1, false);
+			current->setUtil(i,cValue);
+			bestValue = ((cValue>bestValue) ? cValue : bestValue);
+		}
+		return bestValue;
+	}
+	else
+	{
+		int bestValue = 65536;
+		for (int i=0; i<current->numChild; i++) {
+			int cValue = Minimax(children[i], depth-1, false);
+			current->setUtil(i,cValue);
+			bestValue = ((cValue<bestValue) ? cValue : bestValue);
+		}
+		return bestValue;
+	}
 }
