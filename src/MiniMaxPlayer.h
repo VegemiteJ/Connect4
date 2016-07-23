@@ -19,8 +19,12 @@ public:
 
 	int Minimax(Node* current, int depth, bool MaxPlayer);
 
+	int move;
 private:
 	MiniMaxPlayer();
+
+	int DepthNormalise(int value);
+
 	int turnReference;
 	Node* root;
 };

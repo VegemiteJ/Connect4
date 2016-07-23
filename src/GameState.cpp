@@ -179,8 +179,11 @@ bool GameState::checkWin(int colIn, char tokenIn)
 	int rowIn;
 	for (rowIn = numRows-1; rowIn >-1; rowIn--)
 	{
-		if (cell_array[rowIn][colIn] == ' ')
+		if (cell_array[rowIn][colIn] == ' ') {
+			if (rowIn == numRows-1)
+				rowIn--;
 			break;
+		}
 	}
 	rowIn++;
 
@@ -371,6 +374,22 @@ bool GameState::checkValidMove(int col)
 		return false;
 	} else {
 		return true;
+	}
+}
+
+void GameState::update_cell(int col, char tokenIn)
+{
+	bool placed = false;
+	// for (int row=6; row>0; row--)
+	for (int row = numRows-1; row>-1 && placed == false; row--)
+	{
+		if (cell_array[row][col] == ' ')
+		{
+			cell_array[row][col] = tokenIn;
+			placed = true;
+			LastMoveRow = row;
+			LastMoveCol = col;
+		}
 	}
 }
 

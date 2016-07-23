@@ -8,6 +8,8 @@
 #define MAX_DEPTH 7
 #endif
 
+#define INFINITY 999999
+
 MiniMaxPlayer::MiniMaxPlayer(int Cols, int Rows, Board* iBoard, Node* iroot, int iturn) : 
 	Player(Cols, Rows, iBoard), turnReference(iturn), root(iroot) {}
 
@@ -18,6 +20,7 @@ MiniMaxPlayer::~MiniMaxPlayer()
 
 int MiniMaxPlayer::play(bool valid)
 {
+	/*
 	global_id = 0;
 	GameState* state = board->getBoardState(0);
 	if (verbose >3)
@@ -67,6 +70,7 @@ int MiniMaxPlayer::play(bool valid)
 
 	//Expects a column i.e. 1-indexed
 	return play+1;
+	*/
 }
 
 void MiniMaxPlayer::initialise() {}
@@ -77,6 +81,7 @@ void MiniMaxPlayer::Exit(bool) {}
 
 int MiniMaxPlayer::EvalUtil(Node* current)
 {
+	/*
 	if (verbose >3)
 		current->print();
 	Node** children = current->discoverChildren();
@@ -121,34 +126,59 @@ int MiniMaxPlayer::EvalUtil(Node* current)
 		return max;
 	else
 		return min;
+		*/
 }
 
 int MiniMaxPlayer::Minimax(Node* current, int depth, bool MaxPlayer)
 {
-	bool xWins = current->getState()->checkWin('X');
-	bool oWins = current->getState()->checkWin('O');
+	bool xWins = current->GetState()->checkWin('X');
+	bool oWins = current->GetState()->checkWin('O');
 	if (depth == 0 || xWins || oWins)
-		return current->computeUtil();
+		return current->ComputeUtil();
 
-	Node** children = current->discoverChildren();
+	Node** children = current->DiscoverChildren();
 	if (MaxPlayer)
 	{
-		int bestValue = -65536;
-		for (int i=0; i<current->numChild; i++) {
+		int bestValue = -INFINITY;
+		for (int i=0; i<current->GetNumberOfChildren(); i++) {
+			children[i]->Move();
+			children[i]->Print();
 			int cValue = Minimax(children[i], depth-1, false);
-			current->setUtil(i,cValue);
-			bestValue = ((cValue>bestValue) ? cValue : bestValue);
+			cValue = DepthNormalise(cValue);
+			if (cValue>bestValue) {
+				bestValue = cValue;
+				move = children[i]->GetMove();
+			}
+			children[i]->UnMove();
+			delete children[i];
 		}
 		return bestValue;
 	}
 	else
 	{
-		int bestValue = 65536;
-		for (int i=0; i<current->numChild; i++) {
+		int bestValue = INFINITY;
+		for (int i=0; i<current->GetNumberOfChildren(); i++) {
+			children[i]->Move();
+			children[i]->Print();
 			int cValue = Minimax(children[i], depth-1, false);
-			current->setUtil(i,cValue);
-			bestValue = ((cValue<bestValue) ? cValue : bestValue);
+			cValue = DepthNormalise(cValue);
+			if (cValue<bestValue) {
+				bestValue = cValue;
+				move = children[i]->GetMove();
+			}
+			children[i]->UnMove();
+			delete children[i];
 		}
 		return bestValue;
 	}
+}
+
+int MiniMaxPlayer::DepthNormalise(int value)
+{
+	if ( value<0 ) {
+		value++;
+	} else if ( value>0 ) {
+		value--;
+	}
+	return value;
 }

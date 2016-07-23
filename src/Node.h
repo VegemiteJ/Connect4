@@ -6,59 +6,73 @@
 class Node
 {
 public:
-	Node(int id, GameState* initial, int iturn);
+	//Public Constructors
+	//-----------------------------
 
-	//global id, parent of this node in tree
-	//column -- 0-indexed
-	Node(int id, Node* parent, int col);
-	~Node();
-	void deleteTree();
+	//1. Called when constructing the root Node. 
+	//    Must supply the initial state of the game board
+	Node(int ID, GameState* initial, int initial_turn);
 
-	int numChild;
+	//2. Called for children/ search tree initiailisation 
+	//    Requires valid entry column for new move and turn of this node
+	Node(int ID, GameState* parent_state, int new_mov_column, int new_turn);
 
-	GameState* getState();
-	int getTurn();
-	int getDepth();
-	int* getUtil();
-	void setUtil(int i, int value);
-	Node** getChildren();
+	//Public Destructors
+	//-----------------------------
+	//Deallocates the utlity array and children utility based off
+	//   Does not delete game state, as this is shared among search tree
+	~Node();	
 
-	Node** discoverChildren();
-	int computeUtil();
-	void print();
+	void DeleteTree();
+
+	//Public Member Functions
+	//-----------------------------
+	// Return a copy of gamestate containing the current move
+	GameState* GetState();
+	int GetTurn();
+	int GetDepth();
+	int GetNumberOfChildren();
+	int GetUtil();
+	int* GetChildrenUtil();
+	Node** GetChildren();
+	int GetMove();
+
+	//Uses the current known board state to investigate possible moves
+	Node** DiscoverChildren();
+
+	//Returns the maximum utlity at this node position in order of 
+	//    winUtil, h1Util, ....
+	int ComputeUtil();
+
+	//Print all detals of the node
+	void Print();
+
+	//Performs the move as designated by the initialiser
+	void Move();
+	//Remove the mve initialiy applied during constructor
+	void UnMove();
 
 private:
+	//Private Member functions
+	//-----------------------------
+	int WinUtil();
+	int H1Util();
+	int ConnectivityUtil();
+
+	//Unused empty constructor
 	Node();
 
-	//Utility of [900,1000] or [-900,-1000] for wins, 0 otherwise
-	int winUtil();
-
-	//Utility of [800,899] or [-800, -899] for 3 in row
-	int h1Util();
-	
-	//Bitmask of what items are allocated
-	//           LSB
-	//   X--X--X--X    #Form
-	//   1--0--0--0    #util
-	//   0--1--0--0    #myChildren
-	//   0--0--1--0    #parent
-	//   0--0--0--1    #state
-	//   0--0--0--0    #None
-	// e.g. if part of search tree, allocation will be 1-1-1-1
-	//   Used for intelligent destructor
+	//Private Member vars
+	//-----------------------------
+	int ID;
+	int thisMoveColumn;
+	int numChildren;
+	int thisTurn;
 	int allocated;
-
-	int id;
-	int* util;
-	int turn;		//0 for X, 1 for O
+	int myUtil;
+	int* childUtil;
 	Node** myChildren;
-	Node* parent;			//Usually blank
-	int depth;
-
-    //Tuple of [row, col] location to evaluation present in GameState
-	//int state->LastMoveRow;
-	//int state->LastMoveCol;
-	//Board state of me
+	Node* parent;
 	GameState* state;
 	
 };

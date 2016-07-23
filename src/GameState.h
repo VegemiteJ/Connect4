@@ -50,6 +50,8 @@ public:
 	//Sets the number of winning elements to check (usually 4)
 	void setLength(int length);
 
+	void update_cell(int col, char tokenIn);
+
 	int LastMoveRow;
 	int LastMoveCol;
 

@@ -5,27 +5,33 @@
 #include "ColourDef.h"
 #include <iostream>
 
-int verbose = 1;
+int verbose = 5;
 
 using namespace std;
 
 int main(int argc, char** argv)
 {
 	Board* board = new Board(4,4);
+	board->update_cell(0,'X');
+	board->update_cell(0,'X');
+	board->update_cell(0,'X');
 
 	cout << "Now passing to GameState" << endl;
 	GameState* state = board->getBoardState(0);
 
-	Node* test = new Node(global_id++, state, 1);
-	test->print();
-	Node* test1 = new Node(global_id++, test, 0);
+	Node* initial = new Node(global_id, state, 0);
+	initial->Print();
 
-	//Delete children
-	cout << "Running test" << endl;
-	while (global_id < 10000000)
-	{
-		Node** children = test1->discoverChildren();
-		test1->deleteTree();
-		test1 = new Node(global_id++, test, 0);
+	
+	Node** child = initial->DiscoverChildren();
+
+	cout << "\n\n\n\n";
+	for (int i=0; i<initial->GetNumberOfChildren(); i++) {
+		child[i]->Move();
+		child[i]->Print();
+		cout << "Utility: " << ANSI_PURPLE << child[i]->ComputeUtil() << ANSI_RESET << endl;
+		child[i]->UnMove();
+		delete child[i];
 	}
+	
 }
