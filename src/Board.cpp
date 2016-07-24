@@ -28,26 +28,7 @@ void Board::print()
 // Also checks whether it is occupied
 void Board::update_cell(int col, char tokenIn)
 {	
-	bool placed = false;
-	// for (int row=6; row>0; row--)
-	for (int row = numRows-1; row>-1 && placed == false; row--)
-	{
-		if (state->cell_array[row][col] == ' ')
-		{
-			state->cell_array[row][col] = tokenIn;
-			placed = true;
-			lastMove = col;
-			state->LastMoveRow = row;
-			state->LastMoveCol = col;
-		}
-	}
-	// If the entire column is filled, output an error 
-	if (placed == false)
-		cout << "Error, that column is already full, pick another" << endl;
-	else
-		checkWin(col, tokenIn);
-	
-	//cout << endl << endl;
+	state->update_cell(col, tokenIn);
 }
 
 int Board::getLast()

@@ -11,15 +11,17 @@
 #define INFINITY 999999
 
 MiniMaxPlayer::MiniMaxPlayer(int Cols, int Rows, Board* iBoard, Node* iroot, int iturn) : 
-	Player(Cols, Rows, iBoard), turnReference(iturn), root(iroot) {}
+	Player(Cols, Rows, iBoard), Variation(NULL), alloc(false), turnReference(iturn), root(iroot) {}
 
 MiniMaxPlayer::~MiniMaxPlayer() 
 {
 	//delete root;
+	delete[] Variation;
 }
 
 int MiniMaxPlayer::play(bool valid)
 {
+	return 0;
 	/*
 	global_id = 0;
 	GameState* state = board->getBoardState(0);
@@ -81,6 +83,7 @@ void MiniMaxPlayer::Exit(bool) {}
 
 int MiniMaxPlayer::EvalUtil(Node* current)
 {
+	return 0;
 	/*
 	if (verbose >3)
 		current->print();
@@ -131,6 +134,10 @@ int MiniMaxPlayer::EvalUtil(Node* current)
 
 int MiniMaxPlayer::Minimax(Node* current, int depth, bool MaxPlayer)
 {
+	if (!alloc) {
+		Variation = new int[depth+1]();
+		alloc = true;
+	}
 	bool xWins = current->GetState()->checkWin('X');
 	bool oWins = current->GetState()->checkWin('O');
 	if (depth == 0 || xWins || oWins)
@@ -142,12 +149,19 @@ int MiniMaxPlayer::Minimax(Node* current, int depth, bool MaxPlayer)
 		int bestValue = -INFINITY;
 		for (int i=0; i<current->GetNumberOfChildren(); i++) {
 			children[i]->Move();
-			children[i]->Print();
+			if (verbose>3)
+				children[i]->Print();
 			int cValue = Minimax(children[i], depth-1, false);
 			cValue = DepthNormalise(cValue);
 			if (cValue>bestValue) {
 				bestValue = cValue;
 				move = children[i]->GetMove();
+				if (verbose>3) {
+					cout << ANSI_CYAN;
+					cout << "At depth: " << depth << " New maximum: " << cValue << " move: " << move+1 << endl;
+					cout << ANSI_RESET;
+				}
+				Variation[depth] = move;
 			}
 			children[i]->UnMove();
 			delete children[i];
@@ -159,12 +173,19 @@ int MiniMaxPlayer::Minimax(Node* current, int depth, bool MaxPlayer)
 		int bestValue = INFINITY;
 		for (int i=0; i<current->GetNumberOfChildren(); i++) {
 			children[i]->Move();
-			children[i]->Print();
-			int cValue = Minimax(children[i], depth-1, false);
+			if (verbose>3)
+				children[i]->Print();
+			int cValue = Minimax(children[i], depth-1, true);
 			cValue = DepthNormalise(cValue);
 			if (cValue<bestValue) {
 				bestValue = cValue;
 				move = children[i]->GetMove();
+				if (verbose>3) {
+					cout << ANSI_CYAN;
+					cout << "At depth: " << depth << " New minimum: " << cValue << " move: " << move+1 << endl;
+					cout << ANSI_RESET;
+				}
+				Variation[depth] = move;
 			}
 			children[i]->UnMove();
 			delete children[i];
@@ -181,4 +202,9 @@ int MiniMaxPlayer::DepthNormalise(int value)
 		value--;
 	}
 	return value;
+}
+
+int* MiniMaxPlayer::GetVariation()
+{
+	return Variation;
 }

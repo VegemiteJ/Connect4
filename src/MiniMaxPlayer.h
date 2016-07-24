@@ -19,11 +19,16 @@ public:
 
 	int Minimax(Node* current, int depth, bool MaxPlayer);
 
+	int* GetVariation();
+
 	int move;
 private:
 	MiniMaxPlayer();
 
 	int DepthNormalise(int value);
+
+	int* Variation;
+	bool alloc;
 
 	int turnReference;
 	Node* root;

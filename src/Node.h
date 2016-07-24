@@ -66,6 +66,7 @@ private:
 	//-----------------------------
 	int ID;
 	int thisMoveColumn;
+	int thisMoveRow;
 	int numChildren;
 	int thisTurn;
 	int allocated;

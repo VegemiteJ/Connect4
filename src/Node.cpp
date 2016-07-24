@@ -46,7 +46,10 @@ int Node::GetTurn()
 {
 	return thisTurn;
 }
-int Node::GetDepth() {}
+int Node::GetDepth() 
+{
+	return 0;
+}
 int Node::GetNumberOfChildren() 
 {
 	return numChildren;
@@ -65,7 +68,7 @@ Node** Node::GetChildren()
 }
 int Node::GetMove() 
 {
-	return state->LastMoveCol;
+	return thisMoveColumn;
 }
 
 Node** Node::DiscoverChildren() 
@@ -124,15 +127,15 @@ int Node::ComputeUtil()
 }
 void Node::Print() 
 {
-	cout << "ID: " << ANSI_PURPLE << ID << ANSI_RESET;
+	cout << "\nID: " << ANSI_PURPLE << ID << ANSI_RESET;
 	cout << " Number of Children: " << ANSI_PURPLE;
 	cout << numChildren << ANSI_RESET;
 	cout << " Turn: " << ANSI_PURPLE << thisTurn << ANSI_RESET;
 	cout << endl;
 	state->print();
-	cout << "Last Move: " << state->LastMoveRow << " " << state->LastMoveCol << endl;
+	cout << "Last Move: " << state->LastMoveRow + 1 << " " << state->LastMoveCol + 1 << endl;
 	cout << "X Win?: " << state->checkWin('X') << ", O Win?: " << state->checkWin('O') << endl;
-	cout << "This State Utility: " << ANSI_PURPLE << ComputeUtil() << ANSI_RESET << endl;
+	cout << "This State Utility: " << ANSI_PURPLE << ComputeUtil() << ANSI_RESET << "\n" << endl;
 }
 
 //Private Member Functions
@@ -141,10 +144,13 @@ void Node::Move()
 {
 	char turn = (thisTurn == 0) ? 'X' : 'O';
 	state->update_cell(thisMoveColumn, turn);
+	thisMoveRow = state->LastMoveRow;
 }
 void Node::UnMove() 
 {
-	state->cell_array[state->LastMoveRow][thisMoveColumn] = ' ';
+	if (verbose>3)
+		cout << "Unmoving... Row: " << thisMoveRow+1 << " Col: " << thisMoveColumn+1 << endl;
+	state->cell_array[thisMoveRow][thisMoveColumn] = ' ';
 }
 int Node::WinUtil() 
 {
@@ -177,7 +183,10 @@ int Node::H1Util()
 {
 	return 0;
 }
-int Node::ConnectivityUtil() {}
+int Node::ConnectivityUtil() 
+{
+	return 0;
+}
 
 
 /*
