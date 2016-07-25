@@ -153,7 +153,7 @@ int MiniMaxPlayer::Minimax(Node* current, int depth, bool MaxPlayer)
 				children[i]->Print();
 			int cValue = Minimax(children[i], depth-1, false);
 			cValue = DepthNormalise(cValue);
-			if (cValue>bestValue) {
+			if (cValue>=bestValue) {
 				bestValue = cValue;
 				move = children[i]->GetMove();
 				if (verbose>3) {
@@ -177,7 +177,7 @@ int MiniMaxPlayer::Minimax(Node* current, int depth, bool MaxPlayer)
 				children[i]->Print();
 			int cValue = Minimax(children[i], depth-1, true);
 			cValue = DepthNormalise(cValue);
-			if (cValue<bestValue) {
+			if (cValue<=bestValue) {
 				bestValue = cValue;
 				move = children[i]->GetMove();
 				if (verbose>3) {

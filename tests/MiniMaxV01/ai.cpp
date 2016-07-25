@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	Node* test = new Node(global_id++, state, 0);
 	test->Print();
 
-	int depth = 9;
+	int depth = 10;
 	bool Maximizing = false;
 	MiniMaxPlayer* testPlayer = new MiniMaxPlayer(4, 4, board, test, 0);
 	
@@ -38,6 +38,7 @@ int main(int argc, char** argv)
 
 	int move = testPlayer->move;
 	cout << "\nBest Utility: " << utility << " in " << diff.count() << "s" << endl;
+	cout << "Explored " << global_id << " Nodes..." << endl;
 	cout << "Outputting Optimal Variation...: " << endl;
 	
 	int* Variation = testPlayer->GetVariation();
