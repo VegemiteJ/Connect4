@@ -15,19 +15,42 @@ int main(int argc, char** argv)
 {
 	Board* board = new Board(6,7);
 
-	board->update_cell(4,'X');
-	board->update_cell(4,'X');
-	board->update_cell(4,'X');
+	board->update_cell(3,'X');
+	board->update_cell(1,'X');
+	board->update_cell(6,'X');
+	board->update_cell(2,'O');
 	board->update_cell(4,'O');
-	board->update_cell(4,'X');
+	board->update_cell(4,'O');
+	board->update_cell(3,'O');
+	board->update_cell(2,'X');
+	board->update_cell(2,'O');
+	board->update_cell(2,'X');
+	board->update_cell(2,'X');
+	board->update_cell(2,'O');
+	board->update_cell(3,'X');
+	board->update_cell(3,'X');
+	board->update_cell(3,'O');
+	board->update_cell(6,'O');
+	board->update_cell(0,'X');
+	board->update_cell(3,'O');
+	board->update_cell(6,'X');
+	board->update_cell(6,'O');
+	board->update_cell(6,'X');
+	board->update_cell(6,'O');
+	board->update_cell(0,'X');
+
+
 	cout << "Now passing to GameState" << endl;
 	GameState* state = board->getBoardState(0);
 
 	cout << "Generating root node" << endl;
+	//0 is O to move, 1 is X to move
 	Node* test = new Node(global_id++, state, 0);
 	test->Print();
 
-	int depth = 10;
+	int depth = 6;
+
+	//False means O to move, True means X to move
 	bool Maximizing = false;
 	MiniMaxPlayer* testPlayer = new MiniMaxPlayer(4, 4, board, test, 0);
 	
@@ -51,7 +74,7 @@ int main(int argc, char** argv)
 			cout << "Depth: [" << depth-i << "]: Min Player Has Col: " << Variation[i]+1 << endl; 
 		}
 		board->print();
-		this_thread::sleep_for(1s);
+		this_thread::sleep_for(6s);
 		FlipFlop = !FlipFlop;
 
 		cout << "\n\n" << endl;

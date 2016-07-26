@@ -21,6 +21,8 @@ public:
 
 	int* GetVariation();
 
+	void PrintVariation(bool Maximising);
+
 	int move;
 private:
 	MiniMaxPlayer();
@@ -32,6 +34,8 @@ private:
 
 	int turnReference;
 	Node* root;
+
+	int depth;
 };
 
 

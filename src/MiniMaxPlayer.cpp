@@ -3,7 +3,10 @@
 #include "ColourDef.h"
 
 #include <chrono>
+#include <thread>
 
+
+//Deprecated... Now use as argument for minimax
 #ifndef MAX_DEPTH
 #define MAX_DEPTH 7
 #endif
@@ -207,4 +210,29 @@ int MiniMaxPlayer::DepthNormalise(int value)
 int* MiniMaxPlayer::GetVariation()
 {
 	return Variation;
+}
+
+void MiniMaxPlayer::PrintVariation(bool Maximizing)
+{
+	cout << "Outputting Optimal Variation...: " << endl;
+	
+	bool FlipFlop = Maximizing;
+
+	//bCpy = COPY OF board...
+
+	for (int i=depth; i>=0; i--) {
+		board->update_cell(Variation[i], ((FlipFlop) ? 'X' :'O') );
+		if (FlipFlop) {
+			cout << "Depth: [" << depth-i << "]: Max Player Has Col: " << Variation[i]+1 << endl; 
+		} else {
+			cout << "Depth: [" << depth-i << "]: Min Player Has Col: " << Variation[i]+1 << endl; 
+		}
+		board->print();
+		this_thread::sleep_for(1s);
+		FlipFlop = !FlipFlop;
+
+		cout << "\n\n" << endl;
+	}
+
+	//Free bCpy
 }
