@@ -8,7 +8,7 @@
 
 //Deprecated... Now use as argument for minimax
 #ifndef MAX_DEPTH
-#define MAX_DEPTH 7
+#define MAX_DEPTH 3
 #endif
 
 #define INFINITY 999999
@@ -22,9 +22,28 @@ MiniMaxPlayer::~MiniMaxPlayer()
 	delete[] Variation;
 }
 
+using namespace std;
+
 int MiniMaxPlayer::play(bool valid)
 {
-	return 0;
+	Node* test = new Node(global_id++, board->getBoardState(0), (turnReference+1)%2);
+	cout << "TURN REF: " << turnReference;
+	int depth = 8;
+	bool Maximizing = (turnReference==0) ? true : false;
+	auto start = chrono::steady_clock::now();
+	int utility = Minimax(test, depth, Maximizing);
+	auto end = chrono::steady_clock::now();
+	chrono::duration<double> diff = end-start;
+
+	int move0 = test->GetMove();
+
+	int move = Variation[depth]+1;		//Move is column index (1 indexed) not state index
+	cout << "\nBest Utility: " << utility << " in " << diff.count() << "s" << endl;
+	cout << "Explored " << global_id << " Nodes..." << endl;
+	cout << "Move0 " << move0 << " other move " << move << endl;
+	cout << "Outputting Optimal Variation...: " << endl;
+
+	return move;
 	/*
 	global_id = 0;
 	GameState* state = board->getBoardState(0);
@@ -164,7 +183,7 @@ int MiniMaxPlayer::Minimax(Node* current, int depth, bool MaxPlayer)
 					cout << "At depth: " << depth << " New maximum: " << cValue << " move: " << move+1 << endl;
 					cout << ANSI_RESET;
 				}
-				Variation[depth] = move;
+				Variation[depth] = move;	//Wrong for all other than root
 			}
 			children[i]->UnMove();
 			delete children[i];
@@ -188,7 +207,7 @@ int MiniMaxPlayer::Minimax(Node* current, int depth, bool MaxPlayer)
 					cout << "At depth: " << depth << " New minimum: " << cValue << " move: " << move+1 << endl;
 					cout << ANSI_RESET;
 				}
-				Variation[depth] = move;
+				Variation[depth] = move;	//Wrong for all other than root
 			}
 			children[i]->UnMove();
 			delete children[i];

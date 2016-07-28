@@ -14,56 +14,20 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	Board* board = new Board(6,7);
-
-	board->update_cell(3,'X');
-	board->update_cell(1,'X');
-	board->update_cell(6,'X');
-	board->update_cell(2,'O');
-	board->update_cell(4,'O');
-	board->update_cell(4,'O');
-	board->update_cell(3,'O');
-	board->update_cell(2,'X');
-	board->update_cell(2,'O');
-	board->update_cell(2,'X');
-	board->update_cell(2,'X');
-	board->update_cell(2,'O');
-	board->update_cell(3,'X');
-	board->update_cell(3,'X');
-	board->update_cell(3,'O');
-	board->update_cell(6,'O');
-	board->update_cell(0,'X');
-	board->update_cell(3,'O');
-	board->update_cell(6,'X');
-	board->update_cell(6,'O');
-	board->update_cell(6,'X');
-	board->update_cell(6,'O');
-	board->update_cell(0,'X');
-
-
-	cout << "Now passing to GameState" << endl;
-	GameState* state = board->getBoardState(0);
-
-	cout << "Generating root node" << endl;
-	//0 is O to move, 1 is X to move
-	Node* test = new Node(global_id++, state, 0);
-	test->Print();
-
-	int depth = 6;
-
-	//False means O to move, True means X to move
-	bool Maximizing = false;
-	MiniMaxPlayer* testPlayer = new MiniMaxPlayer(4, 4, board, test, 0);
 	
-	auto start = chrono::steady_clock::now();
-	int utility = testPlayer->Minimax(test, depth, Maximizing);
-	auto end = chrono::steady_clock::now();
-	chrono::duration<double> diff = end-start;
+	/*
+	board->update_cell(3,'O');
+	board->update_cell(3,'O');
+	board->update_cell(3,'O');
+	*/
 
-	int move = testPlayer->move;
-	cout << "\nBest Utility: " << utility << " in " << diff.count() << "s" << endl;
-	cout << "Explored " << global_id << " Nodes..." << endl;
-	cout << "Outputting Optimal Variation...: " << endl;
+	MiniMaxPlayer* testPlayer = new MiniMaxPlayer(7, 6, board, NULL, 0);
 	
+	cout << "Move returned = " << testPlayer->play(0) << endl;
+
+	board->print();
+	
+	/*
 	int* Variation = testPlayer->GetVariation();
 	bool FlipFlop = Maximizing;
 	for (int i=depth; i>=0; i--) {
@@ -79,4 +43,5 @@ int main(int argc, char** argv)
 
 		cout << "\n\n" << endl;
 	}
+	*/
 }
