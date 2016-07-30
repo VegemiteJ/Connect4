@@ -3,5 +3,6 @@
 
 extern int global_id;
 extern int verbose;
+extern int global_prunes;
 
 #endif

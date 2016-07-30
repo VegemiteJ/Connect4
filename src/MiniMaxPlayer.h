@@ -18,6 +18,7 @@ public:
 	int EvalUtil(Node* current);
 
 	int Minimax(Node* current, int depth, bool MaxPlayer);
+	int AlphaBeta(Node* current, int depth, int alpha, int beta, bool MaxPlayer);
 
 	int* GetVariation();
 

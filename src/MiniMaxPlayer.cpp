@@ -13,6 +13,8 @@
 
 #define INFINITY 999999
 
+int global_prunes = 0;
+
 MiniMaxPlayer::MiniMaxPlayer(int Cols, int Rows, Board* iBoard, Node* iroot, int iturn) : 
 	Player(Cols, Rows, iBoard), Variation(NULL), alloc(false), turnReference(iturn), root(iroot) {}
 
@@ -28,10 +30,10 @@ int MiniMaxPlayer::play(bool valid)
 {
 	Node* test = new Node(global_id++, board->getBoardState(0), (turnReference+1)%2);
 	cout << "TURN REF: " << turnReference;
-	int depth = 8;
+	int depth = 2;
 	bool Maximizing = (turnReference==0) ? true : false;
 	auto start = chrono::steady_clock::now();
-	int utility = Minimax(test, depth, Maximizing);
+	int utility = AlphaBeta(test, depth, -INFINITY, INFINITY, Maximizing);
 	auto end = chrono::steady_clock::now();
 	chrono::duration<double> diff = end-start;
 
@@ -40,8 +42,8 @@ int MiniMaxPlayer::play(bool valid)
 	int move = Variation[depth]+1;		//Move is column index (1 indexed) not state index
 	cout << "\nBest Utility: " << utility << " in " << diff.count() << "s" << endl;
 	cout << "Explored " << global_id << " Nodes..." << endl;
-	cout << "Move0 " << move0 << " other move " << move << endl;
-	cout << "Outputting Optimal Variation...: " << endl;
+	cout << "Move: " << move << endl;
+	cout << "Number of pruned: " << global_prunes << endl;
 
 	return move;
 	/*
@@ -224,6 +226,81 @@ int MiniMaxPlayer::DepthNormalise(int value)
 		value--;
 	}
 	return value;
+}
+
+int MiniMaxPlayer::AlphaBeta(Node* current, int depth, int alpha, int beta, bool MaxPlayer)
+{
+	if (!alloc) {
+		Variation = new int[depth+1]();
+		alloc = true;
+	}
+	bool xWins = current->GetState()->checkWin('X');
+	bool oWins = current->GetState()->checkWin('O');
+	if (depth == 0 || xWins || oWins)
+		return current->ComputeUtil();
+	
+	int bestValue;
+	Node** children = current->DiscoverChildren();
+	if (MaxPlayer)
+	{
+		bestValue = -INFINITY;
+		for (int i=0; i<current->GetNumberOfChildren(); i++) {
+			children[i]->Move();
+			if (verbose>3)
+				children[i]->Print();
+			int cValue = AlphaBeta(children[i], depth-1, alpha, beta, false);
+			cValue = DepthNormalise(cValue);
+			if (cValue>=bestValue) {
+				bestValue = cValue;
+				move = children[i]->GetMove();
+				if (verbose>3) {
+					cout << ANSI_CYAN;
+					cout << "At depth: " << depth << " New maximum: " << cValue << " move: " << move+1 << endl;
+					cout << ANSI_RESET;
+				}
+				Variation[depth] = move;	//Wrong for all other than root
+			}
+			children[i]->UnMove();
+			alpha = (alpha >= bestValue) ? alpha : bestValue;
+			bestValue = alpha;
+			if (beta <= alpha) {
+				global_prunes++;
+				break;	
+			}
+		}
+	}
+	else
+	{
+		bestValue = INFINITY;
+		for (int i=0; i<current->GetNumberOfChildren(); i++) {
+			children[i]->Move();
+			if (verbose>3)
+				children[i]->Print();
+			int cValue = AlphaBeta(children[i], depth-1, alpha, beta, true);
+			cValue = DepthNormalise(cValue);
+			if (cValue<=bestValue) {
+				bestValue = cValue;
+				move = children[i]->GetMove();
+				if (verbose>3) {
+					cout << ANSI_CYAN;
+					cout << "At depth: " << depth << " New minimum: " << cValue << " move: " << move+1 << endl;
+					cout << ANSI_RESET;
+				}
+				Variation[depth] = move;	//Wrong for all other than root
+			}
+			children[i]->UnMove();
+			beta = (beta <= bestValue) ? beta : bestValue;
+			bestValue = beta;
+			if (beta <= alpha) {
+				global_prunes++;
+				break;
+			}
+		}
+	}
+	for (int i=0; i<current->GetNumberOfChildren(); i++) {
+		delete children[i];
+	}
+	return bestValue;
 }
 
 int* MiniMaxPlayer::GetVariation()

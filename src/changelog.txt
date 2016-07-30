@@ -5,6 +5,10 @@ Upcoming:
 	- Choice for PvP or computer
 	- Computer class(es)
 
+--- 1.1.0 ---
+Done:
+	Minimax AI. Now works for both first player and second player
+
 --- 1.0.8-a ---
 Fixed:
 	Winning now tells loser
