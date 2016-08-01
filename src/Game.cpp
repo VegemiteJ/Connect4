@@ -19,18 +19,7 @@ Game::Game(bool isServer) {
 	const int numRows = 6;
 	const int numCols = 7;
 	board = new Board(numRows, numCols);
-	
-	/*
-	srand(time(NULL));
 
-	default_random_engine generator(rand());
-	uniform_int_distribution<int> distribution;
-	function<int()> dice;
-	distribution = uniform_int_distribution<int>(0,numCols-1);
-	dice = bind(distribution, generator);
-
-	board->update_cell(dice(), 'O');
-	*/
 	turnCounter = 0;
 	int start;
 	
@@ -68,17 +57,18 @@ Game::Game(bool isServer) {
 	}
 
 	//Verify status
-	cout << "p1 : Player id: " << ((p1->id == 0) ? "Local" : "Network") << " Turn: " << p1->turn << endl;
-	cout << "p1 : Player id: " << ((p2->id == 0) ? "Local" : "Network") << " Turn: " << p2->turn << endl;
-
+	if (verbose>3) {
+		cout << "p1 : Player id: " << ((p1->id == 0) ? "Local" : "Network") << " Turn: " << p1->turn << endl;
+		cout << "p1 : Player id: " << ((p2->id == 0) ? "Local" : "Network") << " Turn: " << p2->turn << endl;
+	}
 }
 
 void Game::setPlayers(int numRows, int numCols, bool isServer)
 {
 	//p1 = new NetworkPlayer(numRows, numCols, board, isServer);
-	p1 = new LocalPlayer(numRows, numCols, board);
-	//p1 = new MiniMaxPlayer(numCols, numRows, board, NULL, 0);
-	p2 = new MiniMaxPlayer(numCols, numRows, board, NULL, 1);
+	//p1 = new LocalPlayer(numRows, numCols, board);
+	p1 = new MiniMaxPlayer(numCols, numRows, board, NULL, 0, 0);
+	p2 = new MiniMaxPlayer(numCols, numRows, board, NULL, 1, 1);
 }
 
 void Game::cleanup()
@@ -123,6 +113,7 @@ void Game::play() {
 
 		// Place a token in the selected valid column
 		board->update_cell(choice, 'X');
+		board->checkWin(choice, 'X');
 		turnCounter++;
 		board->print();
 
@@ -135,6 +126,7 @@ void Game::play() {
 			choice--;
 		}
 		board->update_cell(choice, 'O');
+		board->checkWin(choice, 'O');
 		turnCounter++;
 		board->print();
 	}

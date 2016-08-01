@@ -1,10 +1,10 @@
 #ifndef CLIENTSOCKETSET_H
 #define CLIENTSOCKETSET_H
 
-#include <winsock2.h>
-#define __USE_W32_SOCKETS
 #define USE_SYS_TYPES_FD_SET
 #define WIN32_LEAN_AND_MEAN
+#define __USE_W32_SOCKETS
+#include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
 #include <stdlib.h>

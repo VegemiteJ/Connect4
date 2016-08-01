@@ -1,11 +1,11 @@
 # Makefile for connect-four
 
-CLASSES = GameState.o Node.o Board.o Player.o MiniMaxPlayer.o LocalPlayer.o NetworkPlayer.o RandomPlayer.o Game.o ClientSocketSet.o ServerSocketSet.o
+CLASSES = ClientSocketSet.o ServerSocketSet.o GameState.o Node.o Board.o Player.o MiniMaxPlayer.o LocalPlayer.o NetworkPlayer.o RandomPlayer.o Game.o
 NETCLASSES = ClientSocketSet.o ServerSocketSet.o
 OBJLOC = ./Objs
 OBJS = $(patsubst %,$(OBJLOC)/%,$(CLASSES))
 NOBJS = $(patsubst %,$(OBJLOC)/%,$(NETCLASSES))
-VERSION = -std=gnu++14 -Wall -pedantic
+VERSION = -std=gnu++14 -Wall -pedantic -O3
 CYG = -g
 LIB = -lws2_32
 INCLUDE = -I"/usr/include"

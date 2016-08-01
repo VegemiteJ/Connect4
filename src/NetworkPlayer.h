@@ -1,6 +1,9 @@
 #ifndef NETWORKPLAYER_H
 #define NETWORKPLAYER_H
 
+#define USE_SYS_TYPES_FD_SET
+#define WIN32_LEAN_AND_MEAN
+#define __USE_W32_SOCKETS
 #include "Player.h"
 #include "LocalPlayer.h"
 #include "ServerSocketSet.h"

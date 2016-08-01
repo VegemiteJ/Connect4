@@ -8,35 +8,38 @@
 class MiniMaxPlayer : public Player
 {
 public:
-	MiniMaxPlayer(int Cols, int Rows, Board* iBoard, Node* root, int iturn);
+	MiniMaxPlayer(int Cols, int Rows, Board* iBoard, Node* root, int iturn, int iAlg);
 	~MiniMaxPlayer();
 	virtual int play(bool valid);
 	virtual void initialise();
 	virtual void setFirst();
 	virtual void Exit(bool);
 
-	int EvalUtil(Node* current);
-
 	int Minimax(Node* current, int depth, bool MaxPlayer);
 	int AlphaBeta(Node* current, int depth, int alpha, int beta, bool MaxPlayer);
 
 	int* GetVariation();
-
 	void PrintVariation(bool Maximising);
 
-	int move;
 private:
 	MiniMaxPlayer();
 
+	int IterativeDeepen();
 	int DepthNormalise(int value);
+	int GetMMPlay();
+	int GetABPlay();
 
 	int* Variation;
 	bool alloc;
+	int move;
+	int currentMove;
 
+	int algRef;
 	int turnReference;
 	Node* root;
 
-	int depth;
+	int ABdepth;
+	int MMdepth;
 };
 
 

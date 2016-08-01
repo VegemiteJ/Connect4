@@ -1,11 +1,13 @@
 #include "Board.h"
 #include "ColourDef.h"
+#include "consts.h"
 
 Board::Board(int numRowsi, int numColsi)
 {
 	numRows = numRowsi;
 	numCols = numColsi;
-	cout << "Dimensions: " << numRows << " " << numCols << endl;
+	if (verbose > 3)
+		cout << "Dimensions: " << numRows << " " << numCols << endl;
 	state = new GameState(numRows, numCols);
 
 	resetBoard();
