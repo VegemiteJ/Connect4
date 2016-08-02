@@ -24,7 +24,7 @@ public:
 private:
 	MiniMaxPlayer();
 
-	int IterativeDeepen();
+	int IterativeDeepen(int milliseconds);
 	int DepthNormalise(int value);
 	int GetMMPlay();
 	int GetABPlay();

@@ -12,8 +12,8 @@ int global_prunes = 0;
 MiniMaxPlayer::MiniMaxPlayer(int Cols, int Rows, Board* iBoard, Node* iroot, int iturn, int iAlg) : 
 	Player(Cols, Rows, iBoard), Variation(NULL), alloc(false), algRef(iAlg), turnReference(iturn), root(iroot)
 	{
-		ABdepth = 14;
-		MMdepth = 9;
+		ABdepth = 5;
+		MMdepth = 5;
 	}
 
 MiniMaxPlayer::~MiniMaxPlayer() 
@@ -26,19 +26,37 @@ using namespace std;
 
 int MiniMaxPlayer::play(bool valid)
 {
-	if (algRef == 0) //AlphaBeta
-		return GetABPlay();
+	if (algRef == 0)  //AlphaBeta
+		return IterativeDeepen(20000);
 	else
 		return GetMMPlay();
 }
 
-int MiniMaxPlayer::IterativeDeepen()
+int MiniMaxPlayer::IterativeDeepen(int milliseconds)
 {
+	ABdepth = 5;
 	//Set start time
+	auto start = chrono::steady_clock::now();
 
 	//Run default depth search
-
+	int move = GetABPlay();
+	auto runTime = chrono::steady_clock::now();
+	double difference = chrono::duration_cast<chrono::milliseconds>(runTime-start).count();
+	if (verbose>1)
+		cout << "Total Time so far: " << difference << "ms" << endl;
+	
 	//While current time - start time < 10 seconds continue running searches with depth+1
+	//	I.e while within computational budget. Very rough estimation is TotalTimeSoFar^3 < total time
+	while(difference*difference < milliseconds)
+	{
+		ABdepth++;
+		move = GetABPlay();
+		runTime = chrono::steady_clock::now();
+		difference = chrono::duration_cast<chrono::milliseconds>(runTime-start).count();
+		if (verbose>1)
+			cout << "Total Time so far: " << difference << "ms" << endl;
+	}
+	return move;
 }
 
 int MiniMaxPlayer::GetABPlay()
@@ -57,6 +75,7 @@ int MiniMaxPlayer::GetABPlay()
 	int move = Variation[ABdepth]+1;		//Move is column index (1 indexed) not state index
 
 	if (verbose>1) {
+		cout << "Depth: " << ABdepth << endl;
 		cout << "Best Utility: " << utility << " in " << diff.count() << "s" << endl;
 		cout << "Explored " << global_id << " Nodes..." << endl;
 		cout << "Number of pruned: " << global_prunes << endl;
