@@ -8,6 +8,7 @@
 class MiniMaxPlayer : public Player
 {
 public:
+	//iAlg is 0 -> Alpha beta else minimax
 	MiniMaxPlayer(int Cols, int Rows, Board* iBoard, Node* root, int iturn, int iAlg);
 	~MiniMaxPlayer();
 	virtual int play(bool valid);
