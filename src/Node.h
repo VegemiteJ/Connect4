@@ -52,12 +52,18 @@ public:
 	//Remove the mve initialiy applied during constructor
 	void UnMove();
 
+	int H1Util();
+	int DetermineDirection(int k, int l);
 private:
 	//Private Member functions
 	//-----------------------------
 	int WinUtil();
-	int H1Util();
+	
 	int ConnectivityUtil();
+
+	//Helper Functions
+	//-----------------------------
+	int Count3(char Token);
 
 	//Unused empty constructor
 	Node();

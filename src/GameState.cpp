@@ -122,13 +122,13 @@ void GameState::print()
 	cout << "  ";
 	for (int i=1; i<numCols+1; i++)
 	{
-		cout << i << "   ";
+		cout << i-1 << "   ";
 	} cout << endl;
 	
 	for (int x=0; x<numRows; x++) 
 	{
 		// y axis labels
-		cout << x+1 << " ";
+		cout << x << " ";
 		
 		// Column separators
 		for (int y=0; y<numCols; y++) 

@@ -179,10 +179,130 @@ int Node::WinUtil()
 	}
 	return 0;
 }
+
 int Node::H1Util() 
 {
-	return 0;
+	//Number of X and O in a row
+	int count[2] = {0,0};
+	
+	char currentToken = 'X';
+	count[0] = Count3(currentToken);
+
+	currentToken = 'O';
+	count[1] = Count3(currentToken);
+
+	cout << "Number of 3 in a row for X: " << count[0] << endl;
+	cout << "Number of 3 in a row for O: " << count[1] << endl;
+
+	return 50*(count[0]-count[1]);
 }
+
+int Node::DetermineDirection(int k, int l)
+{
+	int val = l+k;
+	val = (val<0) ? -val : val;
+
+	if (val==2)			//Left diag
+		return 0;
+	else if (val==0)	//Right diag
+		return 1;
+	else if (l==0)		//Vertical
+		return 2;
+	else if (k==0)		//Horizontal
+		return 3;
+
+	//Error
+	return -1;
+}
+
+int Node::Count3(char Token)
+{
+		//Initialise array of visited nodes to all false
+	int nRows = state->numRows;
+	int nCols = state->numCols;
+	bool** visited = new bool*[nRows];
+	for (int i = 0; i < nRows; i++) {
+		visited[i] = new bool[nCols];
+	}
+	for (int i=0; i<nRows; i++){
+		for (int j=0; j<nCols; j++){
+			visited[i][j] = false;
+		}
+	}
+
+	int count = 0;
+	int cToken = (Token=='X') ? 0 : 1;
+
+	char** brd = state->cell_array;
+
+	//For each square on board not already seen
+	for (int i=0; i<nRows; i++) {
+		for (int j=0; j<nCols && !(visited[i][j]); j++) {
+			cout << "\nAt position: (" << i << "," << j << ")" << endl;
+			if (!visited[i][j] && (brd[i][j] == Token)) {		//If current square is token we want
+				//Initialise array of 4 ints storing the number in a row in each dimension
+				//Also initialise array of 4 bools depicting if the current dimension has a free spot at the end
+				int countInDimension[4] = {1,1,1,1};	//1 for including self
+				bool hasFreeEnd[4] = {false,false,false,false};
+				cout << "\nAt position: (" << i << "," << j << ")" << endl;
+
+				//Check from this position - all neighbouring pieces
+				for (int k=-1; k<=1; k++) {		//While in bounds rows, columns
+					if ((i+k < nRows && i+k >= 0)) {
+						for (int l=-1; l<=1; l++) {
+							if ((j+l >= 0) && (j+l < nCols) && (k!=0 || l!=0) && (!visited[i+k][j+l])) {
+								//If current neighbour is unvisited, continue down that dimension incrementing length
+								//Only continue if unvisited && token is same one && not out of bounds
+								int row = i+k;
+								int col = j+l;
+								int index = DetermineDirection(k,l);
+								bool inbounds = true;
+								while (brd[row][col] == Token) {
+									cout << "Position: (" << row << "," << col << ") is " << Token << endl;
+									visited[row][col] = true;
+									countInDimension[index]++;
+
+									row += k; col += l;
+									if (row<0 || row>=nRows || col<0 || col>=nCols) {	//Out of bounds
+										inbounds = false;
+										break;
+									}
+								}
+								if (inbounds) {
+									if (brd[row][col] == ' ') {
+										cout << "Has free end at: (" << row << "," << col << ")" << endl;
+										hasFreeEnd[index] = true;
+										visited[row][col] = true;
+									}
+								}
+							}
+						}
+					}
+				}
+				cout << "Dimension details: " << countInDimension[0] << " " << countInDimension[1] << " " << countInDimension[2] << " " << countInDimension[3] << endl;
+				int max = 1;
+				for (int i=0; i<4; i++) {
+					if (countInDimension[i] > max && hasFreeEnd[i])
+						max = countInDimension[i];
+				}
+				if (max == 3)
+					count++;
+			}
+		}
+	}
+
+	for (int i=0; i<nRows; i++) {
+		if (verbose > 4)
+			cout << "Deleting row: " << i << endl;
+		delete[] visited[i];
+	}
+	if (verbose > 4)
+		cout << "Deleting Host Array" << endl;
+	delete[] visited;
+	
+	return count;
+}
+
 int Node::ConnectivityUtil() 
 {
 	return 0;
