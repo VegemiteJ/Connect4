@@ -13,12 +13,12 @@ Node::Node() {}	//Unused
 
 Node::Node(int iID, GameState* iinitial, int initial_turn) :
 	ID(iID), thisMoveColumn(-1), numChildren(-1), thisTurn(initial_turn), 
-	allocated(0), myUtil(0), childUtil(NULL), myChildren(NULL), 
+	allocated(0), myUtil(0), myChildren(NULL), 
 	parent(NULL), state(iinitial) {}
 
 Node::Node(int iID, GameState* parent_state, int new_mov_column, int new_turn) :
 	ID(iID), thisMoveColumn(new_mov_column), numChildren(-1), thisTurn(new_turn), 
-	allocated(0), myUtil(0), childUtil(NULL), myChildren(NULL), 
+	allocated(0), myUtil(0), myChildren(NULL), 
 	parent(NULL), state(parent_state) {}
 
 //Public Destructors
@@ -27,8 +27,8 @@ Node::~Node()
 {
 	if (verbose>3)
 		cout << "Deleting node: " << ID << endl;
-	if (allocated==1)
-		delete[] childUtil;
+	//if (allocated==1)
+		//delete[] childUtil;		Why is New[] throwing segfault????
 }
 void Node::DeleteTree() 
 {
@@ -80,7 +80,7 @@ Node** Node::DiscoverChildren()
 	numChildren = 0;
 
 	int terminalPosition = 0;
-	int* children = new int[state->numCols];
+	int children[state->numCols];
 
 	//Discover number of children
 	for (int i=0; i<state->numCols; i++) {
@@ -95,16 +95,16 @@ Node** Node::DiscoverChildren()
 		cout << "NumChild: " << numChildren << endl;
 	if (numChildren != 0) {
 		myChildren = new Node*[numChildren];
-		childUtil = new int[numChildren]();
 		allocated = 1;
 	}
+	//childUtil = new int[numChildren]();		Why is New[] throwing segfault????
 	for (int i = 0; i<terminalPosition; i++){
 		if (verbose>3)
 			cout << "Making node: " << i << endl;
 		myChildren[i] = new Node(global_id++, state, children[i], (thisTurn+1)%2);
 	}
 	//Free local scope children array
-	delete[] children;
+	//delete[] children;	Why is New[] throwing segfault????
 
 	return myChildren;
 }
@@ -191,8 +191,10 @@ int Node::H1Util()
 	currentToken = 'O';
 	count[1] = Count3(currentToken);
 
-	cout << "Number of 3 in a row for X: " << count[0] << endl;
-	cout << "Number of 3 in a row for O: " << count[1] << endl;
+	if (verbose>3) {
+		cout << "Number of 3 in a row for X: " << count[0] << endl;
+		cout << "Number of 3 in a row for O: " << count[1] << endl;
+	}
 
 	return 50*(count[0]-count[1]);
 }
@@ -217,89 +219,59 @@ int Node::DetermineDirection(int k, int l)
 
 int Node::Count3(char Token)
 {
-		//Initialise array of visited nodes to all false
 	int nRows = state->numRows;
 	int nCols = state->numCols;
-	bool** visited = new bool*[nRows];
-	for (int i = 0; i < nRows; i++) {
-		visited[i] = new bool[nCols];
-	}
-	for (int i=0; i<nRows; i++){
-		for (int j=0; j<nCols; j++){
-			visited[i][j] = false;
-		}
-	}
 
 	int count = 0;
-	int cToken = (Token=='X') ? 0 : 1;
 
 	char** brd = state->cell_array;
 
 	//For each square on board not already seen
 	for (int i=0; i<nRows; i++) {
-		for (int j=0; j<nCols && !(visited[i][j]); j++) {
-			cout << "\nAt position: (" << i << "," << j << ")" << endl;
-			if (!visited[i][j] && (brd[i][j] == Token)) {		//If current square is token we want
+		for (int j=0; j<nCols; j++) {
+			//cout << "\nAt position: (" << i << "," << j << ")" << endl;
+			if ( (brd[i][j] == ' ')) {		//If current square is blank
 				//Initialise array of 4 ints storing the number in a row in each dimension
-				//Also initialise array of 4 bools depicting if the current dimension has a free spot at the end
-				int countInDimension[4] = {1,1,1,1};	//1 for including self
-				bool hasFreeEnd[4] = {false,false,false,false};
-				cout << "\nAt position: (" << i << "," << j << ")" << endl;
+				int countInDimension[4] = {0,0,0,0};	//1 for including self
 
 				//Check from this position - all neighbouring pieces
 				for (int k=-1; k<=1; k++) {		//While in bounds rows, columns
 					if ((i+k < nRows && i+k >= 0)) {
 						for (int l=-1; l<=1; l++) {
-							if ((j+l >= 0) && (j+l < nCols) && (k!=0 || l!=0) && (!visited[i+k][j+l])) {
+							if ((j+l >= 0) && (j+l < nCols) && (k!=0 || l!=0)) {
 								//If current neighbour is unvisited, continue down that dimension incrementing length
 								//Only continue if unvisited && token is same one && not out of bounds
 								int row = i+k;
 								int col = j+l;
 								int index = DetermineDirection(k,l);
-								bool inbounds = true;
 								while (brd[row][col] == Token) {
-									cout << "Position: (" << row << "," << col << ") is " << Token << endl;
-									visited[row][col] = true;
+									//cout << "Position: (" << row << "," << col << ") is " << Token << endl;
 									countInDimension[index]++;
 
 									row += k; col += l;
 									if (row<0 || row>=nRows || col<0 || col>=nCols) {	//Out of bounds
-										inbounds = false;
 										break;
-									}
-								}
-								if (inbounds) {
-									if (brd[row][col] == ' ') {
-										cout << "Has free end at: (" << row << "," << col << ")" << endl;
-										hasFreeEnd[index] = true;
-										visited[row][col] = true;
 									}
 								}
 							}
 						}
 					}
 				}
-				cout << "Dimension details: " << countInDimension[0] << " " << countInDimension[1] << " " << countInDimension[2] << " " << countInDimension[3] << endl;
-				int max = 1;
-				for (int i=0; i<4; i++) {
-					if (countInDimension[i] > max && hasFreeEnd[i])
-						max = countInDimension[i];
+				//cout << "Dimension details: " << countInDimension[0] << " " << countInDimension[1] << " " << countInDimension[2] << " " << countInDimension[3] << endl;
+				int max = 0;
+				for (int m=0; m<4; m++) {
+					if (countInDimension[m] > max) {
+						max = countInDimension[m];
+					}
 				}
-				if (max == 3)
+				if (max == 3) {
+					//cout << "Found a 3 in Row for " << Token << " at: (" << i << "," << j << ")" << endl;
 					count++;
+				}
 			}
 		}
 	}
 
-	for (int i=0; i<nRows; i++) {
-		if (verbose > 4)
-			cout << "Deleting row: " << i << endl;
-		delete[] visited[i];
-	}
-	if (verbose > 4)
-		cout << "Deleting Host Array" << endl;
-	delete[] visited;
-	
 	return count;
 }
 

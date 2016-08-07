@@ -15,6 +15,7 @@ public:
 	~Board();
 	
 	void print();
+	void print(int row, int col);	//Of last move
 	void update_cell(int col, char tokenIn);
 	bool checkValidMove(int col);
 	void resetBoard();
@@ -32,6 +33,8 @@ public:
 	
 	int* getSize();
 	
+	int numMoves;
+
 private:
 	Board();
 

@@ -122,13 +122,13 @@ void GameState::print()
 	cout << "  ";
 	for (int i=1; i<numCols+1; i++)
 	{
-		cout << i-1 << "   ";
+		cout << i << "   ";
 	} cout << endl;
 	
 	for (int x=0; x<numRows; x++) 
 	{
 		// y axis labels
-		cout << x << " ";
+		cout << x+1 << " ";
 		
 		// Column separators
 		for (int y=0; y<numCols; y++) 
@@ -137,6 +137,44 @@ void GameState::print()
 				cout << ANSI_RED;
 			} else {
 				cout << ANSI_GREEN;
+			}
+			if (y<numCols-1){
+				cout << cell_array[x][y] << ANSI_RESET << " | ";
+			} else {
+				cout << cell_array[x][y] << ANSI_RESET;
+			}
+		}
+		
+		// Row separators
+		cout << endl << "  --";
+		for (int i=1; i<numCols; i++)
+			cout << "----";
+		cout << endl;
+		// cout << endl << "  --------------------------" << endl;
+	}
+}
+
+void GameState::print(int row, int col)
+{
+	// x axis labels
+	cout << "  ";
+	for (int i=1; i<numCols+1; i++)
+	{
+		cout << i << "   ";
+	} cout << endl;
+	
+	for (int x=0; x<numRows; x++) 
+	{
+		// y axis labels
+		cout << x+1 << " ";
+		
+		// Column separators
+		for (int y=0; y<numCols; y++) 
+		{
+			if (cell_array[x][y] == 'X'){
+				cout << ((x==row && y==col) ? ANSI_YELLOW : ANSI_RED);
+			} else {
+				cout << ((x==row && y==col) ? ANSI_YELLOW : ANSI_GREEN);
 			}
 			if (y<numCols-1){
 				cout << cell_array[x][y] << ANSI_RESET << " | ";
@@ -188,6 +226,16 @@ bool GameState::checkWin(int colIn, char tokenIn)
 	rowIn++;
 
 	// Check winning positions
+	bool hasWon;
+	hasWon = checkVert(rowIn, colIn, tokenIn); 
+	hasWon |= checkHorz(rowIn, tokenIn);
+	hasWon |= checkDiag(rowIn, colIn, tokenIn);
+	
+	return hasWon;
+}
+
+bool GameState::checkWin(int rowIn, int colIn, char tokenIn)
+{
 	bool hasWon;
 	hasWon = checkVert(rowIn, colIn, tokenIn); 
 	hasWon |= checkHorz(rowIn, tokenIn);
@@ -380,7 +428,6 @@ bool GameState::checkValidMove(int col)
 void GameState::update_cell(int col, char tokenIn)
 {
 	bool placed = false;
-	// for (int row=6; row>0; row--)
 	for (int row = numRows-1; row>-1 && placed == false; row--)
 	{
 		if (cell_array[row][col] == ' ')
@@ -391,6 +438,11 @@ void GameState::update_cell(int col, char tokenIn)
 			LastMoveCol = col;
 		}
 	}
+}
+
+void GameState::update_cell(int row, int col, char tokenIn)
+{
+	cell_array[row][col] = tokenIn;
 }
 
 void GameState::setLength(int length)

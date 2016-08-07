@@ -13,6 +13,7 @@ public:
 	Game(bool isServer);
 	~Game();
 	void play();
+	void PrintGameSequence();
 
 private:
 
@@ -23,6 +24,8 @@ private:
 
 	int turnCounter;
 	int started;
+
+	int* moveSequence;
 
 	Board* board;
 	Player* p1;

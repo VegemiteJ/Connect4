@@ -52,18 +52,18 @@ public:
 	//Remove the mve initialiy applied during constructor
 	void UnMove();
 
-	int H1Util();
-	int DetermineDirection(int k, int l);
 private:
 	//Private Member functions
 	//-----------------------------
 	int WinUtil();
+	int H1Util();
 	
 	int ConnectivityUtil();
 
 	//Helper Functions
 	//-----------------------------
 	int Count3(char Token);
+	int DetermineDirection(int k, int l);	
 
 	//Unused empty constructor
 	Node();
@@ -77,7 +77,7 @@ private:
 	int thisTurn;
 	int allocated;
 	int myUtil;
-	int* childUtil;
+	int childUtil[7];
 	Node** myChildren;
 	Node* parent;
 	GameState* state;

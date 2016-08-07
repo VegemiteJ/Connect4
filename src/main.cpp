@@ -1,13 +1,13 @@
 #include "Game.h"
 #include "Board.h"
 #include "Player.h"
-#include "ServerSocketSet.h"
-#include "ClientSocketSet.h"
+//#include "ServerSocketSet.h"
+//#include "ClientSocketSet.h"
 #include "consts.h"
 #include <iostream>
 #include <string>
 
-int verbose = 2;
+int verbose = 0;
 
 using namespace std;
 
@@ -29,4 +29,5 @@ int main(int argc, char** argv)
 	}
 	Game game = Game(isServ);
 	game.play();
+	game.PrintGameSequence();
 }

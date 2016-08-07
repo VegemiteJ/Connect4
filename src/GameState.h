@@ -24,6 +24,9 @@ public:
 	//Prints the board state
 	void print();
 
+	//Prints the board state with last move as yellow
+	void print(int col, int row);
+
 	//Returns true if the game state has been completed
 	bool completed();
 	
@@ -32,6 +35,9 @@ public:
 
 	//Determines if last move tokenIn in column colIn wins through any metric
 	bool checkWin(int colIn, char tokenIn);
+
+	//Determines winner based off of row in and column in
+	bool checkWin(int rowIn, int colIn, char tokenIn);
 	
 	//Determines if last move tokenIn at position rowIn, colIn wins horizontally
 	bool checkVert(int rowIn, int colIn, char tokenIn);
@@ -51,6 +57,7 @@ public:
 	void setLength(int length);
 
 	void update_cell(int col, char tokenIn);
+	void update_cell(int row, int col, char tokenIn);
 
 	int LastMoveRow;
 	int LastMoveCol;

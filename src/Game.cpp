@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "Board.h"
 #include "LocalPlayer.h"
-#include "NetworkPlayer.h"
+//#include "NetworkPlayer.h"
 #include "RandomPlayer.h"
 #include "MiniMaxPlayer.h"
 #include "consts.h"
@@ -18,6 +18,9 @@ using namespace std;
 Game::Game(bool isServer) {
 	const int numRows = 6;
 	const int numCols = 7;
+
+	moveSequence = new int[numRows*numCols]();
+
 	board = new Board(numRows, numCols);
 
 	turnCounter = 0;
@@ -66,8 +69,8 @@ Game::Game(bool isServer) {
 void Game::setPlayers(int numRows, int numCols, bool isServer)
 {
 	//p1 = new NetworkPlayer(numRows, numCols, board, isServer);
-	p1 = new LocalPlayer(numRows, numCols, board);
-	//p1 = new MiniMaxPlayer(numCols, numRows, board, NULL, 0, 0);	//iAlg is 0 -> Alpha beta else minimax
+	//p1 = new LocalPlayer(numRows, numCols, board);
+	p1 = new MiniMaxPlayer(numCols, numRows, board, NULL, 0, 0);	//iAlg is 0 -> Alpha beta else minimax
 	p2 = new MiniMaxPlayer(numCols, numRows, board, NULL, 1, 0);
 }
 
@@ -84,7 +87,10 @@ void Game::cleanup()
 	}
 }
 
-Game::~Game() {}
+Game::~Game() 
+{
+	delete[] moveSequence;
+}
 
 int Game::detStart()
 {
@@ -102,6 +108,7 @@ void Game::play() {
 	board->print();
 	while (board->checkFull() == false && board->hasWon == false)
 	{
+		//Player 1s Turn----------------------------------------
 		cout << "Player1 turn" << endl;
 		int choice;
 		choice = p1->play(true);
@@ -112,12 +119,16 @@ void Game::play() {
 		}
 
 		// Place a token in the selected valid column
+		moveSequence[turnCounter] = choice+1;
 		board->update_cell(choice, 'X');
 		board->checkWin(choice, 'X');
 		turnCounter++;
-		board->print();
+		board->print(board->getBoardState(0)->LastMoveRow, board->getBoardState(0)->LastMoveCol);
 
+		//Don't ask for player 2 move if 1 wins
 		if (board->hasWon == true) {break;}
+
+		//Player 2s Turn----------------------------------------
 		cout << "Player2 turn" << endl;
 		choice = p2->play(true);
 		choice--;
@@ -125,10 +136,11 @@ void Game::play() {
 			choice = p2->play(false);
 			choice--;
 		}
+		moveSequence[turnCounter] = choice+1;
 		board->update_cell(choice, 'O');
 		board->checkWin(choice, 'O');
 		turnCounter++;
-		board->print();
+		board->print(board->getBoardState(0)->LastMoveRow, board->getBoardState(0)->LastMoveCol);
 	}
 
 	// Output winner
@@ -138,4 +150,18 @@ void Game::play() {
 		cout << "O wins!" << endl;
 
 	cleanup();
+}
+
+void Game::PrintGameSequence()
+{
+	int count = 0;
+	int* size = board->getSize();
+
+	cout << "Printing the game..." << endl;
+	while(moveSequence[count] != 0 && count < size[0]*size[1])	//Double check for safety
+	{
+		(count != 0) ? (cout << "," << moveSequence[count++]) : (cout << moveSequence[count++]); 
+	}
+
+	delete[] size;
 }

@@ -2,7 +2,7 @@
 #include "ColourDef.h"
 #include "consts.h"
 
-Board::Board(int numRowsi, int numColsi)
+Board::Board(int numRowsi, int numColsi) : numMoves(0)
 {
 	numRows = numRowsi;
 	numCols = numColsi;
@@ -20,10 +20,16 @@ Board::~Board()
 	delete state;
 }
 
-// Prints the board layout and current move
+// Prints the board layout
 void Board::print()
 {
 	state->print();
+}
+
+// Prints the board layout and current move as yellow
+void Board::print(int row, int col)
+{
+	state->print(row, col);
 }
 
 // Insert a move into the 'lowest' slot in the specified column
@@ -31,6 +37,7 @@ void Board::print()
 void Board::update_cell(int col, char tokenIn)
 {	
 	state->update_cell(col, tokenIn);
+	numMoves++;
 }
 
 int Board::getLast()

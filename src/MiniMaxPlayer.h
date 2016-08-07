@@ -34,13 +34,13 @@ private:
 	bool alloc;
 	int move;
 	int currentMove;
+	int utility;
 
 	int algRef;
 	int turnReference;
 	Node* root;
 
-	int ABdepth;
-	int MMdepth;
+	int startDepth;
 };
 
 

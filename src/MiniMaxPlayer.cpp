@@ -4,17 +4,18 @@
 
 #include <chrono>
 #include <thread>
+#include <random>
+#include <functional>
 
-#define INFINITY 999999
+#define INF 999999
 
 int global_prunes = 0;
 
 //iAlg is 0 -> Alpha beta else minimax
 MiniMaxPlayer::MiniMaxPlayer(int Cols, int Rows, Board* iBoard, Node* iroot, int iturn, int iAlg) : 
-	Player(Cols, Rows, iBoard), Variation(NULL), alloc(false), algRef(iAlg), turnReference(iturn), root(iroot)
+	Player(Cols, Rows, iBoard), Variation(NULL), alloc(false), utility(0), algRef(iAlg), turnReference(iturn), root(iroot)
 	{
-		ABdepth = 5;
-		MMdepth = 5;
+		startDepth = 5;
 	}
 
 MiniMaxPlayer::~MiniMaxPlayer() 
@@ -27,39 +28,62 @@ using namespace std;
 
 int MiniMaxPlayer::play(bool valid)
 {
-	if (algRef == 0)  //AlphaBeta
-		return IterativeDeepen(20000);
-	else
-		return GetMMPlay();
+	global_prunes = 0;
+	global_id = 0;
+	int ret = IterativeDeepen(60000);
+	if (verbose == 0) {
+		cout << "\nUtility Estimate: " << utility << endl;
+		cout << "Reached Depth: " << startDepth << endl;
+	}
+	return ret;
+
 }
 
 int MiniMaxPlayer::IterativeDeepen(int milliseconds)
 {
-	ABdepth = 5;
+	startDepth = 5;
 	//Set start time
 	auto start = chrono::steady_clock::now();
 	auto startTime = chrono::steady_clock::now();
+	
 	//Run default depth search
-	int move = GetABPlay();
+	int move;
+	if (algRef == 0)
+		move = GetABPlay();
+	else
+		move = GetMMPlay();
+
 	auto runTime = chrono::steady_clock::now();
 	double runLength = chrono::duration_cast<chrono::milliseconds>(runTime-startTime).count();
 	double difference = chrono::duration_cast<chrono::milliseconds>(runTime-start).count();
 	if (verbose>1)
 		cout << "Total Time so far: " << difference << "ms" << endl;
 	
+	int* size = board->getSize();
+	int depthPossible = size[0]*size[1] - board->numMoves;
+	delete[] size;
+
+	if (verbose > 1)
+		cout << "Number of Possible Moves: " << depthPossible << endl;
+
+
 	//While current time - start time < 10 seconds continue running searches with depth+1
-	//	I.e while within computational budget. Very rough estimation is TotalTimeSoFar^3 < total time
-	while( 6.0*runLength < (milliseconds-difference) && ABdepth < 42 )
+	//	I.e while within computational budget. Very rough estimation is 6.0*prevRunTime < timeRemaining
+	while( 6.0*runLength < (milliseconds-difference) && startDepth <= depthPossible )
 	{
-		ABdepth++;
+		startDepth++;
 		startTime = chrono::steady_clock::now();
-		move = GetABPlay();
+		
+		if (algRef == 0)
+			move = GetABPlay();
+		else
+			move = GetMMPlay();
+
 		runTime = chrono::steady_clock::now();
 
 		runLength = chrono::duration_cast<chrono::milliseconds>(runTime-startTime).count();
 		difference = chrono::duration_cast<chrono::milliseconds>(runTime-start).count();
 		if (verbose>1) {
-			cout << "Last run: " << runLength << endl;
 			cout << "Total Time so far: " << difference << "ms" << endl;
 		}
 	}
@@ -68,21 +92,22 @@ int MiniMaxPlayer::IterativeDeepen(int milliseconds)
 
 int MiniMaxPlayer::GetABPlay()
 {
-	cout << "\n\nAB Searching to depth: " << ABdepth << endl;
+	if (verbose > 1)
+		cout << "\n\nAB Searching to depth: " << startDepth << endl;
 	Node* test = new Node(global_id++, board->getBoardState(0), (turnReference+1)%2);
 	if (verbose>3)
 		cout << "TURN REF: " << turnReference << endl;
 
 	bool Maximizing = (turnReference==0) ? true : false;
 	auto start = chrono::steady_clock::now();
-	int utility = AlphaBeta(test, ABdepth, -INFINITY, INFINITY, Maximizing);
+	utility = AlphaBeta(test, startDepth, -INF, INF, Maximizing);
 	auto end = chrono::steady_clock::now();
 	chrono::duration<double> diff = end-start;
 
-	int move = Variation[ABdepth]+1;		//Move is column index (1 indexed) not state index
+	int move = Variation[startDepth]+1;		//Move is column index (1 indexed) not state index
 
 	if (verbose>1) {
-		cout << "Depth: " << ABdepth << endl;
+		cout << "Depth: " << startDepth << endl;
 		cout << "Best Utility: " << utility << " in " << diff.count() << "s" << endl;
 		cout << "Explored " << global_id << " Nodes..." << endl;
 		cout << "Number of pruned: " << global_prunes << endl;
@@ -91,24 +116,25 @@ int MiniMaxPlayer::GetABPlay()
 			cout << "Move: " << move << endl;
 		}
 	}
-	return move;
 
+	return move;
 }
 
 int MiniMaxPlayer::GetMMPlay()
 {
-	cout << "\n\nMM Searching to depth: " << MMdepth << endl;
+	if (verbose > 1)
+		cout << "\n\nMM Searching to depth: " << startDepth << endl;
 	Node* test = new Node(global_id++, board->getBoardState(0), (turnReference+1)%2);
 	if (verbose>3)
 		cout << "TURN REF: " << turnReference << endl;
 
 	bool Maximizing = (turnReference==0) ? true : false;
 	auto start = chrono::steady_clock::now();
-	int utility = Minimax(test, MMdepth, Maximizing);
+	int utility = Minimax(test, startDepth, Maximizing);
 	auto end = chrono::steady_clock::now();
 	chrono::duration<double> diff = end-start;
 
-	int move = Variation[MMdepth]+1;		//Move is column index (1 indexed) not state index
+	int move = Variation[startDepth]+1;		//Move is column index (1 indexed) not state index
 
 	if (verbose>1) {
 		cout << "Best Utility: " << utility << " in " << diff.count() << "s" << endl;
@@ -142,7 +168,7 @@ int MiniMaxPlayer::Minimax(Node* current, int depth, bool MaxPlayer)
 	Node** children = current->DiscoverChildren();
 	if (MaxPlayer)
 	{
-		int bestValue = -INFINITY;
+		int bestValue = -INF;
 		for (int i=0; i<current->GetNumberOfChildren(); i++) {
 			children[i]->Move();
 			if (verbose>3)
@@ -166,7 +192,7 @@ int MiniMaxPlayer::Minimax(Node* current, int depth, bool MaxPlayer)
 	}
 	else
 	{
-		int bestValue = INFINITY;
+		int bestValue = INF;
 		for (int i=0; i<current->GetNumberOfChildren(); i++) {
 			children[i]->Move();
 			if (verbose>3)
@@ -222,7 +248,7 @@ int MiniMaxPlayer::AlphaBeta(Node* current, int depth, int alpha, int beta, bool
 	{
 		if (verbose>3)
 			cout << ANSI_RED << "IsMax" << ANSI_RESET << endl;
-		bestValue = -INFINITY;
+		bestValue = -INF;
 		for (int i=0; i<current->GetNumberOfChildren(); i++) {
 			children[i]->Move();
 			if (verbose>3)
@@ -251,7 +277,7 @@ int MiniMaxPlayer::AlphaBeta(Node* current, int depth, int alpha, int beta, bool
 	{
 		if (verbose>3)
 			cout << ANSI_RED << "IsNotMax" << ANSI_RESET << endl;
-		bestValue = INFINITY;
+		bestValue = INF;
 		for (int i=0; i<current->GetNumberOfChildren(); i++) {
 			children[i]->Move();
 			if (verbose>3)
