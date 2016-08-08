@@ -62,6 +62,12 @@ public:
 	void update_cell(int col, char tokenIn);
 	void update_cell(int row, int col, char tokenIn);
 
+	//Return the internal state
+	char** getState();
+
+	//"Zero" (Set to all ' ' spaces) the cell_array
+	void initCellArray(bool init);
+
 	//Index of the Row and Col of the last move
 	int LastMoveRow;
 	int LastMoveCol;
@@ -76,9 +82,6 @@ private:
 	//Value is 4 for connect 4. Set by the Game setup. Remains constant throughout
 	//	a game
 	int connectLength;
-
-	//"Zero" (Set to all ' ' spaces) the cell_array
-	void initCellArray();
 };
 
 

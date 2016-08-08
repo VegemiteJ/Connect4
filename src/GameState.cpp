@@ -6,11 +6,13 @@
 using namespace std;
 
 //Set cell_array to all spaces
-void GameState::initCellArray()
+void GameState::initCellArray(bool init)
 {
-	cell_array = new char*[numRows];
-	for (int i = 0; i < numRows; i++) {
-		cell_array[i] = new char[numCols];
+	if (!init) {
+		cell_array = new char*[numRows];
+		for (int i = 0; i < numRows; i++) {
+			cell_array[i] = new char[numCols];
+		}
 	}
 	for (int i=0; i<numRows; i++){
 		for (int j=0; j<numCols; j++){
@@ -24,7 +26,7 @@ GameState::GameState(char** prev_cell_array, int inumRows, int inumCols) :
 	LastMoveRow(-1), LastMoveCol(-1), numRows(inumRows),
 	numCols(inumCols), cell_array(NULL), connectLength(4)
 {
-	initCellArray();
+	initCellArray(false);
 	//New copy
 	for (int i=0; i<numRows; i++)
 	{
@@ -43,7 +45,7 @@ GameState::GameState(GameState* prev, int row, int col, int turn) :
 	numRows = prev->numRows;
 	numCols = prev->numCols;
 
-	initCellArray();
+	initCellArray(false);
 
 	//Copy
 	for (int i=0; i<numRows; i++)
@@ -70,7 +72,7 @@ GameState::GameState(GameState* prev, int col, int turn) :
 	numRows = prev->numRows;
 	numCols = prev->numCols;
 
-	initCellArray();
+	initCellArray(false);
 
 	//Copy
 	for (int i=0; i<numRows; i++)
@@ -103,7 +105,7 @@ GameState::GameState(int inumRows, int inumCols) :
 	LastMoveRow(-1), LastMoveCol(-1), numRows(inumRows),
 	numCols(inumCols), cell_array(NULL), connectLength(4)
 {
-	initCellArray();
+	initCellArray(false);
 }
 
 //Delete cell_array
@@ -464,4 +466,9 @@ void GameState::update_cell(int row, int col, char tokenIn)
 void GameState::setLength(int length)
 {
 	connectLength = length;
+}
+
+char** GameState::getState()
+{
+	return cell_array;
 }

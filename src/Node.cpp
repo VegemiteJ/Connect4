@@ -14,12 +14,20 @@ Node::Node() {}	//Unused
 Node::Node(int iID, GameState* iinitial, int initial_turn) :
 	ID(iID), thisMoveColumn(-1), numChildren(-1), thisTurn(initial_turn), 
 	allocated(0), myUtil(0), myChildren(NULL), 
-	parent(NULL), state(iinitial) {}
+	parent(NULL), state(iinitial)
+	{
+		childUtil = new int[state->numCols];
+		allocated = 1;
+	}
 
 Node::Node(int iID, GameState* parent_state, int new_mov_column, int new_turn) :
 	ID(iID), thisMoveColumn(new_mov_column), numChildren(-1), thisTurn(new_turn), 
 	allocated(0), myUtil(0), myChildren(NULL), 
-	parent(NULL), state(parent_state) {}
+	parent(NULL), state(parent_state) 
+	{
+		childUtil = new int[state->numCols];
+		allocated = 1;
+	}
 
 //Public Destructors
 //---------------------------------------------------
@@ -27,13 +35,11 @@ Node::~Node()
 {
 	if (verbose>3)
 		cout << "Deleting node: " << ID << endl;
-	//if (allocated==1)
-		//delete[] childUtil;		Why is New[] throwing segfault????
+	if (allocated==1)
+		delete[] childUtil;		//Why does New[] throwing segfault after 15 deep or so on linux
+								//Mem usage is only 800MB for 15 deep... so that isn't the issue
 }
-void Node::DeleteTree() 
-{
-
-}
+void Node::DeleteTree() {}
 
 //Public Member Functions
 //---------------------------------------------------
@@ -150,7 +156,9 @@ void Node::UnMove()
 {
 	if (verbose>3)
 		cout << "Unmoving... Row: " << thisMoveRow+1 << " Col: " << thisMoveColumn+1 << endl;
-	state->cell_array[thisMoveRow][thisMoveColumn] = ' ';
+
+	char** st = state->getState();
+	st[thisMoveRow][thisMoveColumn] = ' ';
 }
 int Node::WinUtil() 
 {
@@ -224,12 +232,11 @@ int Node::Count3(char Token)
 
 	int count = 0;
 
-	char** brd = state->cell_array;
+	char** brd = state->getState();
 
 	//For each square on board not already seen
 	for (int i=0; i<nRows; i++) {
 		for (int j=0; j<nCols; j++) {
-			//cout << "\nAt position: (" << i << "," << j << ")" << endl;
 			if ( (brd[i][j] == ' ')) {		//If current square is blank
 				//Initialise array of 4 ints storing the number in a row in each dimension
 				int countInDimension[4] = {0,0,0,0};	//1 for including self

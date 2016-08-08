@@ -4,10 +4,10 @@
 
 using namespace std;
 
-Player::Player(int numRows, int numCols, Board* iBoard)
+Player::Player(int inumRows, int inumCols, Board* iBoard)
 {
-	numRows = Rows;
-	numColumns = Cols;
+	numRows = inumRows;
+	numColumns = inumCols;
 	board = iBoard;
 }
 

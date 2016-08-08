@@ -48,19 +48,23 @@ int Board::getLast()
 // Sets the entire board to a space (empty)
 void Board::resetBoard()
 {
+	state->initCellArray(true);
+	/*
 	for (int i=0; i<numRows; i++){
 		for (int j=0; j<numCols; j++){
 			state->cell_array[i][j] = ' ';
 		}
 	}
+	*/
 }
 
 // Checks whether the board is full or not 
 // Only checks the first (top) row, as all the bottom ones get filled first
 bool Board::checkFull()
 {
+	char** st = state->getState();
 	for (int i=0; i<numCols; i++)
-		if (state->cell_array[0][i] == ' ')
+		if (st[0][i] == ' ')
 			return false;
 
 	return true;
@@ -92,7 +96,7 @@ bool Board::doCheck(int row, int col, char tokenIn)
 
 char** Board::getBoardState()
 {
-	return state->cell_array;
+	return state->getState();
 }
 
 int* Board::getSize()

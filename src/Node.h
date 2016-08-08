@@ -80,7 +80,7 @@ private:
 
 	//Stores the utility of the children
 	//	TODO: fix heap corruption so that hardcode length not required
-	int childUtil[];
+	int* childUtil;
 	Node** myChildren;
 	Node* parent;
 	GameState* state;
