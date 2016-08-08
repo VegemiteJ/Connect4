@@ -1,7 +1,9 @@
 #include "ClientSocketSet.h"
 #include <iostream>
 
-ClientSocketSet::ClientSocketSet(std::string addr, std::string destPort) {
+ClientSocketSet::ClientSocketSet(std::string addr, std::string destPort) :
+    result(NULL), iResult(0), iSendResult(0)
+{
 	ClientSocket = INVALID_SOCKET;
     struct addrinfo *result = NULL,
                     *ptr = NULL,
@@ -74,6 +76,8 @@ ClientSocketSet::~ClientSocketSet()
 {
     delete[] recvbuf;
 }
+
+ClientSocketSet::ClientSocketSet( const ClientSocketSet &obj ) {}
 
 int ClientSocketSet::sendMessage(std::string msg) {
 	char* sendbuf = (char*)msg.c_str();

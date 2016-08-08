@@ -14,7 +14,8 @@
 //Inputs: Port number to attempt assign on. Can fail with port bind exception
 //Returns: none
 //Description: Sets up TCP connection, leaves open awaiting new message
-ServerSocketSet::ServerSocketSet(std::string port) {
+ServerSocketSet::ServerSocketSet(std::string port) : iResult(0), iSendResult(0)
+{
 	errorFlag = 0;
     ListenSocket = INVALID_SOCKET;
     ClientSocket = INVALID_SOCKET;
@@ -99,6 +100,7 @@ ServerSocketSet::ServerSocketSet(std::string port) {
     closesocket(ListenSocket);
 }
 
+ServerSocketSet::ServerSocketSet( const ServerSocketSet &obj ) {}
 
 //Returns: 0 if successful, any otherwise
 //Inputs: Message to send
@@ -116,12 +118,12 @@ int ServerSocketSet::sendMessage(std::string msg) {
     if (iSendResult == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
         closesocket(ClientSocket);
-        free(sendBuf);
+        delete[] sendBuf;
         WSACleanup();
         return 1;
     } else {
     	printf("Bytes sent: %d\n", iSendResult);
-    	free(sendBuf);
+    	delete[] sendBuf;
     	return iSendResult;
     }
 }

@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	{
 		isServ = false;
 	}
-	Game game = Game(isServ);
+	Game game(isServ);
 	game.play();
 	game.PrintGameSequence();
 }

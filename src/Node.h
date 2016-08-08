@@ -21,7 +21,7 @@ public:
 	//-----------------------------
 	//Deallocates the utlity array and children utility based off
 	//   Does not delete game state, as this is shared among search tree
-	~Node();	
+	~Node();
 
 	void DeleteTree();
 
@@ -53,6 +53,8 @@ public:
 	void UnMove();
 
 private:
+	Node( Node &obj );
+	
 	//Private Member functions
 	//-----------------------------
 	int WinUtil();

@@ -9,7 +9,7 @@
 using namespace std;
 
 NetworkPlayer::NetworkPlayer(int numRows, int numCols, Board* iboard, bool isS)
-	: Player(numRows, numCols, iboard) 
+	: Player(numRows, numCols, iboard), player(NULL), server(NULL), client(NULL)
 {
 	isServer = isS;
 	id = 1;				//Player id

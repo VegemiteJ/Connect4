@@ -19,8 +19,8 @@ public:
 
 private:
 	//Necessary for generating random values
-	std::default_random_engine generator;
 	std::uniform_int_distribution<int> distribution;
+	std::default_random_engine generator;
 	std::function<int()> dice;
 };
 

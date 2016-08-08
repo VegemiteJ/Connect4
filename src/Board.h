@@ -13,6 +13,8 @@ public:
 	Board(int numRows, int numCols);
 	//Deletes self and state
 	~Board();
+	//Copy Constructor
+	Board( Board &obj );
 	
 	//Prints the board with rows and columns 1-indexed
 	//	Player 1 is red, Player 2 is green

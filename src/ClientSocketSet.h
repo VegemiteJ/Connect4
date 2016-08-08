@@ -39,6 +39,9 @@ public:
     int errorFlag;
 private:
 
+    //Copy constructor - Not a valid call ever
+    ClientSocketSet( const ClientSocketSet &obj );
+
     //Windows socket requirements
 	SOCKET ClientSocket;
     struct addrinfo *result;

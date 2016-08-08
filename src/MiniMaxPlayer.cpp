@@ -13,9 +13,10 @@
 int global_prunes = 0;
 
 //iAlg is 0 -> Alpha beta else minimax
-MiniMaxPlayer::MiniMaxPlayer(int numRows, int numCols, Board* iBoard, Node* iroot, int iturn, int iAlg) : 
-	Player(numRows, numCols, iBoard), Variation(NULL), alloc(false), utility(0), algRef(iAlg),
-	turnReference(iturn), root(iroot)
+MiniMaxPlayer::MiniMaxPlayer(int numRows, int numCols, Board* iBoard,
+	Node* iroot, int iturn, int iAlg) : 
+	Player(numRows, numCols, iBoard), Variation(NULL), alloc(false), move(0),
+	currentMove(0), utility(0), algRef(iAlg), turnReference(iturn), root(iroot)
 	{
 		startDepth = 5;
 	}

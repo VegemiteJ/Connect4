@@ -97,6 +97,8 @@ Game::~Game()
 	delete[] moveSequence;
 }
 
+Game::Game( const Game &obj ) {}
+
 //Return 0 if p1 starts, 1 if p2 starts
 int Game::detStart()
 {
@@ -164,7 +166,7 @@ void Game::PrintGameSequence()
 	int* size = board->getSize();
 
 	cout << "Printing the game..." << endl;
-	while(moveSequence[count] != 0 && count < size[0]*size[1])	//Double check for safety
+	while( count < size[0]*size[1] && moveSequence[count] != 0 )	//Double check for safety
 	{
 		(count != 0) ? (cout << "," << moveSequence[count++]) : (cout << moveSequence[count++]); 
 	}

@@ -2,7 +2,7 @@
 #include "ColourDef.h"
 #include "Consts.h"
 
-Board::Board(int numRowsi, int numColsi) : numMoves(0)
+Board::Board(int numRowsi, int numColsi) : numMoves(0), lastMove(0)
 {
 	numRows = numRowsi;
 	numCols = numColsi;
@@ -18,6 +18,14 @@ Board::~Board()
 {
 	cout << "Cleaning Board" << endl;
 	delete state;
+}
+
+Board::Board( Board &obj ) : 
+	hasWon(obj.hasWon), numMoves(obj.numMoves), numRows(obj.numRows),
+	numCols(obj.numCols), lastMove(obj.lastMove)
+{
+	char** cell_array = obj.getBoardState();
+	state = new GameState(cell_array, obj.numRows, obj.numCols);
 }
 
 // Prints the board layout

@@ -11,7 +11,7 @@ class Game
 {
 public:
 	//Set up a new game with special parameters if we are a server
-	Game(bool isServer);
+	explicit Game(bool isServer);
 	~Game();
 
 	//Play a game
@@ -20,6 +20,9 @@ public:
 	void PrintGameSequence();
 
 private:
+	//Can't create a copy of game
+	Game( const Game &obj );
+
 	//Set the specific players
 	//	TODO: eliminate need for numRows, numCols call and request from board
 	void setPlayers(int numRows, int numCols, bool isServer);

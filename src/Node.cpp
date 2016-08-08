@@ -12,8 +12,8 @@ using namespace std;
 Node::Node() {}	//Unused
 
 Node::Node(int iID, GameState* iinitial, int initial_turn) :
-	ID(iID), thisMoveColumn(-1), numChildren(-1), thisTurn(initial_turn), 
-	allocated(0), myUtil(0), myChildren(NULL), 
+	ID(iID), thisMoveColumn(-1), thisMoveRow(-1), numChildren(-1),
+	thisTurn(initial_turn), allocated(0), myUtil(0), myChildren(NULL), 
 	parent(NULL), state(iinitial)
 	{
 		childUtil = new int[state->numCols];
@@ -21,8 +21,8 @@ Node::Node(int iID, GameState* iinitial, int initial_turn) :
 	}
 
 Node::Node(int iID, GameState* parent_state, int new_mov_column, int new_turn) :
-	ID(iID), thisMoveColumn(new_mov_column), numChildren(-1), thisTurn(new_turn), 
-	allocated(0), myUtil(0), myChildren(NULL), 
+	ID(iID), thisMoveColumn(new_mov_column), thisMoveRow(-1), numChildren(-1),
+	thisTurn(new_turn), allocated(0), myUtil(0), myChildren(NULL), 
 	parent(NULL), state(parent_state) 
 	{
 		childUtil = new int[state->numCols];
@@ -35,10 +35,18 @@ Node::~Node()
 {
 	if (verbose>3)
 		cout << "Deleting node: " << ID << endl;
-	if (allocated==1)
+	if (allocated==1) {
 		delete[] childUtil;		//Why does New[] throwing segfault after 15 deep or so on linux
 								//Mem usage is only 800MB for 15 deep... so that isn't the issue
+	} else if (allocated>1) {
+		delete[] myChildren;
+		delete[] childUtil;
+	}
+
 }
+
+Node::Node( Node &obj ) {}
+
 void Node::DeleteTree() {}
 
 //Public Member Functions
@@ -101,14 +109,16 @@ Node** Node::DiscoverChildren()
 		cout << "NumChild: " << numChildren << endl;
 	if (numChildren != 0) {
 		myChildren = new Node*[numChildren];
-		allocated = 1;
+		childUtil = new int[numChildren]();		//Why is New[] throwing segfault????
+		allocated = 2;
 	}
-	//childUtil = new int[numChildren]();		Why is New[] throwing segfault????
+
 	for (int i = 0; i<terminalPosition; i++){
 		if (verbose>3)
 			cout << "Making node: " << i << endl;
 		myChildren[i] = new Node(global_id++, state, children[i], (thisTurn+1)%2);
 	}
+	
 	//Free local scope children array
 	//delete[] children;	Why is New[] throwing segfault????
 
