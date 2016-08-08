@@ -1,5 +1,5 @@
 #include "Node.h"
-#include "consts.h"
+#include "Consts.h"
 #include "ColourDef.h"
 #include <iostream>
 

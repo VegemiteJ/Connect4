@@ -1,6 +1,6 @@
 #include "Board.h"
 #include "ColourDef.h"
-#include "consts.h"
+#include "Consts.h"
 
 Board::Board(int numRowsi, int numColsi) : numMoves(0)
 {
@@ -66,6 +66,7 @@ bool Board::checkFull()
 	return true;
 }
 
+//Returns true if the column is a valid possible move
 bool Board::checkValidMove(int col) 
 {
 	return state->checkValidMove(col);
@@ -82,6 +83,8 @@ void Board::checkWin(int colIn, char tokenIn)
 
 }
 
+//Check if [row][col] is equal to tokenIn
+//	Also bounds checking
 bool Board::doCheck(int row, int col, char tokenIn) 
 {
 	return state->doCheck(row, col, tokenIn);

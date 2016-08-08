@@ -1,6 +1,6 @@
 #include "GameState.h"
 #include "ColourDef.h"
-#include "consts.h"
+#include "Consts.h"
 #include <iostream>
 
 using namespace std;

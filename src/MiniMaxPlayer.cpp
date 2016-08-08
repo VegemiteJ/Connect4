@@ -1,5 +1,5 @@
 #include "MiniMaxPlayer.h"
-#include "consts.h"
+#include "Consts.h"
 #include "ColourDef.h"
 
 #include <chrono>
@@ -30,7 +30,7 @@ int MiniMaxPlayer::play(bool valid)
 {
 	global_prunes = 0;
 	global_id = 0;
-	int ret = IterativeDeepen(60000);
+	int ret = IterativeDeepen(24000);
 	if (verbose == 0) {
 		cout << "\nUtility Estimate: " << utility << endl;
 		cout << "Reached Depth: " << startDepth << endl;

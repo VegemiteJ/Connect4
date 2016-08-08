@@ -3,7 +3,7 @@
 #include "Player.h"
 //#include "ServerSocketSet.h"
 //#include "ClientSocketSet.h"
-#include "consts.h"
+#include "Consts.h"
 #include <iostream>
 #include <string>
 
