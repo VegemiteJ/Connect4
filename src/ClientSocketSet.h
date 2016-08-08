@@ -17,22 +17,37 @@
 
 class ClientSocketSet {
 public:
+    //Attempt to initialise new socket connecting to <addr,destPort>
 	ClientSocketSet(std::string addr, std::string destPort);
-    ~ClientSocketSet();
-	int sendMessage(std::string msg);
-	char* receiveMessage(void);
-	void zeroMemory(void);
-    int errorFlag;
-    
-private:
-	SOCKET ClientSocket;
 
+    //Delete recvbuf
+    ~ClientSocketSet();
+
+    //Assumes socket established and connection works. Send msg through socket
+    //  Returns the number of bytes sent
+	int sendMessage(std::string msg);
+
+    //Receive message into char array
+	char* receiveMessage(void);
+
+    //Zero the receive buffer.
+	void zeroMemory(void);
+
+    //Error flag for windows socket status messages. Many possible socket errors 
+    //  but value is 0 on success. For all errors see:
+    //https://msdn.microsoft.com/en-us/library/windows/desktop/ms740668(v=vs.85).aspx
+    int errorFlag;
+private:
+
+    //Windows socket requirements
+	SOCKET ClientSocket;
     struct addrinfo *result;
     struct addrinfo hints;
-
     WSADATA wsaData;
-    int iResult;
-    int iSendResult;
+
+    //Message send and receive details
+    int iResult;        //Number of bytes received
+    int iSendResult;    //Number of bytes sent
     char* recvbuf;
     int recvbuflen;
 };

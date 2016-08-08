@@ -9,11 +9,13 @@
 
 #define INF 999999
 
+//Initialise total number of prunes to 0
 int global_prunes = 0;
 
 //iAlg is 0 -> Alpha beta else minimax
-MiniMaxPlayer::MiniMaxPlayer(int Cols, int Rows, Board* iBoard, Node* iroot, int iturn, int iAlg) : 
-	Player(Cols, Rows, iBoard), Variation(NULL), alloc(false), utility(0), algRef(iAlg), turnReference(iturn), root(iroot)
+MiniMaxPlayer::MiniMaxPlayer(int numRows, int numCols, Board* iBoard, Node* iroot, int iturn, int iAlg) : 
+	Player(numRows, numCols, iBoard), Variation(NULL), alloc(false), utility(0), algRef(iAlg),
+	turnReference(iturn), root(iroot)
 	{
 		startDepth = 5;
 	}
@@ -90,6 +92,7 @@ int MiniMaxPlayer::IterativeDeepen(int milliseconds)
 	return move;
 }
 
+//Returns: best move, utility-wise
 int MiniMaxPlayer::GetABPlay()
 {
 	if (verbose > 1)
@@ -120,6 +123,8 @@ int MiniMaxPlayer::GetABPlay()
 	return move;
 }
 
+//Returns: best move, utility-wise
+//	Runs the ai algorithm
 int MiniMaxPlayer::GetMMPlay()
 {
 	if (verbose > 1)
@@ -313,7 +318,5 @@ int* MiniMaxPlayer::GetVariation()
 	return Variation;
 }
 
-void MiniMaxPlayer::PrintVariation(bool Maximizing)
-{
-	//Complicated
-}
+//Complicated. Unimplemented until Principle Variation storage is complete
+void MiniMaxPlayer::PrintVariation(bool Maximizing) {}

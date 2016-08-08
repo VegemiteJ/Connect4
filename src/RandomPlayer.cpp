@@ -10,6 +10,8 @@ RandomPlayer::RandomPlayer(int numRows, int numCols, Board* iboard)
 	id = 2;
 	distribution = uniform_int_distribution<int>(1,numCols);
 	dice = bind(distribution, generator);
+
+	//Generate 3 test values between 1 and numCols
 	cout << "Test: " << dice() << dice() << dice() << endl;
 }
 
@@ -22,7 +24,7 @@ void RandomPlayer::Exit(bool val) {}
 int RandomPlayer::play(bool valid) 
 {
 	int tentatitve = dice();
-	while(!board->checkValidMove(tentatitve-1))
+	while(!board->checkValidMove(tentatitve-1))	//While that column is full gen. more moves
 	{
 		tentatitve = dice();
 	}

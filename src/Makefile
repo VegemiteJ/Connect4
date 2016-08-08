@@ -1,15 +1,15 @@
 # Makefile for connect-four
 
-CLASSES = GameState.o Node.o Board.o Player.o MiniMaxPlayer.o LocalPlayer.o Game.o
-#  ClientSocketSet.o ServerSocketSet.o  NetworkPlayer.o RandomPlayer.o Game.o
-NETCLASSES = ClientSocketSet.o ServerSocketSet.o
+CLASSES = GameState.o Node.o Board.o Player.o MiniMaxPlayer.o LocalPlayer.o RandomPlayer.o Game.o
+NETCLASSES = ClientSocketSet.o ServerSocketSet.o NetworkPlayer.o
+
+#Store all objects in a Obj folder, seperate from src files
 OBJLOC = ./Objs
 OBJS = $(patsubst %,$(OBJLOC)/%,$(CLASSES))
 NOBJS = $(patsubst %,$(OBJLOC)/%,$(NETCLASSES))
 VERSION = -std=gnu++0x -Wall -pedantic -O3
 CYG = -g
 LIB = 
-# -lws2_32
 INCLUDE = -I"/usr/include"
 
 all: main
@@ -17,6 +17,7 @@ all: main
 clean:
 	rm -f Objs/*.o ../bin/* *.h.gch
 # ----------------------------------------------------
+
 # BOARD STUFF	
 GameState.o: GameState.cpp
 	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
@@ -24,7 +25,14 @@ GameState.o: GameState.cpp
 Board.o: Board.cpp
 	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
 # ----------------------------------------------------
-# FUNDAMENTAL GAME STUFF
+
+# FUNDAMENTAL GAME STUFF	
+Game.o: Game.cpp
+	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
+
+# ----------------------------------------------------	
+
+# PLAYER TYPES
 Player.o: Player.cpp
 	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
 
@@ -39,22 +47,13 @@ RandomPlayer.o: RandomPlayer.cpp
 
 MiniMaxPlayer.o: MiniMaxPlayer.cpp
 	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
-	
-Game.o: Game.cpp
-	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
 # ----------------------------------------------------	
-# PLAYER TYPES
-Human.o: Player.h Human.cpp 
-	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
 
-# Computer: Player Computer.cpp
-#	g++ -c Computer.cpp
-# ----------------------------------------------------	
 # AI TYPES	
 Node.o: Node.cpp
 	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
-
 # ----------------------------------------------------	
+
 # NETWORKING
 Network: ClientSocketSet.o ServerSocketSet.o
 	g++ netmainS.cpp $(NOBJS) ${VERSION} ${LIB} -o ../bin/NetTestS.exe
@@ -65,8 +64,8 @@ ClientSocketSet.o: ClientSocketSet.h ClientSocketSet.cpp
 
 ServerSocketSet.o: ServerSocketSet.h ServerSocketSet.cpp
 	g++ -c ${VERSION} ${INCLUDE} ServerSocketSet.cpp -o $(OBJLOC)/$@
-
 #-----------------------------------------------------
+
 # MAIN
-main: ${CLASSES}
+main: ${NETCLASSES} ${CLASSES}
 	g++ ${CYG} main.cpp $(OBJS) ${LIB} ${VERSION} -o ../bin/Connect4.exe

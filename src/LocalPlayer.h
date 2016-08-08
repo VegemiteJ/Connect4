@@ -10,7 +10,11 @@ class LocalPlayer: public Player
 public:
 	LocalPlayer(int numRows, int numCols, Board* iboard);
 	~LocalPlayer();
+
+	//Prompt the User for a move via CLI
 	virtual int play(bool valid);
+
+	//Inherited unused Player functions
 	virtual void initialise();
 	virtual void setFirst();
 	virtual void Exit(bool);

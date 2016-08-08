@@ -10,21 +10,34 @@
 class Game
 {
 public:
+	//Set up a new game with special parameters if we are a server
 	Game(bool isServer);
 	~Game();
+
+	//Play a game
 	void play();
+	//Print a sequence of moves played in a game
 	void PrintGameSequence();
 
 private:
-
+	//Set the specific players
+	//	TODO: eliminate need for numRows, numCols call and request from board
 	void setPlayers(int numRows, int numCols, bool isServer);
 
+	//Returns 0 if p1 starts, 1 if p2 starts. Determine the start order by prompting
+	//	the user (Server) for input
 	int detStart();
+
+	//If the server, notify the client and shutdown the socket
 	void cleanup();
 
+	//Increments for each move
 	int turnCounter;
+
+	//0 if p1 starts, 1 if p2 starts
 	int started;
 
+	//Series of moves that was played in the game
 	int* moveSequence;
 
 	Board* board;

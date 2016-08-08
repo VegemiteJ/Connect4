@@ -56,19 +56,28 @@ public:
 	//Sets the number of winning elements to check (usually 4)
 	void setLength(int length);
 
+	//Attempts to add a token to column col.
+	//	Responsibility for valid placement is up to the caller by calling
+	//	checkValidMove();
 	void update_cell(int col, char tokenIn);
 	void update_cell(int row, int col, char tokenIn);
 
+	//Index of the Row and Col of the last move
 	int LastMoveRow;
 	int LastMoveCol;
 
+	//Sizes
 	int numRows;
 	int numCols;
-	char** cell_array;
-
 private:
-	//Value is 4 for connect 4
+	//Internal storage
+	char** cell_array;
+	
+	//Value is 4 for connect 4. Set by the Game setup. Remains constant throughout
+	//	a game
 	int connectLength;
+
+	//"Zero" (Set to all ' ' spaces) the cell_array
 	void initCellArray();
 };
 

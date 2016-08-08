@@ -20,6 +20,7 @@ ClientSocketSet::ClientSocketSet(std::string addr, std::string destPort) {
         return;
     }
 
+    //Define required socket details. In this case TCP
 	ZeroMemory( &hints, sizeof(hints) );
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
@@ -69,7 +70,10 @@ ClientSocketSet::ClientSocketSet(std::string addr, std::string destPort) {
     }
 }
 
-ClientSocketSet::~ClientSocketSet() {}
+ClientSocketSet::~ClientSocketSet() 
+{
+    delete[] recvbuf;
+}
 
 int ClientSocketSet::sendMessage(std::string msg) {
 	char* sendbuf = (char*)msg.c_str();

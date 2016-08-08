@@ -77,7 +77,10 @@ private:
 	int thisTurn;
 	int allocated;
 	int myUtil;
-	int childUtil[7];
+
+	//Stores the utility of the children
+	//	TODO: fix heap corruption so that hardcode length not required
+	int childUtil[];
 	Node** myChildren;
 	Node* parent;
 	GameState* state;

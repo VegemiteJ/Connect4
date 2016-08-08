@@ -5,6 +5,7 @@
 
 using namespace std;
 
+//Set cell_array to all spaces
 void GameState::initCellArray()
 {
 	cell_array = new char*[numRows];
@@ -18,6 +19,7 @@ void GameState::initCellArray()
 	}
 }
 
+//Initialise new state from parent state (Make a fully copy)
 GameState::GameState(char** prev_cell_array, int inumRows, int inumCols) :
 	LastMoveRow(-1), LastMoveCol(-1), numRows(inumRows),
 	numCols(inumCols), cell_array(NULL), connectLength(4)
@@ -33,6 +35,7 @@ GameState::GameState(char** prev_cell_array, int inumRows, int inumCols) :
 	}
 }
 
+//Initialise new state from parent state (Make a fully copy)
 GameState::GameState(GameState* prev, int row, int col, int turn) :
 	LastMoveRow(-1), LastMoveCol(-1), numRows(-1),
 	numCols(-1), cell_array(NULL), connectLength(4)
@@ -57,6 +60,9 @@ GameState::GameState(GameState* prev, int row, int col, int turn) :
 	LastMoveCol = col;
 }
 
+//Initialise new state from parent state (Make a fully copy)
+//	Adds new entry in col. Performs no validity checking, Object is always constructed
+//	but will notify when col is an error
 GameState::GameState(GameState* prev, int col, int turn) :
 	LastMoveRow(-1), LastMoveCol(col), numRows(-1),
 	numCols(-1), cell_array(NULL), connectLength(4)
@@ -90,11 +96,9 @@ GameState::GameState(GameState* prev, int col, int turn) :
 	// If the entire column is filled, output an error 
 	if (placed == false)
 		cout << "Error, that column is already full, pick another" << endl;
-	
-	//cout << endl << endl;
 }
 
-
+//Construct a new blank State
 GameState::GameState(int inumRows, int inumCols) :
 	LastMoveRow(-1), LastMoveCol(-1), numRows(inumRows),
 	numCols(inumCols), cell_array(NULL), connectLength(4)
@@ -102,6 +106,7 @@ GameState::GameState(int inumRows, int inumCols) :
 	initCellArray();
 }
 
+//Delete cell_array
 GameState::~GameState()
 {
 	if (verbose > 4)
@@ -116,6 +121,7 @@ GameState::~GameState()
 	delete[] cell_array;
 }
 
+//Print the game board. p1 is Red 'X', p2 is green 'O'
 void GameState::print()
 {
 	// x axis labels
@@ -154,6 +160,7 @@ void GameState::print()
 	}
 }
 
+//As above but print last move at row,col as yellow
 void GameState::print(int row, int col)
 {
 	// x axis labels
@@ -192,6 +199,7 @@ void GameState::print(int row, int col)
 	}
 }
 
+//Returns true if the game board is full
 bool GameState::completed()
 {
 	//For all columns, only check topmost row
@@ -202,6 +210,7 @@ bool GameState::completed()
 	return true;
 }
 
+//Return true if player 'X' or 'O' wins
 bool GameState::checkWin(char tokenIn)
 {
 	return checkWin(LastMoveCol, tokenIn);
@@ -234,6 +243,7 @@ bool GameState::checkWin(int colIn, char tokenIn)
 	return hasWon;
 }
 
+//Return true if player 'X' or 'O' wins
 bool GameState::checkWin(int rowIn, int colIn, char tokenIn)
 {
 	bool hasWon;
@@ -387,6 +397,7 @@ bool GameState::checkDiag(int rowIn, int colIn, char tokenIn)
 	return hasWon;
 }
 
+//Return true if the value at cell_array[row][col] == tokenIn
 bool GameState::doCheck(int row, int col, char tokenIn)
 {
 	//Check if in bounds
@@ -404,6 +415,7 @@ bool GameState::doCheck(int row, int col, char tokenIn)
 	}
 }
 
+//If a move at column col is valid, return true
 bool GameState::checkValidMove(int col)
 {
 	bool placeable = false;
@@ -425,6 +437,8 @@ bool GameState::checkValidMove(int col)
 	}
 }
 
+//Attempt to place token in column. No guarantee or error flag set if not possible
+//	Caller responsible for first calling checkValidMove
 void GameState::update_cell(int col, char tokenIn)
 {
 	bool placed = false;
@@ -440,11 +454,13 @@ void GameState::update_cell(int col, char tokenIn)
 	}
 }
 
+//Usable for debug uses only. No guarantee of correctness
 void GameState::update_cell(int row, int col, char tokenIn)
 {
 	cell_array[row][col] = tokenIn;
 }
 
+//Set the win length of the game board
 void GameState::setLength(int length)
 {
 	connectLength = length;

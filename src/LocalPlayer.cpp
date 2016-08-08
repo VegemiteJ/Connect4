@@ -4,18 +4,22 @@
 
 using namespace std;
 
+//Initialise new local player
 LocalPlayer::LocalPlayer(int numRows, int numCols, Board* iboard)
 	: Player(numRows, numCols, iboard) 
 {
 	id = 0;
 }
 
+
 LocalPlayer::~LocalPlayer() {}
 
+//Inherited Classes from Player
 void LocalPlayer::initialise() {}
 void LocalPlayer::setFirst() {}
 void LocalPlayer::Exit(bool val) {}
 
+//Prompt the human player for a move via CLI
 int LocalPlayer::play(bool valid) 
 {
 	int choice = 0;

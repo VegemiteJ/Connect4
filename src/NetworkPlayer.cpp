@@ -12,7 +12,7 @@ NetworkPlayer::NetworkPlayer(int numRows, int numCols, Board* iboard, bool isS)
 	: Player(numRows, numCols, iboard) 
 {
 	isServer = isS;
-	id = 1;
+	id = 1;				//Player id
 	firstRun = true;
 }
 

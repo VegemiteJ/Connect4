@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Player::Player(int Cols, int Rows, Board* iBoard)
+Player::Player(int numRows, int numCols, Board* iBoard)
 {
 	numRows = Rows;
 	numColumns = Cols;

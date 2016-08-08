@@ -28,6 +28,9 @@ Game::Game(bool isServer) {
 	
 	setPlayers(numRows, numCols, isServer);
 
+	//Perform decision as to who goes first, p1 or p2?
+	//	Only relevant for networked game.
+	//	TODO: Abstract details away into networked game setup func.
 	if (isServer)
 	{
 
@@ -66,6 +69,7 @@ Game::Game(bool isServer) {
 	}
 }
 
+//Create two new players
 void Game::setPlayers(int numRows, int numCols, bool isServer)
 {
 	//p1 = new NetworkPlayer(numRows, numCols, board, isServer);
@@ -74,6 +78,7 @@ void Game::setPlayers(int numRows, int numCols, bool isServer)
 	p2 = new MiniMaxPlayer(numCols, numRows, board, NULL, 1, 0);
 }
 
+//Used in networked games
 void Game::cleanup()
 {
 	if (verbose >3)
@@ -92,6 +97,7 @@ Game::~Game()
 	delete[] moveSequence;
 }
 
+//Return 0 if p1 starts, 1 if p2 starts
 int Game::detStart()
 {
 		//Start determination protocol
