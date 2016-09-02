@@ -34,6 +34,9 @@ private:
 	//If the server, notify the client and shutdown the socket
 	void cleanup();
 
+	//Set a starting game sequence for testing
+	void BoardInit();
+
 	//Increments for each move
 	int turnCounter;
 

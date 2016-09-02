@@ -2,6 +2,8 @@
 #define NODE_H
 
 #include "GameState.h"
+#include <random>
+#include <functional>
 
 class Node
 {
@@ -12,10 +14,14 @@ public:
 	//1. Called when constructing the root Node. 
 	//    Must supply the initial state of the game board
 	Node(int ID, GameState* initial, int initial_turn);
+	Node(int ID, GameState* initial, int initial_turn,
+	int heuristics, int randSwaps);
 
 	//2. Called for children/ search tree initiailisation 
 	//    Requires valid entry column for new move and turn of this node
 	Node(int ID, GameState* parent_state, int new_mov_column, int new_turn);
+	Node(int ID, GameState* parent_state, int new_mov_column, int new_turn,
+	int heuristics, int randSwaps);
 
 	//Public Destructors
 	//-----------------------------
@@ -65,7 +71,8 @@ private:
 	//Helper Functions
 	//-----------------------------
 	int Count3(char Token);
-	int DetermineDirection(int k, int l);	
+	int DetermineDirection(int k, int l);
+	void Swap(int* a, int* b);
 
 	//Unused empty constructor
 	Node();
@@ -79,6 +86,14 @@ private:
 	int thisTurn;
 	int allocated;
 	int myUtil;
+	int numRandSwaps;
+
+	//Heuristic selection for computeUtil()
+	//	Form is bit mask
+	int heuristics;
+	//--------------------------------------------
+	// 0   -   0   -   0   -   0   
+	// ws  -   c3  -   c2  -   cprime
 
 	//Stores the utility of the children
 	//	TODO: fix heap corruption so that hardcode length not required
@@ -86,6 +101,10 @@ private:
 	Node** myChildren;
 	Node* parent;
 	GameState* state;
+
+	std::uniform_int_distribution<int> distribution;
+	std::default_random_engine generator;
+	std::function<int()> dice;
 	
 };
 

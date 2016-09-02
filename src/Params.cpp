@@ -53,36 +53,39 @@ void Params::ParseParams(int m_argc, const char** m_argv)
 	{
 		if (string(argv[ix]) == "-n"){
 			PrintConsole("-n\n",3);
-		}else if (string(argv[ix]) == "-lp") {
+			//Read next number ix++
+		}else if (string(argv[ix]) == "-lp") {	//lcl player
 			PrintConsole("-lp\n",3);
-		}else if (string(argv[ix]) == "-np") {
+		}else if (string(argv[ix]) == "-np") {	//network player
 			PrintConsole("-np\n",3);
-		}else if (string(argv[ix]) == "-rp") {
+		}else if (string(argv[ix]) == "-rp") {	//randome player
 			PrintConsole("-rp\n",3);
-		}else if (string(argv[ix]) == "-ai") {
+		}else if (string(argv[ix]) == "-ai") {	//ai player
 			PrintConsole("-ai\n",3);
-		}else if (string(argv[ix]) == "-mm") {
+		}else if (string(argv[ix]) == "-mm") {	//ai option ab or mm
 			PrintConsole("-mm\n",3);
-		}else if (string(argv[ix]) == "-ab") {
+		}else if (string(argv[ix]) == "-ab") {	//^^
 			PrintConsole("-ab\n",3);
-		}else if (string(argv[ix]) == "-id") {
+		}else if (string(argv[ix]) == "-id") {	//iterative deepening
 			PrintConsole("-id\n",3);
-		}else if (string(argv[ix]) == "-d") {
+		}else if (string(argv[ix]) == "-d") {	//initial search depth
 			PrintConsole("-d\n",3);
-		}else if (string(argv[ix]) == "-ws") {
+		}else if (string(argv[ix]) == "-ws") {	//winstate heuristic
 			PrintConsole("-ws\n",3);
-		}else if (string(argv[ix]) == "-c3") {
+		}else if (string(argv[ix]) == "-c3") {	//connect 3 heuristic
 			PrintConsole("-c3\n",3);
-		}else if (string(argv[ix]) == "-c2") {
+		}else if (string(argv[ix]) == "-c2") {	//connect 2 heuristic
 			PrintConsole("-c2\n",3);
-		}else if (string(argv[ix]) == "-cprime") {
+		}else if (string(argv[ix]) == "-cprime") {	//connectivity heuristic
 			PrintConsole("-cprime\n",3);
-		}else if (string(argv[ix]) == "-rs") {
+		}else if (string(argv[ix]) == "-rs") {	//num of rand swaps in discoverChild
 			PrintConsole("-rs\n",3);
-		}else if (string(argv[ix]) == "-bs") {
+		}else if (string(argv[ix]) == "-bs") {	//initial board state
 			PrintConsole("-bs\n",3);
-		}else if (string(argv[ix]) == "-of") {
+		}else if (string(argv[ix]) == "-of") {	//output file
 			PrintConsole("-of\n",3);
+		}else if (string(argv[ix]) == "-v") {	//verbose level
+			PrintConsole("-v\n",3);
 		}else{
 			PrintConsole("Unknown param: " + string(argv[ix]) + "\n",3);
 		}

@@ -4,17 +4,31 @@
 #include "board.h"
 #include "consts.h"
 #include "ColourDef.h"
+#include "Params.h"
+#include "PrintConsole.h"
+#include <cstdlib>
+#include <string>
 #include <iostream>
 #include <thread>
 
-int verbose = 0;
+
+int verbose = 4;
 
 using namespace std;
 
-int main(int argc, char** argv)
+
+int main(int argc, const char** argv)
 {
+	Params* settings = new Params();
+
+	settings->ParseParams(argc, argv);
+
+	//settings->ParseParams(argc, argv);
+
+	/*
 	Board* board = new Board(6,7);
 	
+	/*
 	board->update_cell(0,'X');
 	board->update_cell(0,'X');
 	board->update_cell(0,'X');
@@ -24,11 +38,18 @@ int main(int argc, char** argv)
 	board->update_cell(1,'O');
 	board->update_cell(2,'O');
 	board->update_cell(3,'O');
-
-	MiniMaxPlayer* testPlayer = new MiniMaxPlayer(7, 6, board, NULL, 0, 1);
 	
+	
+	MiniMaxPlayer* testPlayer = new MiniMaxPlayer(7, 6, board, NULL, 0, 15, 6, 2, 10000, 16);
+
+	testPlayer->PrintSettings();
+	
+	*/
+	/*
 	GameState* state = board->getBoardState(0);
 	Node* initial = new Node(global_id, state, 0);
+	board->print();
+	*/
 	/*
 	cout << "-1,-1: " << initial->DetermineDirection(-1,-1) << endl;
 	cout << "-1,0: " << initial->DetermineDirection(-1,0) << endl;
@@ -39,9 +60,8 @@ int main(int argc, char** argv)
 	cout << "1,0: " << initial->DetermineDirection(1,0) << endl;
 	cout << "1,1: " << initial->DetermineDirection(1,1) << endl;
 	*/
-	(void) initial->H1Util();
 
-	board->print();
+	
 	
 	/*
 	int* Variation = testPlayer->GetVariation();

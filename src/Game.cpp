@@ -7,10 +7,13 @@
 #include "Consts.h"
 #include <iostream>
 #include <cstdlib>
+#include <sstream>
 #include <random>
 #include <memory>
 #include <chrono>
 #include <functional>
+#include <fstream>
+#include <string>
 #include <time.h>
 
 using namespace std;
@@ -22,6 +25,7 @@ Game::Game(bool isServer) {
 	moveSequence = new int[numRows*numCols]();
 
 	board = new Board(numRows, numCols);
+	BoardInit();
 
 	turnCounter = 0;
 	int start;
@@ -73,9 +77,11 @@ Game::Game(bool isServer) {
 void Game::setPlayers(int numRows, int numCols, bool isServer)
 {
 	//p1 = new NetworkPlayer(numRows, numCols, board, isServer);
-	p1 = new LocalPlayer(numRows, numCols, board);
-	//p1 = new MiniMaxPlayer(numCols, numRows, board, NULL, 0, 0);	//iAlg is 0 -> Alpha beta else minimax
+	//p1 = new LocalPlayer(numRows, numCols, board);
+	p1 = new MiniMaxPlayer(numCols, numRows, board, NULL, 0, 0);	//iAlg is 0 -> Alpha beta else minimax
 	p2 = new MiniMaxPlayer(numCols, numRows, board, NULL, 1, 0);
+	//p1 = new RandomPlayer(numRows,numCols, board);
+	//p2 = new RandomPlayer(numRows,numCols, board);
 }
 
 //Used in networked games
@@ -113,11 +119,13 @@ int Game::detStart()
 
 void Game::play() {
 	// Playing the actual game
-	board->print();
+	if (verbose != -1)
+		board->print();
 	while (board->checkFull() == false && board->hasWon == false)
 	{
 		//Player 1s Turn----------------------------------------
-		cout << "Player1 turn" << endl;
+		if (verbose != -1)
+			cout << "Player1 turn" << endl;
 		int choice;
 		choice = p1->play(true);
 		choice--;
@@ -131,13 +139,15 @@ void Game::play() {
 		board->update_cell(choice, 'X');
 		board->checkWin(choice, 'X');
 		turnCounter++;
-		board->print(board->getBoardState(0)->LastMoveRow, board->getBoardState(0)->LastMoveCol);
+		if (verbose != -1)
+			board->print(board->getBoardState(0)->LastMoveRow, board->getBoardState(0)->LastMoveCol);
 
 		//Don't ask for player 2 move if 1 wins
 		if (board->hasWon == true) {break;}
 
 		//Player 2s Turn----------------------------------------
-		cout << "Player2 turn" << endl;
+		if (verbose != -1)		
+			cout << "Player2 turn" << endl;
 		choice = p2->play(true);
 		choice--;
 		while(!board->checkValidMove(choice)){
@@ -148,14 +158,17 @@ void Game::play() {
 		board->update_cell(choice, 'O');
 		board->checkWin(choice, 'O');
 		turnCounter++;
-		board->print(board->getBoardState(0)->LastMoveRow, board->getBoardState(0)->LastMoveCol);
+		if (verbose != -1)
+			board->print(board->getBoardState(0)->LastMoveRow, board->getBoardState(0)->LastMoveCol);
 	}
 
 	// Output winner
-	if (turnCounter%2 != 0)
-		cout << "X wins!" << endl;
-	else
-		cout << "O wins!" << endl;
+	if (verbose != -1) {
+		if (turnCounter%2 != 0)
+			cout << "X wins!" << endl;
+		else
+			cout << "O wins!" << endl;
+	}
 
 	cleanup();
 }
@@ -164,12 +177,38 @@ void Game::PrintGameSequence()
 {
 	int count = 0;
 	int* size = board->getSize();
+	stringstream ss;
 
-	cout << "Printing the game..." << endl;
+	//cout << "Printing the game..." << endl;
 	while( count < size[0]*size[1] && moveSequence[count] != 0 )	//Double check for safety
 	{
-		(count != 0) ? (cout << "," << moveSequence[count++]) : (cout << moveSequence[count++]); 
+		(count != 0) ? (ss << "," << moveSequence[count++]) : (ss << moveSequence[count++]); 
 	}
 
+	//If even number of moves, O wins
+	char winner = ((count%2 == 0) ? 'O' : 'X');
+	ostringstream out;
+	out << "\n" << winner << "," << count << "\n";
+	string winnerstr = out.str();
+	string moveSeq = ss.str();
+	
+	if (verbose != -1)
+		cout << winnerstr << moveSeq;
+
+	string filename = "result_3X3O_depth2_WinOnly.dat";
+	ofstream outfile;
+	outfile.open(filename, ios::out | ios::app);
+	while (!outfile.is_open()){
+		outfile.open(filename, ios::out | ios::app);
+	}
+	outfile << winnerstr << moveSeq;
+	outfile.close();
+
 	delete[] size;
+}
+
+void Game::BoardInit()
+{
+	board->update_cell(3, 'X');
+	board->update_cell(3, 'O');
 }

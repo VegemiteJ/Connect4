@@ -10,7 +10,12 @@ class MiniMaxPlayer : public Player
 public:
 	//Parameters: Number of Rows, Number of Cols, Board, Initial Search node (deprecated)
 	//	Turn (0 if p1, 1 if p2), Algorithm to use: 0 for AB, 1 for MM
-	MiniMaxPlayer(int numRows, int numCols, Board* iBoard, Node* root, int iturn, int iAlg);
+	MiniMaxPlayer(int numRows, int numCols, Board* iBoard, Node* root, int iturn);
+
+	//Constructor for algorithm selection
+	MiniMaxPlayer(int numRows, int numCols, Board* iBoard, Node* root,
+		int iturn, int heuristics, int randSwaps, int aiParams, int time, int startdepth);
+
 	~MiniMaxPlayer();
 
 	//Returns column to place move in. If previous move was invalid, param valid set to true
@@ -38,6 +43,9 @@ public:
 	//Print the Principle variation
 	void PrintVariation(bool Maximising);
 
+
+	void PrintSettings();
+
 private:
 	MiniMaxPlayer();
 
@@ -56,6 +64,22 @@ private:
 	//Returns the best move from AlphaBeta
 	int GetABPlay();
 
+	//Intermediate node params
+	int heuristic;	
+	int randSwaps;
+
+	//Stores what ai to use, MM or AB with/without ID.
+	//Bit mask in form
+	//--------------------------------------
+	// 0-------------------------0
+	//MM if 0, AB if 1		  1 if ID 				
+	int aiParams;
+	int idTime;
+	int itrDepth;
+
+	//Depth to start at for ID
+	int startDepth;
+
 	//The array holding prinicple variation
 	int* Variation;
 
@@ -66,11 +90,8 @@ private:
 	int currentMove;
 	int utility;
 
-	int algRef;
 	int turnReference;
 	Node* root;
-
-	int startDepth;
 };
 
 

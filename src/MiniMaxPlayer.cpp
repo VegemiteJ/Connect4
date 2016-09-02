@@ -1,6 +1,7 @@
 #include "MiniMaxPlayer.h"
 #include "Consts.h"
 #include "ColourDef.h"
+#include "PrintConsole.h"
 
 #include <chrono>
 #include <thread>
@@ -14,12 +15,22 @@ int global_prunes = 0;
 
 //iAlg is 0 -> Alpha beta else minimax
 MiniMaxPlayer::MiniMaxPlayer(int numRows, int numCols, Board* iBoard,
-	Node* iroot, int iturn, int iAlg) : 
+	Node* iroot, int iturn) : 
 	Player(numRows, numCols, iBoard), Variation(NULL), alloc(false), move(0),
-	currentMove(0), utility(0), algRef(iAlg), turnReference(iturn), root(iroot)
-	{
-		startDepth = 5;
-	}
+	currentMove(0), utility(0), turnReference(iturn), root(iroot)
+{
+	startDepth = 2;
+}
+
+//Constructor for param parsing from cli
+MiniMaxPlayer::MiniMaxPlayer(int numRows, int numCols, Board* iBoard,
+		Node* iroot, int iturn, int m_heuristic, int m_randSwaps,
+		int m_aiParams, int m_idTime, int m_startDepth) : 
+	Player(numRows, numCols, iBoard), heuristic(m_heuristic), randSwaps(m_randSwaps),
+	aiParams(m_aiParams), idTime(m_idTime), itrDepth(m_startDepth), startDepth(m_startDepth),
+	Variation(NULL), alloc(false), move(0), currentMove(0), utility(0),
+	turnReference(iturn), root(iroot)
+{}
 
 MiniMaxPlayer::~MiniMaxPlayer() 
 {
@@ -33,10 +44,24 @@ int MiniMaxPlayer::play(bool valid)
 {
 	global_prunes = 0;
 	global_id = 0;
-	int ret = IterativeDeepen(24000);
+	int ret;
+
+	//If iterative deepen
+	if (((aiParams >> 0) & 1) == 1) {
+		PrintConsole("Running ID...\n", 1);
+		ret = IterativeDeepen(idTime);
+	}
+	else if (((aiParams >> 1) & 1) == 1) {
+		PrintConsole("Running AB...\n", 1);
+		ret = GetABPlay();
+	} else {
+		PrintConsole("Running MM...\n", 1);
+		ret = GetMMPlay();
+	}
+
 	if (verbose == 0) {
 		cout << "\nUtility Estimate: " << utility << endl;
-		cout << "Reached Depth: " << startDepth << endl;
+		cout << "Reached Depth: " << itrDepth << endl;
 	}
 	return ret;
 
@@ -44,17 +69,20 @@ int MiniMaxPlayer::play(bool valid)
 
 int MiniMaxPlayer::IterativeDeepen(int milliseconds)
 {
-	startDepth = 5;
+	itrDepth = startDepth;
 	//Set start time
 	auto start = chrono::steady_clock::now();
 	auto startTime = chrono::steady_clock::now();
 	
 	//Run default depth search
 	int move;
-	if (algRef == 0)
+	if (((aiParams >> 1) & 1) == 1) {
+		PrintConsole("Running AB...\n", 1);
 		move = GetABPlay();
-	else
+	} else {
+		PrintConsole("Running MM...\n", 1);
 		move = GetMMPlay();
+	}
 
 	auto runTime = chrono::steady_clock::now();
 	double runLength = chrono::duration_cast<chrono::milliseconds>(runTime-startTime).count();
@@ -72,15 +100,18 @@ int MiniMaxPlayer::IterativeDeepen(int milliseconds)
 
 	//While current time - start time < 10 seconds continue running searches with depth+1
 	//	I.e while within computational budget. Very rough estimation is 6.0*prevRunTime < timeRemaining
-	while( 6.0*runLength < (milliseconds-difference) && startDepth <= depthPossible )
+	while( 6.0*runLength < (milliseconds-difference) && itrDepth <= depthPossible )
 	{
-		startDepth++;
+		itrDepth++;
 		startTime = chrono::steady_clock::now();
 		
-		if (algRef == 0)
+		if (((aiParams >> 1) & 1) == 1) {
+			PrintConsole("Running AB...\n", 1);
 			move = GetABPlay();
-		else
+		} else {
+			PrintConsole("Running MM...\n", 1);
 			move = GetMMPlay();
+		}
 
 		runTime = chrono::steady_clock::now();
 
@@ -97,21 +128,21 @@ int MiniMaxPlayer::IterativeDeepen(int milliseconds)
 int MiniMaxPlayer::GetABPlay()
 {
 	if (verbose > 1)
-		cout << "\n\nAB Searching to depth: " << startDepth << endl;
+		cout << "\n\nAB Searching to depth: " << itrDepth << endl;
 	Node* test = new Node(global_id++, board->getBoardState(0), (turnReference+1)%2);
 	if (verbose>3)
 		cout << "TURN REF: " << turnReference << endl;
 
 	bool Maximizing = (turnReference==0) ? true : false;
 	auto start = chrono::steady_clock::now();
-	utility = AlphaBeta(test, startDepth, -INF, INF, Maximizing);
+	utility = AlphaBeta(test, itrDepth, -INF, INF, Maximizing);
 	auto end = chrono::steady_clock::now();
 	chrono::duration<double> diff = end-start;
 
-	int move = Variation[startDepth]+1;		//Move is column index (1 indexed) not state index
+	int move = Variation[itrDepth]+1;		//Move is column index (1 indexed) not state index
 
 	if (verbose>1) {
-		cout << "Depth: " << startDepth << endl;
+		cout << "Depth: " << itrDepth << endl;
 		cout << "Best Utility: " << utility << " in " << diff.count() << "s" << endl;
 		cout << "Explored " << global_id << " Nodes..." << endl;
 		cout << "Number of pruned: " << global_prunes << endl;
@@ -129,18 +160,18 @@ int MiniMaxPlayer::GetABPlay()
 int MiniMaxPlayer::GetMMPlay()
 {
 	if (verbose > 1)
-		cout << "\n\nMM Searching to depth: " << startDepth << endl;
+		cout << "\n\nMM Searching to depth: " << itrDepth << endl;
 	Node* test = new Node(global_id++, board->getBoardState(0), (turnReference+1)%2);
 	if (verbose>3)
 		cout << "TURN REF: " << turnReference << endl;
 
 	bool Maximizing = (turnReference==0) ? true : false;
 	auto start = chrono::steady_clock::now();
-	int utility = Minimax(test, startDepth, Maximizing);
+	int utility = Minimax(test, itrDepth, Maximizing);
 	auto end = chrono::steady_clock::now();
 	chrono::duration<double> diff = end-start;
 
-	int move = Variation[startDepth]+1;		//Move is column index (1 indexed) not state index
+	int move = Variation[itrDepth]+1;		//Move is column index (1 indexed) not state index
 
 	if (verbose>1) {
 		cout << "Best Utility: " << utility << " in " << diff.count() << "s" << endl;
@@ -321,3 +352,12 @@ int* MiniMaxPlayer::GetVariation()
 
 //Complicated. Unimplemented until Principle Variation storage is complete
 void MiniMaxPlayer::PrintVariation(bool Maximizing) {}
+
+void MiniMaxPlayer::PrintSettings()
+{
+	cout << "Ai Player Settings..." << endl;
+	cout << "Ai Type: " << ((((aiParams >> 1) & 1) == 1) ? "AB" : "MM") << endl;
+	cout << "Iterative Deepening? " << ((((aiParams >> 0) & 1) == 1) ? "Yes" : "No") << endl;
+	cout << "Iterative Deepening time: " << idTime << endl;
+	cout << "Start Depth: " << startDepth << endl;
+}

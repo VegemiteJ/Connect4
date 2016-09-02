@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 
-int verbose = 0;
+int verbose = -1;
 
 using namespace std;
 

@@ -1,13 +1,13 @@
 # Makefile for connect-four
 
-CLASSES = GameState.o Node.o Board.o Player.o MiniMaxPlayer.o LocalPlayer.o RandomPlayer.o Game.o
+CLASSES = PrintConsole.o Params.o GameState.o Node.o Board.o Player.o MiniMaxPlayer.o LocalPlayer.o RandomPlayer.o Game.o
 NETCLASSES = ClientSocketSet.o ServerSocketSet.o NetworkPlayer.o
 
 #Store all objects in a Obj folder, seperate from src files
 OBJLOC = ./Objs
 OBJS = $(patsubst %,$(OBJLOC)/%,$(CLASSES))
 NOBJS = $(patsubst %,$(OBJLOC)/%,$(NETCLASSES))
-VERSION = -std=gnu++0x -Wall -pedantic -O3
+VERSION = -std=gnu++14 -Wall -pedantic -O3
 CYG = -g
 LIB = 
 INCLUDE = -I"/usr/include"
@@ -20,10 +20,10 @@ clean:
 
 # BOARD STUFF	
 GameState.o: GameState.cpp
-	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
+	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
 
 Board.o: Board.cpp
-	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
+	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
 # ----------------------------------------------------
 
 # FUNDAMENTAL GAME STUFF	
@@ -37,7 +37,7 @@ Player.o: Player.cpp
 	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
 
 LocalPlayer.o: LocalPlayer.cpp
-	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
+	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
 
 NetworkPlayer.o: NetworkPlayer.cpp
 	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
@@ -51,8 +51,8 @@ MiniMaxPlayer.o: MiniMaxPlayer.cpp
 
 # AI TYPES	
 Node.o: Node.cpp
-	g++ -c $^ ${CYG} -o $(OBJLOC)/$@
-# ----------------------------------------------------	
+	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
+# ----------------------------------------------------
 
 # NETWORKING
 Network: ClientSocketSet.o ServerSocketSet.o
@@ -64,6 +64,15 @@ ClientSocketSet.o: ClientSocketSet.h ClientSocketSet.cpp
 
 ServerSocketSet.o: ServerSocketSet.h ServerSocketSet.cpp
 	g++ -c ${VERSION} ${INCLUDE} ServerSocketSet.cpp -o $(OBJLOC)/$@
+#-----------------------------------------------------
+
+#-----------------------------------------------------
+# HELPER FUNCTIONS
+PrintConsole.o: src/PrintConsole.cpp
+	g++ -c ${INCLUDE} $^ ${FLAGS} ${VERSION} -o $(OBJLOC)/$@
+
+Params.o: src/Params.cpp
+	g++ -c ${INCLUDE} $^ ${FLAGS} ${VERSION} -o $(OBJLOC)/$@
 #-----------------------------------------------------
 
 # MAIN
