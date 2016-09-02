@@ -23,6 +23,24 @@ int main(int argc, const char** argv)
 
 	settings->ParseParams(argc, argv);
 
+	cout << "Player1: " << settings->p1 << endl;
+	cout << "Player1 Param: " << settings->aiParams1 << endl;
+	cout << "Player1 time: " << settings->idTime1 << endl;
+	cout << "Player1 maxDepth: " << settings->itrDepth1 << endl;
+	cout << "Player1 Node: " << settings->heuristic1 << endl;
+	cout << "Player1 randSwaps: " << settings->randSwaps1 << endl;
+
+	cout << "Player2: " << settings->p2 << endl;
+	cout << "Player2 Param: " << settings->aiParams2 << endl;
+	cout << "Player2 time: " << settings->idTime2 << endl;
+	cout << "Player2 maxDepth: " << settings->itrDepth2 << endl;
+	cout << "Player2 Node: " << settings->heuristic2 << endl;
+	cout << "Player2 randSwaps: " << settings->randSwaps2 << endl;
+
+	cout << "Initial board state: " << settings->bs << endl;
+	cout << "Output File: " << settings->of << endl;
+	verbose = settings->verbosity;
+	cout << "Verbose level: " << verbose << endl;
 	//settings->ParseParams(argc, argv);
 
 	/*

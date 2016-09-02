@@ -11,26 +11,39 @@ private:
 	const char** argv;
 
 	void InputSuccess();
+	void ParsePlayer(std::string);
 public:
 
 	//Construct container class
-	Params() {}
+	Params();
 	void ParseParams(int argc, const char** argv);
 
 	//Game specific setup
 	bool networkGame;
 	bool isServer;
-	Player* p1;
-	Player* p2;
+	bool seenFirstPlayer;
+	bool seenPlayers;
+	string p1;
+	string p2;
 
 	//Node specific
-	int heuristic;	
-	int randSwaps;
+	int heuristic1;	
+	int randSwaps1;
+	int heuristic2;	
+	int randSwaps2;
 				
 	//AI player specific				
-	int aiParams;
-	int idTime;
-	int itrDepth;	
+	int aiParams1;
+	int idTime1;
+	int itrDepth1;
+	
+	int aiParams2;
+	int idTime2;
+	int itrDepth2;
+
+	string bs;
+	string of;
+	int verbosity;
 };
 
 
