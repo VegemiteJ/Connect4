@@ -5,6 +5,8 @@
 #include "RandomPlayer.h"
 #include "MiniMaxPlayer.h"
 #include "Consts.h"
+#include "PrintConsole.h"
+
 #include <iostream>
 #include <cstdlib>
 #include <sstream>
@@ -18,7 +20,17 @@
 
 using namespace std;
 
-Game::Game(bool isServer) {
+Game::Game(Params* m_settings): settings(m_settings) {
+	PrintConsole("Creating new game\n", 3);
+	//Setup move sequence, turn counter, who starts var
+	//Setup board
+	//Setup players -> pass parameters to ai as necessary
+	//	Also for networked game sanity check player selection and ordering
+	//	Abstract network setup game into seperate function as necessary
+	
+	
+
+	/*
 	const int numRows = 6;
 	const int numCols = 7;
 
@@ -71,6 +83,7 @@ Game::Game(bool isServer) {
 		cout << "p1 : Player id: " << ((p1->id == 0) ? "Local" : "Network") << " Turn: " << p1->turn << endl;
 		cout << "p1 : Player id: " << ((p2->id == 0) ? "Local" : "Network") << " Turn: " << p2->turn << endl;
 	}
+	*/
 }
 
 //Create two new players
@@ -78,8 +91,8 @@ void Game::setPlayers(int numRows, int numCols, bool isServer)
 {
 	//p1 = new NetworkPlayer(numRows, numCols, board, isServer);
 	//p1 = new LocalPlayer(numRows, numCols, board);
-	p1 = new MiniMaxPlayer(numCols, numRows, board, NULL, 0, 0);	//iAlg is 0 -> Alpha beta else minimax
-	p2 = new MiniMaxPlayer(numCols, numRows, board, NULL, 1, 0);
+	//p1 = new MiniMaxPlayer(numCols, numRows, board, NULL, 0, 0);	//iAlg is 0 -> Alpha beta else minimax
+	//p2 = new MiniMaxPlayer(numCols, numRows, board, NULL, 1, 0);
 	//p1 = new RandomPlayer(numRows,numCols, board);
 	//p2 = new RandomPlayer(numRows,numCols, board);
 }
@@ -103,7 +116,7 @@ Game::~Game()
 	delete[] moveSequence;
 }
 
-Game::Game( const Game &obj ) {}
+//Game::Game( const Game &obj ) {}
 
 //Return 0 if p1 starts, 1 if p2 starts
 int Game::detStart()

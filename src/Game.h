@@ -6,12 +6,13 @@
 #define __USE_W32_SOCKETS
 #include "Board.h"
 #include "Player.h"
+#include "Params.h"
 
 class Game
 {
 public:
 	//Set up a new game with special parameters if we are a server
-	explicit Game(bool isServer);
+	Game(Params* m_settings);
 	~Game();
 
 	//Play a game
@@ -21,8 +22,9 @@ public:
 
 private:
 	//Can't create a copy of game
+	Game() {}
 	Game( const Game &obj );
-
+	
 	//Set the specific players
 	//	TODO: eliminate need for numRows, numCols call and request from board
 	void setPlayers(int numRows, int numCols, bool isServer);
@@ -49,6 +51,7 @@ private:
 	Board* board;
 	Player* p1;
 	Player* p2;
+	Params* settings;
 };
 
 

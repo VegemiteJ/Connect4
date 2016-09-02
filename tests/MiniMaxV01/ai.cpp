@@ -6,6 +6,7 @@
 #include "ColourDef.h"
 #include "Params.h"
 #include "PrintConsole.h"
+#include "Game.h"
 #include <cstdlib>
 #include <string>
 #include <iostream>
@@ -41,6 +42,9 @@ int main(int argc, const char** argv)
 	cout << "Output File: " << settings->of << endl;
 	verbose = settings->verbosity;
 	cout << "Verbose level: " << verbose << endl;
+
+	Game* newGame = new Game(settings);
+
 	//settings->ParseParams(argc, argv);
 
 	/*
