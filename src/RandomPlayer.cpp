@@ -11,9 +11,15 @@ RandomPlayer::RandomPlayer(int numRows, int numCols, Board* iboard)
 	distribution = uniform_int_distribution<int>(1,numCols);
 	generator.seed(chrono::system_clock::now().time_since_epoch().count());
 	dice = bind(distribution, generator);
+}
 
-	//Generate 3 test values between 1 and numCols
-	//cout << "Test: " << dice() << dice() << dice() << endl;
+RandomPlayer::RandomPlayer(Board* iboard)
+	: Player(iboard) 
+{
+	id = 2;
+	distribution = uniform_int_distribution<int>(1,iboard->GetCol());
+	generator.seed(chrono::system_clock::now().time_since_epoch().count());
+	dice = bind(distribution, generator);
 }
 
 RandomPlayer::~RandomPlayer() {}

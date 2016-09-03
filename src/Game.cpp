@@ -20,7 +20,10 @@
 
 using namespace std;
 
-Game::Game(Params* m_settings): settings(m_settings) {
+Game::Game(Params* m_settings): turnCounter(0), started(0),
+ 	moveSequence(NULL), board(NULL), p1(NULL), p2(NULL), 
+ 	settings(m_settings)
+{
 	PrintConsole("Creating new game\n", 3);
 	//Setup move sequence, turn counter, who starts var
 	//Setup board
@@ -28,7 +31,29 @@ Game::Game(Params* m_settings): settings(m_settings) {
 	//	Also for networked game sanity check player selection and ordering
 	//	Abstract network setup game into seperate function as necessary
 	
-	
+	//Default size
+	int nRows = 6, nCols = 7;
+	board = new Board(nRows,nCols);
+
+	//In future BoardInit() reads in board size and starting positions 
+	//	if any from the file included in the parameters settings file.
+
+	int* size = board->getSize();
+	nRows = size[0];
+	nCols = size[1];
+	delete[] size;
+
+	moveSequence = new int[nRows*nCols]();
+
+	//Determine if networked game
+	if (settings->networkGame) {
+		setupNetworkedGame();
+	} else {
+		setupPlayers();
+	}
+
+	PrintConsole("Player 1 is: " + to_string(p1->id) + "\n",3);
+	PrintConsole("Player 2 is: " + to_string(p2->id) + "\n",3);
 
 	/*
 	const int numRows = 6;
@@ -87,7 +112,7 @@ Game::Game(Params* m_settings): settings(m_settings) {
 }
 
 //Create two new players
-void Game::setPlayers(int numRows, int numCols, bool isServer)
+void Game::setupPlayers()
 {
 	//p1 = new NetworkPlayer(numRows, numCols, board, isServer);
 	//p1 = new LocalPlayer(numRows, numCols, board);
@@ -95,6 +120,32 @@ void Game::setPlayers(int numRows, int numCols, bool isServer)
 	//p2 = new MiniMaxPlayer(numCols, numRows, board, NULL, 1, 0);
 	//p1 = new RandomPlayer(numRows,numCols, board);
 	//p2 = new RandomPlayer(numRows,numCols, board);
+
+	if (settings->p1 == "lp") {
+		p1 = new LocalPlayer(board);
+	}else if (settings->p1 == "rp") {
+		p1 = new RandomPlayer(board);
+	}else if (settings->p1 == "ai") {
+		//Determine minimax or alphabeta and other params
+	}else {
+		//Error somehow
+		PrintConsole("Error: Game setup - Invalid player option\n",-1000);
+	}
+	if (settings->p2 == "lp") {
+		p2 = new LocalPlayer(board);
+	}else if (settings->p2 == "rp") {
+		p2 = new RandomPlayer(board);
+	}else if (settings->p2 == "ai") {
+		//Determine minimax or alphabeta and other params
+	}else {
+		//Error somehow
+		PrintConsole("Error: Game setup - Invalid player option\n",-1000);
+	}
+}
+
+void Game::setupNetworkedGame()
+{
+
 }
 
 //Used in networked games
@@ -222,6 +273,5 @@ void Game::PrintGameSequence()
 
 void Game::BoardInit()
 {
-	board->update_cell(3, 'X');
-	board->update_cell(3, 'O');
+	
 }

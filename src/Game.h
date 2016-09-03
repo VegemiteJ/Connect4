@@ -24,10 +24,12 @@ private:
 	//Can't create a copy of game
 	Game() {}
 	Game( const Game &obj );
-	
+
 	//Set the specific players
 	//	TODO: eliminate need for numRows, numCols call and request from board
-	void setPlayers(int numRows, int numCols, bool isServer);
+	void setupPlayers();
+	
+	void setupNetworkedGame();
 
 	//Returns 0 if p1 starts, 1 if p2 starts. Determine the start order by prompting
 	//	the user (Server) for input

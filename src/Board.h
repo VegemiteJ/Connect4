@@ -57,6 +57,8 @@ public:
 	
 	//Tuple of the board size <rows,cols>
 	int* getSize();
+	int GetRow();
+	int GetCol();
 	
 	//Number of moves made so far
 	int numMoves;

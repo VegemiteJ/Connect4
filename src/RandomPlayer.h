@@ -11,6 +11,7 @@ class RandomPlayer: public Player
 {
 public:
 	RandomPlayer(int numRows, int numCols, Board* iboard);
+	RandomPlayer(Board* iboard);
 	~RandomPlayer();
 	virtual int play(bool valid);
 	virtual void initialise();

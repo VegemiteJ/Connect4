@@ -9,6 +9,7 @@ class LocalPlayer: public Player
 {
 public:
 	LocalPlayer(int numRows, int numCols, Board* iboard);
+	LocalPlayer(Board* board);
 	~LocalPlayer();
 
 	//Prompt the User for a move via CLI

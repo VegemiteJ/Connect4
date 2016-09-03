@@ -11,6 +11,12 @@ LocalPlayer::LocalPlayer(int numRows, int numCols, Board* iboard)
 	id = 0;
 }
 
+LocalPlayer::LocalPlayer(Board* m_board) 
+	: Player(m_board)
+{
+	id = 0;
+}
+
 
 LocalPlayer::~LocalPlayer() {}
 

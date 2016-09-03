@@ -9,6 +9,7 @@ class Player
 {
 public:
 	Player(int numRows, int numCols, Board* iboard);
+	Player(Board* m_board);
 	~Player();
 
 	//All player classes must return the column of the move to play (1-indexed)

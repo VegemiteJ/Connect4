@@ -53,6 +53,15 @@ int Board::getLast()
 	return lastMove;
 }
 
+int Board::GetRow()
+{
+	return numRows;
+}
+int Board::GetCol()
+{
+	return numCols;
+}
+
 // Sets the entire board to a space (empty)
 void Board::resetBoard()
 {

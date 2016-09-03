@@ -1,6 +1,6 @@
 # Makefile for GameState Unit tests
 
-CLASSES = PrintConsole.o Params.o GameState.o Board.o Node.o Player.o MiniMaxPlayer.o Game.o
+CLASSES = PrintConsole.o Params.o GameState.o Board.o Node.o Player.o RandomPlayer.o LocalPlayer.o MiniMaxPlayer.o Game.o
 OBJLOC = ./src/Objs
 OBJ = $(patsubst %,$(OBJLOC)/%,$(CLASSES))
 VERSION = -std=gnu++14 -Wall -O0 -pedantic
@@ -56,6 +56,12 @@ Player.o: src/Player.cpp
 
 MiniMaxPlayer.o: src/MiniMaxPlayer.cpp
 	g++ -c ${INCLUDE} $^ ${FLAGS} ${VERSION} -o $(OBJLOC)/$@
+
+LocalPlayer.o: src/LocalPlayer.cpp
+	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
+
+RandomPlayer.o: src/RandomPlayer.cpp
+	g++ -c ${VERSION} $^ ${CYG} -o $(OBJLOC)/$@
 
 Game.o: src/Game.cpp
 	g++ -c ${INCLUDE} $^ ${Flags} ${VERSION} ${CYG} -o $(OBJLOC)/$@

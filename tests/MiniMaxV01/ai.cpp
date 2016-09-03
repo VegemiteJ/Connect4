@@ -44,6 +44,7 @@ int main(int argc, const char** argv)
 	cout << "Verbose level: " << verbose << endl;
 
 	Game* newGame = new Game(settings);
+	newGame->play();
 
 	//settings->ParseParams(argc, argv);
 
