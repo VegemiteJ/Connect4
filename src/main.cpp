@@ -4,6 +4,9 @@
 //#include "ServerSocketSet.h"
 //#include "ClientSocketSet.h"
 #include "Consts.h"
+#include "PrintConsole.h"
+#include "Params.h"
+
 #include <iostream>
 #include <string>
 
@@ -11,23 +14,12 @@ int verbose = -1;
 
 using namespace std;
 
-int main(int argc, char** argv)
+int main(int argc, const char** argv)
 {
-	if (argc != 2) {
-		cout << "Incorrect usage Enter \"true\" or \"false\". ./Connect4 [isServer?]" << endl;
-		exit(1);
-	}
-	string isServer = string(argv[1]);	//Get if is server
-	bool isServ;
-	if (isServer == "true" || isServer == "True")
-	{
-		isServ = true;
-	}
-	else
-	{
-		isServ = false;
-	}
-	Game game(isServ);
-	game.play();
-	game.PrintGameSequence();
+	Params* settings = new Params();
+	settings->ParseParams(argc, argv);
+
+	Game* newGame = new Game(settings);
+	newGame->play();
+	newGame->PrintGameSequence();
 }

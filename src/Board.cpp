@@ -1,6 +1,7 @@
 #include "Board.h"
 #include "ColourDef.h"
 #include "Consts.h"
+#include "PrintConsole.h"
 
 Board::Board(int numRowsi, int numColsi) : numMoves(0), lastMove(0)
 {
@@ -43,7 +44,8 @@ void Board::print(int row, int col)
 // Insert a move into the 'lowest' slot in the specified column
 // Also checks whether it is occupied
 void Board::update_cell(int col, char tokenIn)
-{	
+{
+	PrintConsole("Updating cell: " + to_string(col) + " " + to_string(tokenIn) + "\n",3);
 	state->update_cell(col, tokenIn);
 	numMoves++;
 }

@@ -16,6 +16,9 @@ public:
 	MiniMaxPlayer(int numRows, int numCols, Board* iBoard, Node* root,
 		int iturn, int heuristics, int randSwaps, int aiParams, int time, int startdepth);
 
+	MiniMaxPlayer(Board* iBoard, Node* root, int iturn, int heuristics, int randSwaps,
+		int aiParams, int time, int startdepth);
+
 	~MiniMaxPlayer();
 
 	//Returns column to place move in. If previous move was invalid, param valid set to true

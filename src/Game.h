@@ -17,9 +17,10 @@ public:
 
 	//Play a game
 	void play();
+
 	//Print a sequence of moves played in a game
 	void PrintGameSequence();
-
+	
 private:
 	//Can't create a copy of game
 	Game() {}
@@ -54,6 +55,9 @@ private:
 	Player* p1;
 	Player* p2;
 	Params* settings;
+
+	int xMoves;
+	int oMoves;
 };
 
 

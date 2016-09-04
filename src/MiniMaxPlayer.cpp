@@ -30,7 +30,19 @@ MiniMaxPlayer::MiniMaxPlayer(int numRows, int numCols, Board* iBoard,
 	aiParams(m_aiParams), idTime(m_idTime), itrDepth(m_startDepth), startDepth(m_startDepth),
 	Variation(NULL), alloc(false), move(0), currentMove(0), utility(0),
 	turnReference(iturn), root(iroot)
-{}
+{
+	initialise();
+}
+
+MiniMaxPlayer::MiniMaxPlayer(Board* m_board, Node* iroot, int iturn,
+	int m_heuristic, int m_randSwaps, int m_aiParams, int m_idTime, int m_startDepth) : 
+	Player(m_board), heuristic(m_heuristic), randSwaps(m_randSwaps),
+	aiParams(m_aiParams), idTime(m_idTime), itrDepth(m_startDepth), startDepth(m_startDepth),
+	Variation(NULL), alloc(false), move(0), currentMove(0), utility(0),
+	turnReference(iturn), root(iroot)
+{
+	initialise();
+}
 
 MiniMaxPlayer::~MiniMaxPlayer() 
 {
@@ -45,6 +57,9 @@ int MiniMaxPlayer::play(bool valid)
 	global_prunes = 0;
 	global_id = 0;
 	int ret;
+
+	//Reset Depth
+	itrDepth = startDepth;
 
 	//If iterative deepen
 	if (((aiParams >> 0) & 1) == 1) {
@@ -69,7 +84,6 @@ int MiniMaxPlayer::play(bool valid)
 
 int MiniMaxPlayer::IterativeDeepen(int milliseconds)
 {
-	itrDepth = startDepth;
 	//Set start time
 	auto start = chrono::steady_clock::now();
 	auto startTime = chrono::steady_clock::now();
@@ -128,7 +142,7 @@ int MiniMaxPlayer::IterativeDeepen(int milliseconds)
 int MiniMaxPlayer::GetABPlay()
 {
 	if (verbose > 1)
-		cout << "\n\nAB Searching to depth: " << itrDepth << endl;
+		cout << "\nAB Searching to depth: " << itrDepth << endl;
 	Node* test = new Node(global_id++, board->getBoardState(0), (turnReference+1)%2);
 	if (verbose>3)
 		cout << "TURN REF: " << turnReference << endl;
@@ -160,7 +174,7 @@ int MiniMaxPlayer::GetABPlay()
 int MiniMaxPlayer::GetMMPlay()
 {
 	if (verbose > 1)
-		cout << "\n\nMM Searching to depth: " << itrDepth << endl;
+		cout << "\nMM Searching to depth: " << itrDepth << endl;
 	Node* test = new Node(global_id++, board->getBoardState(0), (turnReference+1)%2);
 	if (verbose>3)
 		cout << "TURN REF: " << turnReference << endl;
@@ -185,7 +199,24 @@ int MiniMaxPlayer::GetMMPlay()
 	return move;
 }
 
-void MiniMaxPlayer::initialise() {}
+void MiniMaxPlayer::initialise() 
+{
+	 if (heuristic == 0){
+		heuristic = 15;
+	}if (randSwaps == -1){
+		randSwaps = board->GetCol();
+	}if (startDepth == -1){
+		startDepth = 6;
+		itrDepth = 6;
+	}
+
+	PrintConsole("AIParam: " + to_string(aiParams) + "\n",4);
+	PrintConsole("Heuristic: " + to_string(heuristic) + "\n",4);
+	PrintConsole("RandSwaps: " + to_string(randSwaps) + "\n",4);
+	PrintConsole("idTime: " + to_string(idTime) + "\n",4);
+	PrintConsole("itrDepth: " + to_string(itrDepth) + "\n",4);
+	PrintConsole("startDepth: " + to_string(startDepth) + "\n",4);
+}
 
 void MiniMaxPlayer::setFirst() {}
 

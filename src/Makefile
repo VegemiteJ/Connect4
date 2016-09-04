@@ -1,12 +1,14 @@
 # Makefile for connect-four
 
-CLASSES = PrintConsole.o Params.o GameState.o Node.o Board.o Player.o MiniMaxPlayer.o LocalPlayer.o RandomPlayer.o Game.o
+CLASSES = GameState.o Node.o Board.o Player.o MiniMaxPlayer.o LocalPlayer.o RandomPlayer.o Game.o
 NETCLASSES = ClientSocketSet.o ServerSocketSet.o NetworkPlayer.o
+HELPCLASSES = PrintConsole.o Params.o 
 
 #Store all objects in a Obj folder, seperate from src files
 OBJLOC = ./Objs
 OBJS = $(patsubst %,$(OBJLOC)/%,$(CLASSES))
 NOBJS = $(patsubst %,$(OBJLOC)/%,$(NETCLASSES))
+HOBJS = $(patsubst %,$(OBJLOC)/%,$(HELPCLASSES))
 VERSION = -std=gnu++14 -Wall -pedantic -O3
 CYG = -g
 LIB = 
@@ -68,13 +70,13 @@ ServerSocketSet.o: ServerSocketSet.h ServerSocketSet.cpp
 
 #-----------------------------------------------------
 # HELPER FUNCTIONS
-PrintConsole.o: src/PrintConsole.cpp
+PrintConsole.o: PrintConsole.cpp
 	g++ -c ${INCLUDE} $^ ${FLAGS} ${VERSION} -o $(OBJLOC)/$@
 
-Params.o: src/Params.cpp
+Params.o: Params.cpp
 	g++ -c ${INCLUDE} $^ ${FLAGS} ${VERSION} -o $(OBJLOC)/$@
 #-----------------------------------------------------
 
 # MAIN
-main: ${NETCLASSES} ${CLASSES}
-	g++ ${CYG} main.cpp $(OBJS) ${LIB} ${VERSION} -o ../bin/Connect4.exe
+main: ${HELPCLASSES} ${NETCLASSES} ${CLASSES}
+	g++ ${CYG} main.cpp $(HOBJS) $(OBJS) ${LIB} ${VERSION} -o ../bin/Connect4_3X6O.exe

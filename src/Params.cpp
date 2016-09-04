@@ -1,5 +1,6 @@
 #include "Params.h"
 #include "PrintConsole.h"
+#include "consts.h"
 #include <string>
 
 Params::Params() : networkGame(false), isServer(false), seenFirstPlayer(false),
@@ -13,10 +14,10 @@ void Params::InputSuccess()
 		PrintConsole("./Connect4 (-n [0|1]) [p1] [p2] (player options) (brd state file) (output file name) (-v [verbose level])\n", -1000);
 		PrintConsole("Network Game: (-n) followed by 0 if client, 1 if server\n",-1000);
 		PrintConsole("Possible Players are:\n", -1000);
-		PrintConsole("\tLocal Player \t\t(-lp)\n",-1000);
-		PrintConsole("\tNetwork Player \t\t(-np)\n",-1000);
-		PrintConsole("\tRandom Player \t\t(-rp)\n",-1000);
-		PrintConsole("\tAi Player \t\t(-ai)\n",-1000);
+		PrintConsole("\tLocal Player \t\t(lp)\n",-1000);
+		PrintConsole("\tNetwork Player \t\t(np)\n",-1000);
+		PrintConsole("\tRandom Player \t\t(rp)\n",-1000);
+		PrintConsole("\tAi Player \t\t(ai)\n",-1000);
 
 		PrintConsole("\nPlayer Options are:\n",-1000);
 		PrintConsole("\tChoose MM or AB ai\t(-mm, -ab)\n",-1000);
@@ -216,6 +217,7 @@ void Params::ParseParams(int m_argc, const char** m_argv)
 		}else if (string(argv[ix]) == "-v") {	//verbose level
 			PrintConsole("-v\n",3);
 			verbosity = std::stoi(argv[++ix]);
+			verbose = verbosity;
 		}else{
 			PrintConsole("Unknown param: " + string(argv[ix]) + "\n",3);
 		}
