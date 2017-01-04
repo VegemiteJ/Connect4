@@ -2,10 +2,25 @@
 //
 
 #include "stdafx.h"
+#include "Game.h"
+#include "Board.h"
+#include "Player.h"
+//#include "ServerSocketSet.h"
+//#include "ClientSocketSet.h"
+#include "Consts.h"
+#include <iostream>
+#include <string>
 
+int verbose = -1;
 
-int main()
+using namespace std;
+
+int main(int argc, const char** argv)
 {
-    return 0;
-}
+	Params p;
+	p.ParseParams(argc, argv);
 
+	Game game(&p);
+	game.play();
+	game.PrintGameSequence();
+}
