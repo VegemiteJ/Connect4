@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "RandomPlayer.h"
 #include <iostream>
 #include <cstdlib>

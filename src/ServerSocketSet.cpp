@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "ServerSocketSet.h"
 #include <iostream>
 
@@ -111,7 +112,7 @@ int ServerSocketSet::sendMessage(std::string msg) {
 		return -1;
 
 	char* sendBuf = new char[msg.length() + 1];	//Allocate the send buff
-    strcpy(sendBuf, msg.c_str());
+	strcpy_s(sendBuf, msg.length()+1, msg.c_str());
     std::cout << "Sending msg:[" << sendBuf << "] of length:" << (int)strlen(sendBuf) << std::endl;
 
 	iSendResult = send( ClientSocket, sendBuf, msg.length()+1, 0);
