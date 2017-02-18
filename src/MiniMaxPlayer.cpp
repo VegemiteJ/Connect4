@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "MiniMaxPlayer.h"
 #include "Consts.h"
 #include "ColourDef.h"
@@ -99,8 +100,8 @@ int MiniMaxPlayer::IterativeDeepen(int milliseconds)
 	}
 
 	auto runTime = chrono::steady_clock::now();
-	double runLength = chrono::duration_cast<chrono::milliseconds>(runTime-startTime).count();
-	double difference = chrono::duration_cast<chrono::milliseconds>(runTime-start).count();
+	double runLength = (double)chrono::duration_cast<chrono::milliseconds>(runTime-startTime).count();
+	double difference = (double)chrono::duration_cast<chrono::milliseconds>(runTime-start).count();
 	if (verbose>1)
 		cout << "Total Time so far: " << difference << "ms" << endl;
 	
@@ -129,8 +130,8 @@ int MiniMaxPlayer::IterativeDeepen(int milliseconds)
 
 		runTime = chrono::steady_clock::now();
 
-		runLength = chrono::duration_cast<chrono::milliseconds>(runTime-startTime).count();
-		difference = chrono::duration_cast<chrono::milliseconds>(runTime-start).count();
+		runLength = (double)chrono::duration_cast<chrono::milliseconds>(runTime-startTime).count();
+		difference = (double)chrono::duration_cast<chrono::milliseconds>(runTime-start).count();
 		if (verbose>1) {
 			cout << "Total Time so far: " << difference << "ms" << endl;
 		}

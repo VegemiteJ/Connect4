@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Board.h"
 #include "ColourDef.h"
 #include "Consts.h"

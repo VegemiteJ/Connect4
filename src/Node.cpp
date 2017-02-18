@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Node.h"
 #include "Consts.h"
 #include "ColourDef.h"
@@ -22,7 +23,7 @@ Node::Node(int iID, GameState* iinitial, int initial_turn) :
 		PrintConsole("Constructor 0 called...\n", 3);
 		childUtil = new int[state->numCols];
 		allocated = 1;
-		generator.seed(chrono::system_clock::now().time_since_epoch().count());
+		generator.seed((unsigned int)chrono::system_clock::now().time_since_epoch().count());
 		distribution = uniform_int_distribution<int>(1,state->numCols);
 		dice = bind(distribution, generator);
 	}
@@ -35,7 +36,7 @@ Node::Node(int iID, GameState* parent_state, int new_mov_column, int new_turn) :
 		PrintConsole("Constructor 1 called...\n", 3);
 		childUtil = new int[state->numCols];
 		allocated = 1;
-		generator.seed(chrono::system_clock::now().time_since_epoch().count());
+		generator.seed((unsigned int)chrono::system_clock::now().time_since_epoch().count());
 		distribution = uniform_int_distribution<int>(1,state->numCols);
 		dice = bind(distribution, generator);
 	}
@@ -51,7 +52,7 @@ Node::Node(int iID, GameState* iinitial, int initial_turn, int heuristic, int ra
 
 		childUtil = new int[state->numCols];
 		allocated = 1;
-		generator.seed(chrono::system_clock::now().time_since_epoch().count());
+		generator.seed((unsigned int)chrono::system_clock::now().time_since_epoch().count());
 		distribution = uniform_int_distribution<int>(1,state->numCols);
 		dice = bind(distribution, generator);
 	}
@@ -66,7 +67,7 @@ Node::Node(int iID, GameState* parent_state, int new_mov_column, int new_turn,
 		PrintConsole("Heuristic set to: " + to_string(heuristic) + "\n", 3);
 		childUtil = new int[state->numCols];
 		allocated = 1;
-		generator.seed(chrono::system_clock::now().time_since_epoch().count());
+		generator.seed((unsigned int)chrono::system_clock::now().time_since_epoch().count());
 		distribution = uniform_int_distribution<int>(1,state->numCols);
 		dice = bind(distribution, generator);
 	}
@@ -136,7 +137,8 @@ Node** Node::DiscoverChildren()
 	numChildren = 0;
 
 	int terminalPosition = 0;
-	int children[state->numCols];
+	//Provide static lookup for number of
+	int children[7];
 
 	//Discover number of children
 	for (int i=0; i<state->numCols; i++) {

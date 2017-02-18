@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "GameState.h"
 #include "ColourDef.h"
 #include "Consts.h"

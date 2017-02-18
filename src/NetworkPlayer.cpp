@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "NetworkPlayer.h"
 #include "LocalPlayer.h"
 #include "ServerSocketSet.h"

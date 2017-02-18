@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "LocalPlayer.h"
 #include <iostream>
 #include <cstdlib>

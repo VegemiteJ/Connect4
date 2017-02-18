@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Params.h"
 #include "PrintConsole.h"
 #include "consts.h"
