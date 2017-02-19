@@ -1,0 +1,45 @@
+Additions/Setup
+---------------------------------------
+Requires:
+Visual studio 2015
+GhostDoc
+GoogleTest (Nuget - gtest)
+GoogleTestAdapter (Nuget - **)
+
+Get GhostDoc
+	http://submain.com/download/ghostdoc/community/
+
+Get GoogleTest
+	https://github.com/google/googletest
+Add a new project and build as referenced here:
+	http://www.bogotobogo.com/cplusplus/google_unit_test_gtest.php
+
+-Ensure GoogleTest project builds correctly-
+
+
+UnitTestingProject
+	- Check that ConfigurationProperties -> C/C++ -> General has AdditionalIncludeDirectories referencing the 
+	source folder for Connect4 project
+	-Ensure that main has a snippet with:
+
+int main(int ac, char* av[])
+{
+    std::cout << "Running main() from gtest_main.cc\n";
+    ::testing::GTEST_FLAG(output) = "xml:TestResult.xml";
+    ::testing::InitGoogleTest(&ac, av);
+    return RUN_ALL_TESTS();
+}
+
+
+
+Troubleshooting
+------------------------
+1) Linker errors when running test project
+	-Make sure all project target visual studio 2016 (v140)
+		Right click project -> Properties -> General -> Platform Toolset
+	-Connect4 Project itself should be a static library
+		Right click project -> Properties -> General -> Configuration Type -> Static library (.lib)
+
+2) Test Explorer is missing google tests
+	- Check that google test adapter is installed for Connect 4 and Connect4_Tests
+	- Rebuild solution
