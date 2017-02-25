@@ -3,6 +3,7 @@
 #include "ColourDef.h"
 
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 
@@ -14,6 +15,10 @@ Board::Board()
     FilledColumns = new int[0]{ };
     NumRow = 0;
     NumCol = 0;
+    MoveRow = -1;
+    MoveCol = -1;
+    LastMove = NO_MOVE;
+    ConnectLength = 0;
 }
 
 void Board::CheckValid(Move p)
@@ -24,12 +29,22 @@ void Board::CheckValid(Move p)
     }
 }
 
+Board::Board(int _row, int _col, int _connectLength)
+    : Board(_row,_col)
+{
+    ConnectLength = _connectLength;
+}
+
 Board::Board(int _row, int _col)
 {
     state = new Matrix(_row, _col);
     FilledColumns = new int[_col] {0};
     NumRow = _row;
     NumCol = _col;
+    MoveRow = -1;
+    MoveCol = -1;
+    LastMove = NO_MOVE;
+    ConnectLength = 4;
 }
 
 void swap(Board & first, Board & second)
@@ -38,6 +53,9 @@ void swap(Board & first, Board & second)
 
 	swap(first.NumCol, second.NumCol);
 	swap(first.NumRow, second.NumRow);
+    swap(first.MoveCol, second.MoveCol);
+    swap(first.MoveRow, second.MoveRow);
+    swap(first.ConnectLength, second.ConnectLength);
     swap(first.FilledColumns, second.FilledColumns);
 	swap(first.state, second.state);
 }
@@ -55,6 +73,9 @@ Board::Board(const Board & other)
     state = other.state;
     NumRow = other.NumRow;
     NumCol = other.NumCol;
+    MoveRow = other.MoveRow;
+    MoveCol = other.MoveCol;
+    ConnectLength = other.ConnectLength;
     FilledColumns = new int[NumCol] {0};
     std::copy(other.FilledColumns, other.FilledColumns + other.NumCol, FilledColumns);
 }
@@ -149,22 +170,44 @@ vector<int>* Board::GetAllValidMoves()
     {
         if ((*state)(0, i) == NO_MOVE)
         {
-            validMoves->push_back(i);
+            validMoves->push_back(i+1);
         }
     }
+
+    cout << "Valid moves: ";
+    for (int i = 0; i < (*validMoves).size(); i++)
+    {
+        cout << (*validMoves)[i] << ",";
+    }
+    cout << endl;
 
     return validMoves;
 }
 
+/// <summary>
+/// Given 1-indexed move, update to 0-indexed location
+/// </summary>
+/// <param name="col">The col.</param>
+/// <param name="p">The player as enum P1_MOVE or P2_MOVE</param>
 void Board::MakeMove(int col, Move p)
 {
-    MoveCol = col;
+    LastMove = p;
+    MoveCol = col-1;
     MoveRow = NumRow - FilledColumns[col - 1] - 1;
     (*state)(NumRow - FilledColumns[col-1]-1, col-1) = p;
     FilledColumns[col-1]++;
 }
 
+/// <summary>
+/// Given 1-indexed move col+row, update to 0-indexed location
+/// </summary>
+/// <param name="row">The row.</param>
+/// <param name="col">The col.</param>
+/// <param name="p">The player as enum P1_MOVE or P2_MOVE</param>
 void Board::MakeMove(int row, int col, Move p)
 {
+    LastMove = p;
+    MoveCol = col - 1;
+    MoveRow = row - 1;
     (*state)(row-1, col-1) = p;
 }

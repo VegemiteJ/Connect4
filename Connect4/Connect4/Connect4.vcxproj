@@ -100,6 +100,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile />
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="ColourDef.h" />
+    <ClInclude Include="GameController.h" />
     <ClInclude Include="GameStateEvaluator.h" />
     <ClInclude Include="HumanPlayer.h" />
     <ClInclude Include="Matrix.h" />
@@ -151,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Connect4.cpp" />
+    <ClCompile Include="GameController.cpp" />
     <ClCompile Include="GameStateEvaluator.cpp" />
     <ClCompile Include="HumanPlayer.cpp" />
     <ClCompile Include="Matrix.cpp" />

@@ -3,7 +3,7 @@
 #include "Matrix_Tests.h"
 #include "Board_Tests.h"
 #include "HumanPlayer_Tests.h"
-
+#include "GameStateEvaluator_Tests.h"
 
 #include <iostream>
 

@@ -2,7 +2,7 @@
 
 #include "Player.h"
 
-class HumanPlayer : Player
+class HumanPlayer : public Player
 {
 private:
 

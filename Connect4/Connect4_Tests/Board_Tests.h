@@ -1,5 +1,3 @@
-#pragma once
-
 #include "gtest/gtest.h"
 #include "Board.h"
 
@@ -10,14 +8,22 @@ TEST(BoardTests, Constructor)
     Board c = Board(5, 1);
     EXPECT_EQ(c.NumRow, 5);
     EXPECT_EQ(c.NumCol, 1);
+    EXPECT_EQ(c.MoveCol, -1);
+    EXPECT_EQ(c.MoveRow, -1);
+    EXPECT_EQ(c.ConnectLength, 4);
     Matrix* state = c.StateAccess();
     EXPECT_NE(state, nullptr);
 
     Board b = Board();
     EXPECT_EQ(b.NumRow, 0);
     EXPECT_EQ(b.NumCol, 0);
+    EXPECT_EQ(c.MoveCol, -1);
+    EXPECT_EQ(c.MoveRow, -1);
     state = b.StateAccess();
     EXPECT_NE(state, nullptr);
+
+    Board d = Board(4, 4, 3);
+    EXPECT_EQ(d.ConnectLength, 3);
 }
 
 TEST(BoardTests, CopyAssignment)
@@ -31,6 +37,9 @@ TEST(BoardTests, CopyAssignment)
 
     EXPECT_EQ(a.NumCol, b.NumCol);
     EXPECT_EQ(a.NumRow, b.NumRow);
+    EXPECT_EQ(a.MoveRow, b.MoveRow);
+    EXPECT_EQ(a.MoveCol, b.MoveCol);
+    EXPECT_EQ(a.ConnectLength, b.ConnectLength);
 
     Board c = Board(2, 2);
     Matrix state_c = *(c.StateAccess());
@@ -46,12 +55,34 @@ TEST(BoardTests, Movement)
     Board a = Board(4,4);
     a.MakeMove(1, P1_MOVE);
     Matrix* state = a.StateAccess();
-    cout << a.ToString();
     EXPECT_EQ((*state)(3, 0), P1_MOVE);
+    EXPECT_EQ(a.MoveCol, 0);
+    EXPECT_EQ(a.MoveRow, 3);
+
+    a.MakeMove(1, P2_MOVE);
+    EXPECT_EQ((*state)(2, 0), P2_MOVE);
+    EXPECT_EQ(a.MoveCol, 0);
+    EXPECT_EQ(a.MoveRow, 2);
+
+    a.MakeMove(1, P2_MOVE);
+    EXPECT_EQ((*state)(2, 0), P2_MOVE);
+    EXPECT_EQ(a.MoveCol, 0);
+    EXPECT_EQ(a.MoveRow, 1);
+
+    a.MakeMove(1, P1_MOVE);
+    EXPECT_EQ((*state)(1, 0), P2_MOVE);
+    EXPECT_EQ(a.MoveCol, 0);
+    EXPECT_EQ(a.MoveRow, 0);
 
     a.MakeMove(2, 3, P2_MOVE);
-    cout << a.ToString();
     EXPECT_EQ((*state)(1, 2), P2_MOVE);
+    EXPECT_EQ(a.MoveCol, 2);
+    EXPECT_EQ(a.MoveRow, 1);
+
+    cout << a.ToString();
+
+    //Expect Failure
+    EXPECT_ANY_THROW(a.MakeMove(1, P1_MOVE));
 }
 
 TEST(BoardTests, FilledColumns)

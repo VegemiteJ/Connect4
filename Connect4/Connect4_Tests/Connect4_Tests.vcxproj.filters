@@ -18,26 +18,23 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Matrix_Tests.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Board_Tests.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="HumanPlayer_Tests.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Board_Tests.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateEvaluator_Tests.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Connect4_Tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
