@@ -140,6 +140,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AlphaBetaAI.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="ColourDef.h" />
     <ClInclude Include="GameController.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AlphaBetaAI.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Connect4.cpp" />
     <ClCompile Include="GameController.cpp" />
