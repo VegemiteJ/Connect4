@@ -39,7 +39,7 @@ void HumanPlayer::Play(Board* CurrentBoard)
 
     //Notify the player for a move
     int selectedMove = -1;
-    while (!CheckValidMove(validMoves, selectedMove))
+    while (!CheckValidMove(validMoves, selectedMove-1))
     {
         string input;
         cout << "Type a Column(1,NumCol): " << endl;

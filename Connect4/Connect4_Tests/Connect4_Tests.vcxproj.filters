@@ -33,6 +33,9 @@
     <ClInclude Include="GameStateEvaluator_Tests.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="AlphaBetaAI_Tests.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Connect4_Tests.cpp">

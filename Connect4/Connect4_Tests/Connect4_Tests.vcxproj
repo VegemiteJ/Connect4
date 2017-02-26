@@ -151,6 +151,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AlphaBetaAI_Tests.h" />
     <ClInclude Include="Board_Tests.h" />
     <ClInclude Include="GameStateEvaluator_Tests.h" />
     <ClInclude Include="HumanPlayer_Tests.h" />

@@ -1,7 +1,10 @@
 #include "gtest/gtest.h"
 #include "Board.h"
+#include "DebugLogger.h"
 
 #include <iostream>
+
+using namespace std;
 
 TEST(BoardTests, Constructor)
 {
@@ -104,6 +107,21 @@ TEST(BoardTests, FilledColumns)
     valid = a.GetAllValidMoves();
     validMoves = *valid;
     EXPECT_EQ(validMoves.size(), 1);
+}
+
+TEST(BoardTests, UndoMoves)
+{
+    Board a = Board(4, 4, 4);
+    a.MakeMove(1, P1_MOVE);
+    a.MakeMove(1, P1_MOVE);
+    cout << a.ToString();
+    EXPECT_EQ(a.FilledColumns[0],2);
+
+    a.UnMakeMove(1);
+    cout << a.ToString();
+    EXPECT_EQ((*a.state)(2, 0), NO_MOVE);
+    EXPECT_EQ((*a.state)(3, 0), P1_MOVE);
+    EXPECT_EQ(a.FilledColumns[0], 1);
 }
 
 TEST(BoardTests, ToString)

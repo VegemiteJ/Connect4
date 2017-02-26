@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#define DEBUG_PRINT true
+#define DEBUG_PRINT false
 
 TEST(GameStateEvaluatorTests, VerticalWins)
 {
@@ -283,14 +283,11 @@ TEST(GameStateEvaluatorTests, DiagonalWins)
     a.MakeMove(2, 3, P1_MOVE);
     a.MakeMove(3, 2, P1_MOVE);
     a.MakeMove(4, 1, P1_MOVE);
-    cout << "TEST" << endl;
     diagonalResult = gse.CheckDiagonal(a.StateAccess(), a.MoveRow, a.MoveCol,
         P1_MOVE, a.ConnectLength, a.NumRow, a.NumCol);
-    cout << "TEST2" << endl;
     EXPECT_EQ(diagonalResult, true);
     diagonalResult = gse.CheckDiagonal(a.StateAccess(), a.MoveRow, a.MoveCol,
         P2_MOVE, a.ConnectLength, a.NumRow, a.NumCol);
-    cout << "TEST3" << endl;
     EXPECT_EQ(diagonalResult, false);
     if (DEBUG_PRINT)
         cout << a.ToString();

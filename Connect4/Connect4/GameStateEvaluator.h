@@ -5,7 +5,7 @@
 class GameStateEvaluator
 {
 private:
-    #pragma region FriendTestAccess
+    #pragma region GoogleTests
     #include "gtest/gtest_prod.h"
     FRIEND_TEST(GameStateEvaluatorTests, VerticalWins);
     FRIEND_TEST(GameStateEvaluatorTests, HorizontalWins);
@@ -18,4 +18,8 @@ private:
     bool CheckPosition(Matrix* state, int row, int col, Move p, int NumRow, int NumCol);
 public:
     bool CheckWin(Board* state, Move p);
+
+    int ComputeUtility(Board* evaluationPosition, int _depth);
+
+    int ComputeWinUtility(Board* evaluationPosition, Move p, Move player);
 };

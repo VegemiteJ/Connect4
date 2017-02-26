@@ -1,5 +1,7 @@
 #include "GameStateEvaluator.h"
 
+#pragma region WinStatusImplementation
+
 bool GameStateEvaluator::CheckVertical(Matrix* state, int row, int col, Move p, int ConnectLength, int NumRow, int NumCol)
 {
     Matrix stateDeRef = *state;
@@ -173,4 +175,17 @@ bool GameStateEvaluator::CheckWin(Board * state, Move p)
         return true;
 
     return false;
+}
+
+#pragma endregion
+
+int GameStateEvaluator::ComputeUtility(Board * evaluationPosition, int _depth)
+{
+    return 0;
+}
+
+int GameStateEvaluator::ComputeWinUtility(Board * evaluationPosition, Move p, Move player)
+{
+    //Utility to return is +1000 if we won, -1000 if opponent won
+    return (p == player ? 1000 : -1000);
 }

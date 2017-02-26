@@ -143,6 +143,7 @@
     <ClInclude Include="AlphaBetaAI.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="ColourDef.h" />
+    <ClInclude Include="DebugLogger.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="GameStateEvaluator.h" />
     <ClInclude Include="HumanPlayer.h" />
@@ -155,6 +156,7 @@
     <ClCompile Include="AlphaBetaAI.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Connect4.cpp" />
+    <ClCompile Include="DebugLogger.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="GameStateEvaluator.cpp" />
     <ClCompile Include="HumanPlayer.cpp" />

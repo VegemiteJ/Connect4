@@ -17,6 +17,11 @@ private:
 	//Holds a matrix object
 	Matrix* state;
 
+    #pragma region GoogleTests
+    #include "gtest\gtest_prod.h"
+    FRIEND_TEST(BoardTests, UndoMoves);
+    #pragma endregion
+
     int* FilledColumns;
 
     void CheckValid(Move p);
@@ -80,8 +85,7 @@ public:
     /// </summary>
     /// <param name="col">The col.</param>
     /// <param name="p">The player as enum P1_MOVE or P2_MOVE</param>
-    void MakeMove(int col, Move p);
-    
+    void MakeMove(int col, Move p);    
 
     /// <summary>
     /// Given 1-indexed move col+row, update to 0-indexed location
@@ -90,6 +94,9 @@ public:
     /// <param name="col">The col.</param>
     /// <param name="p">The player as enum P1_MOVE or P2_MOVE</param>
     void MakeMove(int row, int col, Move p);
+
+    void UnMakeMove(int col);
+    void UnMakeMove(int row, int col);
 
 #pragma endregion
 

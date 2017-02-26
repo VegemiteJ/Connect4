@@ -170,16 +170,9 @@ vector<int>* Board::GetAllValidMoves()
     {
         if ((*state)(0, i) == NO_MOVE)
         {
-            validMoves->push_back(i+1);
+            validMoves->push_back(i);
         }
     }
-
-    cout << "Valid moves: ";
-    for (int i = 0; i < (*validMoves).size(); i++)
-    {
-        cout << (*validMoves)[i] << ",";
-    }
-    cout << endl;
 
     return validMoves;
 }
@@ -194,7 +187,7 @@ void Board::MakeMove(int col, Move p)
     LastMove = p;
     MoveCol = col-1;
     MoveRow = NumRow - FilledColumns[col - 1] - 1;
-    (*state)(NumRow - FilledColumns[col-1]-1, col-1) = p;
+    (*state)(MoveRow, col-1) = p;
     FilledColumns[col-1]++;
 }
 
@@ -210,4 +203,30 @@ void Board::MakeMove(int row, int col, Move p)
     MoveCol = col - 1;
     MoveRow = row - 1;
     (*state)(row-1, col-1) = p;
+}
+
+/// <summary>
+/// Undos the last move at column i
+/// </summary>
+/// <param name="col">The col.</param>
+void Board::UnMakeMove(int col)
+{
+    LastMove = NO_MOVE;
+    MoveCol = col - 1;
+    MoveRow = NumRow - FilledColumns[col - 1];
+    (*state)(MoveRow, col - 1) = NO_MOVE;
+    FilledColumns[col - 1]--;
+}
+
+/// <summary>
+/// Undos the last move at column and row
+/// </summary>
+/// <param name="row">The row.</param>
+/// <param name="col">The col.</param>
+void Board::UnMakeMove(int row, int col)
+{
+    LastMove = NO_MOVE;
+    MoveCol = col - 1;
+    MoveRow = col - 1;
+    (*state)(row - 1, col - 1) = NO_MOVE;
 }
