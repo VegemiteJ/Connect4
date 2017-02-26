@@ -28,6 +28,18 @@ for (var i = 0; i < width; i++) {
 	};
 };
 
+//Dynamically change the size of each slot based on the 
+//number of rows and columns
+var columns = document.getElementsByClassName('column');
+for (var i = 0; i < columns.length ; i++) {
+	columns[i].style.width = String(100 / width) + '%';
+};
+var rows = document.getElementsByClassName('row');
+for (var i = 0; i < rows.length ; i++) {
+	rows[i].style.height = String(100 / height) + '%';
+};
+
+
 drawMove(1, 1, 6);
 
 //Adds blue or red token to the board
