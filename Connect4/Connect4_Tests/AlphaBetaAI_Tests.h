@@ -53,7 +53,7 @@ TEST(AlphaBetaAITests, InternalDepth1_Part2)
     int move = ai.GetBestMove();
     cout << "Best Move is: " << move << endl;
     cout << "Utility is: " << utility << endl;
-    EXPECT_EQ(move, 2);
+    EXPECT_EQ(move, 3);
     EXPECT_EQ(utility, 999);
     cout << a.ToString();
 
@@ -63,7 +63,7 @@ TEST(AlphaBetaAITests, InternalDepth1_Part2)
     move = ai.GetBestMove();
     cout << "Best Move is: " << move << endl;
     cout << "Utility is: " << utility << endl;
-    EXPECT_EQ(move, 2);
+    EXPECT_EQ(move, 3);
     EXPECT_EQ(utility, -999);
     cout << a.ToString();
 }
@@ -99,7 +99,7 @@ TEST(AlphaBetaAITests, InternalDepth2_Part1)
     EXPECT_EQ(bestMove, 2);
     EXPECT_EQ(bestUtility, 0);
 
-    a.MakeMove(bestMove + 1, P2_MOVE);
+    a.MakeMove(bestMove, P2_MOVE);
     cout << a.ToString();
     cout << "Number of nodes explored: " << ai.NodesExplored << endl;
     cout << "Number of nodes pruned: " << ai.GlobalPrunes << endl;
@@ -136,7 +136,7 @@ TEST(AlphaBetaAITests, InternalDepth2_Part2)
     EXPECT_EQ(bestMove, 2);
     EXPECT_EQ(bestUtility, 1000);
 
-    a.MakeMove(bestMove + 1, P1_MOVE);
+    a.MakeMove(bestMove, P1_MOVE);
     cout << a.ToString();
     cout << "Number of nodes explored: " << ai.NodesExplored << endl;
     cout << "Number of nodes pruned: " << ai.GlobalPrunes << endl;
@@ -173,7 +173,7 @@ TEST(AlphaBetaAITests, InternalDepth2_Part3)
     EXPECT_EQ(bestMove, 0);
     EXPECT_EQ(bestUtility, 1000);
 
-    a.MakeMove(bestMove + 1, P1_MOVE);
+    a.MakeMove(bestMove+1, P1_MOVE);
     cout << a.ToString();
     cout << "Number of nodes explored: " << ai.NodesExplored << endl;
     cout << "Number of nodes pruned: " << ai.GlobalPrunes << endl;
@@ -194,10 +194,10 @@ TEST(AlphaBetaAITests, PublicInterface)
 
     int move = ai.GetBestMove();
     cout << "Best Move: " << move << endl;
-    a.MakeMove(move + 1, P2_MOVE);
+    a.MakeMove(move, P2_MOVE);
     cout << a.ToString();
 
-    EXPECT_EQ(move, 2);
+    EXPECT_EQ(move, 3);
 }
 
 TEST(AlphaBetaAITests, PublicInterface_2)
@@ -216,10 +216,10 @@ TEST(AlphaBetaAITests, PublicInterface_2)
 
     int move = ai.GetBestMove();
     cout << "Best Move: " << move << endl;
-    a.MakeMove(move + 1, P1_MOVE);
+    a.MakeMove(move, P1_MOVE);
     cout << a.ToString();
 
-    EXPECT_EQ(move, 2);
+    EXPECT_EQ(move, 3);
 }
 
 TEST(AlphaBetaAITests, PublicInterface_3)
@@ -243,9 +243,9 @@ TEST(AlphaBetaAITests, PublicInterface_3)
 
     int move = ai.GetBestMove();
     cout << "Best Move: " << move << endl;
-    a.MakeMove(move + 1, P2_MOVE);
+    a.MakeMove(move, P2_MOVE);
     cout << a.ToString();
-    EXPECT_EQ(move, 0);
+    EXPECT_EQ(move, 1);
 
     a.MakeMove(2, P1_MOVE);
     cout << a.ToString();
@@ -253,8 +253,21 @@ TEST(AlphaBetaAITests, PublicInterface_3)
 
     move = ai.GetBestMove();
     cout << "Best Move: " << move << endl;
-    a.MakeMove(move + 1, P2_MOVE);
+    a.MakeMove(move, P2_MOVE);
     cout << a.ToString();
-    EXPECT_NE(move, 0);
-    EXPECT_NE(move, 2);
+    EXPECT_NE(move, 1);
+    EXPECT_NE(move, 3);
+}
+
+TEST(AlphaBetaAITests, StartGame)
+{
+    Board a = Board(4, 4, 3);
+    AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
+    cout << a.ToString();
+
+    ai.Play(&a);
+
+    int moveSelected = ai.GetBestMove();
+    a.MakeMove(moveSelected, P1_MOVE);
+
 }

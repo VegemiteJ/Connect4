@@ -86,7 +86,10 @@ Board::Board(Board && other)
     swap(*this, other);
 }
 
-Board::~Board() {}
+Board::~Board() 
+{
+    delete[] FilledColumns;
+}
 
 #pragma endregion
 

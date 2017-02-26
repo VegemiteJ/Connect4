@@ -24,6 +24,7 @@ private:
     Board* CurrentBoard;
     int BestUtility;
     int MaxDepth;
+    bool MakingFirstMoveOfGame;
     
     /// <summary>
     /// Scale the absolute value of value upwards

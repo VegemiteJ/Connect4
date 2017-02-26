@@ -14,6 +14,7 @@ AlphaBetaAI::AlphaBetaAI(Move _p)
     player = _p;
     GlobalPrunes = 0;
     NodesExplored = 0;
+    MakingFirstMoveOfGame = false;
 
     generator.seed(chrono::system_clock::now().time_since_epoch().count());
     distribution = uniform_int_distribution<int>(1, 1000);
@@ -38,7 +39,7 @@ int AlphaBetaAI::AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _m
 
     MaxDepth = (_depth > MaxDepth ? _depth : MaxDepth);
 
-    //Make the move on the board
+    //Make the move on the board - if not the first move of the game
     (*CurrentBoard).MakeMove(_move+1, p);
     printString(std::cout, 2, "Making move: " + to_string(_move+1) + "\n");
     printString(std::cout, 3, "Board looks like\n" + CurrentBoard->ToString() + "\n");
@@ -168,7 +169,7 @@ void AlphaBetaAI::SwapTwoElements(int * a, int * b)
 
 int AlphaBetaAI::GetBestMove()
 {
-    return BestMove;
+    return BestMove+1;
 }
 
 void AlphaBetaAI::Play(Board * _CurrentBoard)
@@ -176,6 +177,8 @@ void AlphaBetaAI::Play(Board * _CurrentBoard)
     printString(std::cout, 2, "Making a play\n");
     //Copy of board for modifications
     CurrentBoard = _CurrentBoard;
+
+    cout << "LastMove " << CurrentBoard->LastMove << " " << CurrentBoard->MoveCol << endl;
 
     //Undo last move and redo it as minimizing
     int prevCol = CurrentBoard->MoveCol;
@@ -187,6 +190,7 @@ void AlphaBetaAI::Play(Board * _CurrentBoard)
     MaxDepth = 10;
     bool MaxPlayer = (player != CurrentBoard->LastMove);
     Move playerMove = (player == P1_MOVE ? P2_MOVE : P1_MOVE);
+    MakingFirstMoveOfGame = (CurrentBoard->MoveCol == -1);  //When making first move of the game -> set variable
     printString(std::cout, 2, "MaxPlayer: " + to_string(MaxPlayer) + "\n");
     printString(std::cout, 2, "Player Move: " + to_string(playerMove) + "\n");
 

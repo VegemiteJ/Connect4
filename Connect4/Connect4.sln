@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Connect4", "Connect4\Connect4.vcxproj", "{F124D708-1921-4526-87FA-2EA239426F19}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DAFBA06B-D879-44D3-9E2C-8CCDD0361453} = {DAFBA06B-D879-44D3-9E2C-8CCDD0361453}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GoogleTest", "GoogleTest\GoogleTest.vcxproj", "{DAFBA06B-D879-44D3-9E2C-8CCDD0361453}"
 EndProject
