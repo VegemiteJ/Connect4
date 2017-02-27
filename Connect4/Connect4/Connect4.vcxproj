@@ -147,6 +147,7 @@
     <ClInclude Include="GameController.h" />
     <ClInclude Include="GameStateEvaluator.h" />
     <ClInclude Include="HumanPlayer.h" />
+    <ClInclude Include="IterativeDeepenAI.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="ObjectExtensions.h" />
     <ClInclude Include="Player.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="GameStateEvaluator.cpp" />
     <ClCompile Include="HumanPlayer.cpp" />
+    <ClCompile Include="IterativeDeepenAI.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>

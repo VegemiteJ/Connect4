@@ -30,6 +30,8 @@ public:
 	int NumRow;
 	int NumCol;
 
+    int NumMovesTotal;
+
     int MoveRow;
     int MoveCol;
     Move LastMove;

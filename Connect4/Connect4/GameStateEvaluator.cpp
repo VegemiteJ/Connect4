@@ -167,6 +167,10 @@ bool GameStateEvaluator::CheckWin(Board * state, Move p)
     int ConnectLength = state->ConnectLength;
     Matrix* rawState = state->StateAccess();
 
+    //When no move, noone could have won
+    if (MoveCol == -1 || MoveRow == -1)
+        return false;
+
     if (CheckVertical(rawState, MoveRow, MoveCol, p, ConnectLength, NumRow, NumCol))
         return true;
     if (CheckHorizontal(rawState, MoveRow, MoveCol, p, ConnectLength, NumRow, NumCol))

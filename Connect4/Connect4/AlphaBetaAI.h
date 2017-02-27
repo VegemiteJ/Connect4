@@ -22,8 +22,6 @@ private:
 
     Move player;
     Board* CurrentBoard;
-    int BestUtility;
-    int MaxDepth;
     bool MakingFirstMoveOfGame;
     
     /// <summary>
@@ -61,9 +59,13 @@ private:
 
 public:
     AlphaBetaAI(Move _p);
+    void Reset();
 
     int GetBestMove();
     void Play(Board* _CurrentBoard);
+
+    int BestUtility;
+    int MaxDepth;
 
     long GlobalPrunes;
     long NodesExplored;

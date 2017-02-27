@@ -51,6 +51,9 @@
     <ClInclude Include="DebugLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IterativeDeepenAI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Connect4.cpp">
@@ -78,6 +81,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DebugLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IterativeDeepenAI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

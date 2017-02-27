@@ -1,5 +1,6 @@
 #include "GameController.h"
 #include "GameStateEvaluator.h"
+#include "DebugLogger.h"
 
 #include <iostream>
 
@@ -27,19 +28,28 @@ Move GameController::PlayGame()
     //Whenever a win occurs
     //  Return the player that won: NO_MOVE for draw, P1_MOVE or P2_MOVE for win
     Move winner = NO_MOVE;
+    
+    //Print board
+    printString(cout, 0, BoardEntity->ToString());
 
     while (true)
     {
-        //Print board
-        cout << BoardEntity->ToString() << endl;
-
         winner = RunMove(true);
         if (winner != UNFINISHED)
             return winner;
 
+        int a;
+        cout << "Number to continue: ";
+        cin >> a;
+        cout << endl;
+
         winner = RunMove(false);
         if (winner != UNFINISHED)
             return winner;
+
+        cout << "Number to continue: ";
+        cin >> a;
+        cout << endl;
     }
 }
 
@@ -56,9 +66,9 @@ inline Move GameController::RunMove(bool p1)
     movePos = player->GetBestMove();
     BoardEntity->MakeMove(movePos, p);
     numMoves++;
-    cout << BoardEntity->ToString() << endl;
+    printString(cout, 0, BoardEntity->ToString());
     //Check if win
-    if (gse.CheckWin(BoardEntity, P1_MOVE))
+    if (gse.CheckWin(BoardEntity, p))
     {
         return p;
     }

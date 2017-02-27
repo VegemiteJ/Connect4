@@ -8,6 +8,7 @@ TEST(AlphaBetaAITests, InternalDepth0)
 {
     Board a = Board(7, 6, 4);
     AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
+    ai.MaxDepth = 0;
     ai.CurrentBoard = &a;
 
     int utility = ai.AlphaBeta(0, 0, 0, 0, true, P1_MOVE);
@@ -18,6 +19,7 @@ TEST(AlphaBetaAITests, InternalDepth1_Part1)
 {
     Board a = Board(7, 6, 4);
     AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
+    ai.MaxDepth = 1;
     ai.CurrentBoard = &a;
 
     a.MakeMove(1, P1_MOVE);
@@ -32,6 +34,7 @@ TEST(AlphaBetaAITests, InternalDepth1_Part2)
 {
     Board a = Board(7, 6, 4);
     AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
+    ai.MaxDepth = 1;
     ai.CurrentBoard = &a;
 
     a.MakeMove(1, P2_MOVE);
@@ -45,6 +48,7 @@ TEST(AlphaBetaAITests, InternalDepth1_Part2)
     //  2 Moves for P1, 1 Move for P2, 1 Move for P1
     a = Board(4, 3, 3);
     ai = AlphaBetaAI(P1_MOVE);
+    ai.MaxDepth = 1;
     ai.CurrentBoard = &a;
     a.MakeMove(1, P1_MOVE);
     a.MakeMove(2, P1_MOVE);
@@ -59,6 +63,7 @@ TEST(AlphaBetaAITests, InternalDepth1_Part2)
 
     ai = AlphaBetaAI(P2_MOVE);
     ai.CurrentBoard = &a;
+    ai.MaxDepth = 1;
     utility = ai.AlphaBeta(0, 1, -99999, 99999, false, P2_MOVE);
     move = ai.GetBestMove();
     cout << "Best Move is: " << move << endl;
@@ -81,6 +86,7 @@ TEST(AlphaBetaAITests, InternalDepth2_Part1)
     a.MakeMove(1, P1_MOVE);
     a.MakeMove(2, P1_MOVE);
     ai = AlphaBetaAI(P2_MOVE);
+    ai.MaxDepth = 2;
     ai.CurrentBoard = &a;
 
     cout << a.ToString();
@@ -118,6 +124,7 @@ TEST(AlphaBetaAITests, InternalDepth2_Part2)
     a.MakeMove(1, P1_MOVE);
     a.MakeMove(2, P1_MOVE);
     ai = AlphaBetaAI(P1_MOVE);
+    ai.MaxDepth = 2;
     ai.CurrentBoard = &a;
 
     cout << a.ToString();
@@ -155,6 +162,7 @@ TEST(AlphaBetaAITests, InternalDepth2_Part3)
     a.MakeMove(2, P1_MOVE);
     a.MakeMove(3, P1_MOVE);
     ai = AlphaBetaAI(P1_MOVE);
+    ai.MaxDepth = 2;
     ai.CurrentBoard = &a;
 
     cout << a.ToString();
@@ -270,4 +278,6 @@ TEST(AlphaBetaAITests, StartGame)
     int moveSelected = ai.GetBestMove();
     a.MakeMove(moveSelected, P1_MOVE);
 
+    cout << a.ToString();
+    cout << "Utility: " << ai.BestUtility << endl;
 }

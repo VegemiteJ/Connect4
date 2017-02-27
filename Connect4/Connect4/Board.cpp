@@ -17,6 +17,7 @@ Board::Board()
     NumCol = 0;
     MoveRow = -1;
     MoveCol = -1;
+    NumMovesTotal = 0;
     LastMove = NO_MOVE;
     ConnectLength = 0;
 }
@@ -43,6 +44,7 @@ Board::Board(int _row, int _col)
     NumCol = _col;
     MoveRow = -1;
     MoveCol = -1;
+    NumMovesTotal = 0;
     LastMove = NO_MOVE;
     ConnectLength = 4;
 }
@@ -55,6 +57,7 @@ void swap(Board & first, Board & second)
 	swap(first.NumRow, second.NumRow);
     swap(first.MoveCol, second.MoveCol);
     swap(first.MoveRow, second.MoveRow);
+    swap(first.NumMovesTotal, second.NumMovesTotal);
     swap(first.ConnectLength, second.ConnectLength);
     swap(first.FilledColumns, second.FilledColumns);
 	swap(first.state, second.state);
@@ -75,6 +78,7 @@ Board::Board(const Board & other)
     NumCol = other.NumCol;
     MoveRow = other.MoveRow;
     MoveCol = other.MoveCol;
+    NumMovesTotal = other.NumMovesTotal;
     ConnectLength = other.ConnectLength;
     FilledColumns = new int[NumCol] {0};
     std::copy(other.FilledColumns, other.FilledColumns + other.NumCol, FilledColumns);
@@ -149,8 +153,10 @@ string Board::ToString()
         ss << "---";
         ss << endl;
     }
+    string result = ss.str();
+    ss.clear();
 
-	return ss.str();
+	return result;
 }
 
 
@@ -187,6 +193,7 @@ vector<int>* Board::GetAllValidMoves()
 /// <param name="p">The player as enum P1_MOVE or P2_MOVE</param>
 void Board::MakeMove(int col, Move p)
 {
+    NumMovesTotal++;
     LastMove = p;
     MoveCol = col-1;
     MoveRow = NumRow - FilledColumns[col - 1] - 1;
@@ -202,6 +209,7 @@ void Board::MakeMove(int col, Move p)
 /// <param name="p">The player as enum P1_MOVE or P2_MOVE</param>
 void Board::MakeMove(int row, int col, Move p)
 {
+    NumMovesTotal++;
     LastMove = p;
     MoveCol = col - 1;
     MoveRow = row - 1;
@@ -214,6 +222,7 @@ void Board::MakeMove(int row, int col, Move p)
 /// <param name="col">The col.</param>
 void Board::UnMakeMove(int col)
 {
+    NumMovesTotal--;
     LastMove = NO_MOVE;
     MoveCol = col - 1;
     MoveRow = NumRow - FilledColumns[col - 1];
@@ -228,6 +237,7 @@ void Board::UnMakeMove(int col)
 /// <param name="col">The col.</param>
 void Board::UnMakeMove(int row, int col)
 {
+    NumMovesTotal--;
     LastMove = NO_MOVE;
     MoveCol = col - 1;
     MoveRow = col - 1;
