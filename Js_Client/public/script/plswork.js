@@ -29,13 +29,6 @@ for (var i = 0; i < width; i++) {
 		//newRow.innerHTML = String(i * height + j);	
 	};
 };
-//Handle connection setup
-socket.on('connection', function(){
-	console.log('ClientConnected')
-});
-socket.on('message', function(data){
-	window.alert(data)
-});
 
 //Adds blue or red token to the board
 function drawMove(isRed, column, row) {
