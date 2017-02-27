@@ -3,8 +3,14 @@ var connect4 = document.getElementById("boardGame");
 var width = 6;
 var height = 7;
 
+socket.on('connection', function(){
+	console.log('ClientConnected')
+});
+socket.on('message', function(data){
+	window.alert(data)
+});
+
 var tokens = [];
-var filledCols = [];
 
 for (var i = 0; i < width; i++) {
 	//Creating new column
@@ -16,9 +22,8 @@ for (var i = 0; i < width; i++) {
 
 	//Add clicking listeners
 	newCol.addEventListener("click", function(){
-		drawMove(1,this.id,6);
+		drawMove(1,this.id);
     });
-
 
 	for (var j = 0; j < height; j++ ) {
 		//Creating slots within column
@@ -30,8 +35,25 @@ for (var i = 0; i < width; i++) {
 	};
 };
 
+//Dynamically change the size of each slot based on the 
+//number of rows and columns
+var columns = document.getElementsByClassName('column');
+for (var i = 0; i < columns.length ; i++) {
+	columns[i].style.width = String(100 / width) + '%';
+};
+var rows = document.getElementsByClassName('row');
+for (var i = 0; i < rows.length ; i++) {
+	rows[i].style.height = String(100 / height) + '%';
+};
+
 //Adds blue or red token to the board
-function drawMove(isRed, column, row) {
+function drawMove(isRed, column) {
+	if (tokens[column] >= height)
+	{
+		return;
+	}
+	var row = height - tokens[column]-1;
+	tokens[column]++;
 	var slot = document.getElementById('row' + String(column * height + row));
 
 	if (isRed) {
@@ -39,9 +61,4 @@ function drawMove(isRed, column, row) {
 	} else {
 		slot.style.background = "url('images/blue.png') no-repeat center center";
 	}
-}
-
-function sendMove(move)
-{
-
 }
