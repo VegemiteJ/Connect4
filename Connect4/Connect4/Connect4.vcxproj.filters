@@ -54,6 +54,18 @@
     <ClInclude Include="IterativeDeepenAI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkedHumanPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\NetworkConnection\ClientSocketSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\NetworkConnection\ServerSocketSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Connect4.cpp">
@@ -84,6 +96,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IterativeDeepenAI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkedHumanPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

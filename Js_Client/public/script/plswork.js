@@ -1,20 +1,22 @@
+var socket = io('http://www.connect4.xyz:21357');
 var connect4 = document.getElementById("boardGame");
 var width = 6;
 var height = 7;
 
 var tokens = [];
+var filledCols = [];
 
 for (var i = 0; i < width; i++) {
 	//Creating new column
 	var newCol = document.createElement('div');
 	tokens.push(0);
-	newCol.id = 'column' + String(i);
+	newCol.id = i;
 	newCol.className = 'column';
 	connect4.appendChild(newCol);
 
 	//Add clicking listeners
 	newCol.addEventListener("click", function(){
-		window.alert(this.id);
+		drawMove(1,this.id,6);
     });
 
 
@@ -27,8 +29,13 @@ for (var i = 0; i < width; i++) {
 		//newRow.innerHTML = String(i * height + j);	
 	};
 };
-
-drawMove(1, 1, 6);
+//Handle connection setup
+socket.on('connection', function(){
+	console.log('ClientConnected')
+});
+socket.on('message', function(data){
+	window.alert(data)
+});
 
 //Adds blue or red token to the board
 function drawMove(isRed, column, row) {
@@ -39,4 +46,9 @@ function drawMove(isRed, column, row) {
 	} else {
 		slot.style.background = "url('images/blue.png') no-repeat center center";
 	}
+}
+
+function sendMove(move)
+{
+
 }

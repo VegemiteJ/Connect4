@@ -2,6 +2,7 @@
 
 #include "Player.h"
 #include "HumanPlayer.h"
+#include "NetworkedHumanPlayer.h"
 #include "AlphaBetaAI.h"
 #include "IterativeDeepenAI.h"
 #include "GameController.h"
@@ -14,11 +15,11 @@ using namespace std;
 
 int Run(int debugLvl)
 {
-    Player* p1 = new HumanPlayer(P1_MOVE);
+    Player* p1 = new NetworkedHumanPlayer(P1_MOVE);
     Player* p2 = new IterativeDeepenAI(P2_MOVE, 4);
 
     DEBUG_LVL = debugLvl;
-    GameController gameRunner = GameController(p1, p2);
+    GameController gameRunner = GameController(p1, p2, true);
 
     Move winner = gameRunner.PlayGame();
     string winnerStr = (winner == P1_MOVE ? "P1" : (winner == P2_MOVE ? "P2" : "DRAW"));

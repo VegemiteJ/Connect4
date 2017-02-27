@@ -1,6 +1,7 @@
 #include "GameController.h"
 #include "GameStateEvaluator.h"
 #include "DebugLogger.h"
+#include "SocketHelper.h"
 
 #include <iostream>
 
@@ -10,13 +11,31 @@ GameController::GameController()
 {
     P1 = nullptr;
     P2 = nullptr;
+    NetworkedGame = false;
     BoardEntity = nullptr;
 }
 
-GameController::GameController(Player * _p1, Player * _p2) : GameController()
+void GameController::UpdateNetworkedPlayer(bool p1)
+{
+    if (!NetworkedGame)
+        return;
+
+    if (P1IsNetworked && p1)
+    {
+        connection.sendMessage(to_string(BoardEntity->MoveCol+1));
+    }
+    else if (!P1IsNetworked && !p1)
+    {
+        connection.sendMessage(to_string(BoardEntity->MoveCol+1));
+    }
+}
+
+GameController::GameController(Player * _p1, Player * _p2, bool _NetworkGame) : GameController()
 {
     P1 = _p1;
     P2 = _p2;
+    NetworkedGame = _NetworkGame;
+    P1IsNetworked = true;
     BoardEntity = new Board(7, 6, 4);   //Default state
 
     numMoves = 0;
@@ -29,6 +48,12 @@ Move GameController::PlayGame()
     //  Return the player that won: NO_MOVE for draw, P1_MOVE or P2_MOVE for win
     Move winner = NO_MOVE;
     
+    if (NetworkedGame)  //Wait for connection
+    {
+        printString(std::cout, 0, "Waiting for connection on port: " + string(DEFAULT_PORT) + "\n");
+        Init(DEFAULT_PORT);
+    }
+
     //Print board
     printString(cout, 0, BoardEntity->ToString());
 
@@ -38,18 +63,11 @@ Move GameController::PlayGame()
         if (winner != UNFINISHED)
             return winner;
 
-        int a;
-        cout << "Number to continue: ";
-        cin >> a;
-        cout << endl;
-
         winner = RunMove(false);
         if (winner != UNFINISHED)
             return winner;
 
-        cout << "Number to continue: ";
-        cin >> a;
-        cout << endl;
+        UpdateNetworkedPlayer(true);
     }
 }
 

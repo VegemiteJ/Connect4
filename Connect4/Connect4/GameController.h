@@ -9,6 +9,9 @@ private:
     Player* P1;
     Player* P2;
 
+    bool NetworkedGame;
+    bool P1IsNetworked;
+
     int numMoves;
     int terminatingMoveCount;
     Board* BoardEntity;
@@ -17,8 +20,10 @@ private:
 
     GameController();
 
+    void UpdateNetworkedPlayer(bool p1);
+
 public:
-    GameController(Player* _p1, Player* _p2);
+    GameController(Player* _p1, Player* _p2, bool _NetworkGame);
 
     Move PlayGame();
 };

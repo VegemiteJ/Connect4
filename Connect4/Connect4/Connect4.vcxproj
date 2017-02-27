@@ -101,6 +101,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile />
+      <AdditionalIncludeDirectories>E:\Programming\Connect4\Connect4\lib\NetworkConnection;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,6 +141,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\lib\NetworkConnection\ClientSocketSet.h" />
+    <ClInclude Include="..\lib\NetworkConnection\ServerSocketSet.h" />
     <ClInclude Include="AlphaBetaAI.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="ColourDef.h" />
@@ -149,8 +152,10 @@
     <ClInclude Include="HumanPlayer.h" />
     <ClInclude Include="IterativeDeepenAI.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="NetworkedHumanPlayer.h" />
     <ClInclude Include="ObjectExtensions.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="SocketHelper.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -163,10 +168,17 @@
     <ClCompile Include="HumanPlayer.cpp" />
     <ClCompile Include="IterativeDeepenAI.cpp" />
     <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="NetworkedHumanPlayer.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SocketHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetworkConnection\NetworkConnection.vcxproj">
+      <Project>{ed9f2b89-8782-4e46-bda7-caa612ba5c31}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

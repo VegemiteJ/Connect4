@@ -14,6 +14,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Connect4_Tests", "Connect4_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Connect4Runner", "Connect4Runner\Connect4Runner.vcxproj", "{11E9C068-F334-4D68-A484-9CB6E5C2BF93}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworkConnection", "NetworkConnection\NetworkConnection.vcxproj", "{ED9F2B89-8782-4E46-BDA7-CAA612BA5C31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -54,6 +56,14 @@ Global
 		{11E9C068-F334-4D68-A484-9CB6E5C2BF93}.Release|x64.Build.0 = Release|x64
 		{11E9C068-F334-4D68-A484-9CB6E5C2BF93}.Release|x86.ActiveCfg = Release|Win32
 		{11E9C068-F334-4D68-A484-9CB6E5C2BF93}.Release|x86.Build.0 = Release|Win32
+		{ED9F2B89-8782-4E46-BDA7-CAA612BA5C31}.Debug|x64.ActiveCfg = Debug|x64
+		{ED9F2B89-8782-4E46-BDA7-CAA612BA5C31}.Debug|x64.Build.0 = Debug|x64
+		{ED9F2B89-8782-4E46-BDA7-CAA612BA5C31}.Debug|x86.ActiveCfg = Debug|Win32
+		{ED9F2B89-8782-4E46-BDA7-CAA612BA5C31}.Debug|x86.Build.0 = Debug|Win32
+		{ED9F2B89-8782-4E46-BDA7-CAA612BA5C31}.Release|x64.ActiveCfg = Release|x64
+		{ED9F2B89-8782-4E46-BDA7-CAA612BA5C31}.Release|x64.Build.0 = Release|x64
+		{ED9F2B89-8782-4E46-BDA7-CAA612BA5C31}.Release|x86.ActiveCfg = Release|Win32
+		{ED9F2B89-8782-4E46-BDA7-CAA612BA5C31}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
