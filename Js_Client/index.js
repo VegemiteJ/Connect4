@@ -56,8 +56,9 @@ io.on('connection', function(socket){
     });
 
     //Whenever someone disconnects this piece of code executed
-    socket.on('disconnect', function () {
+    jsRecvSocket.on('disconnect', function () {
       console.log('A user disconnected');
+      firstConnection = false;
     });
   }
 });

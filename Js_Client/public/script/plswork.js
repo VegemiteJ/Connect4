@@ -1,8 +1,8 @@
 var socket = io('http://www.connect4.xyz:21357');
 var connect4 = document.getElementById("boardGame");
 var player1=true;
-var height = 7;
-var width = 6;
+var height = 6;
+var width = 7;
 
 socket.on('connection', function(){
 	console.log('ClientConnected')

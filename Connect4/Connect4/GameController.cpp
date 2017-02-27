@@ -36,7 +36,7 @@ GameController::GameController(Player * _p1, Player * _p2, bool _NetworkGame) : 
     P2 = _p2;
     NetworkedGame = _NetworkGame;
     P1IsNetworked = true;
-    BoardEntity = new Board(7, 6, 4);   //Default state
+    BoardEntity = new Board(6, 7, 4);   //Default state
 
     numMoves = 0;
     terminatingMoveCount = BoardEntity->NumRow * BoardEntity->NumCol;
