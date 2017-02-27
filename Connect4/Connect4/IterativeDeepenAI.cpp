@@ -33,10 +33,11 @@ void IterativeDeepenAI::Play(Board * _CurrentBoard)
     high_resolution_clock::time_point runEnd;
     int itr = startDepth;
     double realDuration = 0.0;
-    double calculationTime = 5.0;
-    double timeRemaining = 5.0;
+    double calculationTime = 10.0;
+    double timeRemaining = calculationTime;
+    int numberPossible = _CurrentBoard->NumCol * _CurrentBoard->NumRow;
     //Do a model whereby roughly if 5*LastRunTime < durationRemaining, run a search
-    while (3*realDuration < timeRemaining)
+    while (3*realDuration < timeRemaining && (itr + _CurrentBoard->NumMovesTotal)<=numberPossible)
     {
         printString(std::cout, 1, "\nRunning for Depth " + to_string(itr) + "\n");
         ai.MaxDepth = itr;

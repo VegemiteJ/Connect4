@@ -1,13 +1,20 @@
 var socket = io('http://www.connect4.xyz:21357');
 var connect4 = document.getElementById("boardGame");
-var width = 6;
+var player1=true;
 var height = 7;
+var width = 6;
 
 socket.on('connection', function(){
 	console.log('ClientConnected')
 });
 socket.on('message', function(data){
-	window.alert(data)
+	console.log(data);
+	if (!player1)
+	{
+		player1 = true;
+		var move = parseInt(data);
+		drawMove(0,move-1);
+	}
 });
 
 var tokens = [];
@@ -22,7 +29,13 @@ for (var i = 0; i < width; i++) {
 
 	//Add clicking listeners
 	newCol.addEventListener("click", function(){
-		drawMove(1,this.id);
+		if (player1){
+			drawMove(1,this.id);
+			var move = parseInt(this.id);
+			move = move+1;
+			socket.send(move);
+		}
+		player1 = false;
     });
 
 	for (var j = 0; j < height; j++ ) {

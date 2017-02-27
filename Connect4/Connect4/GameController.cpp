@@ -61,11 +61,17 @@ Move GameController::PlayGame()
     {
         winner = RunMove(true);
         if (winner != UNFINISHED)
+        {
+            UpdateNetworkedPlayer(true);
             return winner;
+        }
 
         winner = RunMove(false);
         if (winner != UNFINISHED)
+        {
+            UpdateNetworkedPlayer(true);
             return winner;
+        }
 
         UpdateNetworkedPlayer(true);
     }
