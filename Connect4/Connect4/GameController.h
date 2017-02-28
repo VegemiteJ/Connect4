@@ -11,6 +11,7 @@ private:
 
     bool NetworkedGame;
     bool P1IsNetworked;
+    int Port;
 
     int numMoves;
     int terminatingMoveCount;
@@ -23,7 +24,7 @@ private:
     void UpdateNetworkedPlayer(bool p1);
 
 public:
-    GameController(Player* _p1, Player* _p2, bool _NetworkGame);
+    GameController(Player* _p1, Player* _p2, bool _NetworkGame, int _port);
 
     Move PlayGame();
 };

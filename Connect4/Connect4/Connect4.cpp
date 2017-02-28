@@ -13,22 +13,22 @@
 
 using namespace std;
 
-int Run(int debugLvl)
+int Run(int debugLvl, int port)
 {
-    while (true)
-    {
-        Player* p1 = new NetworkedHumanPlayer(P1_MOVE);
-        Player* p2 = new IterativeDeepenAI(P2_MOVE, 4);
 
-        DEBUG_LVL = debugLvl;
-        GameController gameRunner = GameController(p1, p2, true);
+    Player* p1 = new NetworkedHumanPlayer(P1_MOVE);
+    //Player* p1 = new IterativeDeepenAI(P1_MOVE, 4);
+    Player* p2 = new IterativeDeepenAI(P2_MOVE, 4);
 
-        Move winner = gameRunner.PlayGame();
-        string winnerStr = (winner == P1_MOVE ? "P1" : (winner == P2_MOVE ? "P2" : "DRAW"));
-        cout << "Winner was: " << winnerStr << endl;
+    DEBUG_LVL = debugLvl;
+    GameController gameRunner = GameController(p1, p2, true, port);
 
-        delete p1;
-        delete p2;
-    }
-    //return winner;
+    Move winner = gameRunner.PlayGame();
+    string winnerStr = (winner == P1_MOVE ? "P1" : (winner == P2_MOVE ? "P2" : "DRAW"));
+    cout << "Winner was: " << winnerStr << endl;
+
+    delete p1;
+    delete p2;
+    
+    return winner;
 }

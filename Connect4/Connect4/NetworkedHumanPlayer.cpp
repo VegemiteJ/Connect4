@@ -11,6 +11,11 @@ void NetworkedHumanPlayer::Play(Board * _CurrentBoard)
     std::string move = string(connection.receiveMessage());
     printString(std::cout, 0, "Message:[" + move + "]\n");
     BestMove = stoi(move);
+    if (BestMove == -1)
+    {
+        connection.exit();
+        exit(0);
+    }
 }
 
 int NetworkedHumanPlayer::GetBestMove()

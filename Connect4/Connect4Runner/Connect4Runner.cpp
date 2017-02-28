@@ -4,10 +4,15 @@
 int main(int argc, char* argv[])
 {
     int debugLvl = 0;
-    if (argc == 2)
+    int port = 21356;
+    if (argc >= 2)
     {
         debugLvl = stoi(argv[1]);
     }
+    if (argc == 3)
+    {
+        port = stoi(argv[2]);
+    }
 
-    return Run(debugLvl);
+    return Run(debugLvl, port);
 }

@@ -3,15 +3,29 @@ var app = express();
 var http = require('http').createServer(app);
 var Server = require('socket.io');
 var io = new Server(21357);
-
+var exec = require('child_process').execFile;
+var firstConnection = true;
 // Load the TCP Library - for cpp messages
 var net = require('net');
 
+var cppPort = 21556;
+
+var fun =function(){
+   console.log("fun() start");
+   exec('../Connect4/x64/Debug/Connect4Runner.exe', ['1',String(cppPort)] ,function(err, data) {  
+        console.log(err)
+        console.log(data.toString());                       
+    });  
+}
+
 app.get('/', function (req, res) {
+  console.log('Page view: ' + String(firstConnection));
   //res.send('SoonTM')
   if (firstConnection)
   {
     res.sendFile('board.html', {root: __dirname + "/public"} )
+    //Start the cpp ai
+    fun();
   } else
   {
     res.sendFile('Busy.html', {root: __dirname + "/public"} )
@@ -29,25 +43,16 @@ http.listen(3000, function () {
 var cppClientSocket;
 var jsRecvSocket;
 
-var firstConnection=true;
-
-cppClientSocket = new net.Socket();
-cppClientSocket.connect(21356,'192.168.1.100', function(){
-  console.log('connected to cpp');
-})
-
-cppClientSocket.on('data',function(data){
-  console.log('Received ai move: [' + data + ']');
-  sendToJS(data);
-});
+var error=true;
 
 //Whenever someone connects this gets executed
 io.on('connection', function(socket){
+  console.log('A user connected');
   if (firstConnection)
   {
-    firstConnection = false;
+    console.log('First Connection');
     jsRecvSocket = socket;
-    console.log('A user connected');
+    firstConnection = false;
 
     socket.on('message',function(data)
     {
@@ -58,8 +63,22 @@ io.on('connection', function(socket){
     //Whenever someone disconnects this piece of code executed
     jsRecvSocket.on('disconnect', function () {
       console.log('A user disconnected');
-      firstConnection = false;
+      sendToCpp(-1);
+      firstConnection = true;
+      console.log('FirstConnection: ' + String(firstConnection));
     });
+
+    //Create the cpp socket
+    cppClientSocket = new net.Socket();
+    cppClientSocket.connect(cppPort,'192.168.1.100', function(){
+      console.log('connected to cpp');
+    })
+
+    cppClientSocket.on('data',function(data){
+      console.log('Received ai move: [' + data + ']');
+      sendToJS(data);
+    });
+
   }
 });
 

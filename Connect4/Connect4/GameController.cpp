@@ -30,11 +30,12 @@ void GameController::UpdateNetworkedPlayer(bool p1)
     }
 }
 
-GameController::GameController(Player * _p1, Player * _p2, bool _NetworkGame) : GameController()
+GameController::GameController(Player * _p1, Player * _p2, bool _NetworkGame, int _port) : GameController()
 {
     P1 = _p1;
     P2 = _p2;
     NetworkedGame = _NetworkGame;
+    Port = _port;
     P1IsNetworked = true;
     BoardEntity = new Board(6, 7, 4);   //Default state
 
@@ -50,8 +51,8 @@ Move GameController::PlayGame()
     
     if (NetworkedGame)  //Wait for connection
     {
-        printString(std::cout, 0, "Waiting for connection on port: " + string(DEFAULT_PORT) + "\n");
-        Init(DEFAULT_PORT);
+        printString(std::cout, 0, "Waiting for connection on port: " + to_string(Port) + "\n");
+        Init(to_string(Port));
     }
 
     //Print board

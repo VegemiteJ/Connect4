@@ -1,21 +1,30 @@
-var socket = io('http://www.connect4.xyz:21357');
 var connect4 = document.getElementById("boardGame");
 var player1=true;
 var height = 6;
 var width = 7;
 
-socket.on('connection', function(){
-	console.log('ClientConnected')
-});
-socket.on('message', function(data){
-	console.log(data);
-	if (!player1)
-	{
-		player1 = true;
-		var move = parseInt(data);
-		drawMove(0,move-1);
-	}
-});
+var connection = false;
+
+//Try connection after 3 seconds
+var socket;
+setTimeout( function() {
+	socket = io('http://www.connect4.xyz:21357');
+
+	socket.on('connection', function(){
+		console.log('ClientConnected')
+		connection = true;
+	});
+
+	socket.on('message', function(data){
+		console.log(data);
+		if (!player1)
+		{
+			player1 = true;
+			var move = parseInt(data);
+			drawMove(0,move-1);
+		}
+	});
+},400);
 
 var tokens = [];
 
