@@ -79,6 +79,24 @@ io.on('connection', function(socket){
       sendToJS(data);
     });
 
+    cppClientSocket.on('error',function(){
+      console.log('Closed-Error');
+      firstConnection = true;
+      jsRecvSocket = null;
+    });
+
+    cppClientSocket.on('end',function(){
+      console.log('Closed-End');
+      firstConnection = true;
+      jsRecvSocket = null;
+    });
+
+    cppClientSocket.on('close',function(){
+      console.log('Closed-Normal');
+      firstConnection = true;
+      jsRecvSocket = null;
+    });
+
   }
 });
 
