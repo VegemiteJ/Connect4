@@ -47,11 +47,12 @@ Networking Codes
 =================
 
 On connection: JS sends board size Number of Rows then Number of Columns
-            Sends (int)R then (int)C
+            
+    Sends (int)R then (int)C
 
 During Game: JS sends number in range [1,NumberCols] as move
-
-            CPP sends number in range [1,NumberCols] as move
+    
+    CPP sends number in range [1,NumberCols] as move
 
 On Winner: CPP sends -1, followed by 0 for AI win or 1 for JS win
 
