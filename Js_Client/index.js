@@ -17,9 +17,8 @@ http.listen(3010, function () {
 
 //Configuration
 //---------------------------------------------------------
-var cppPort = 30455;
+var cppPort = 30455;          //Configures the starting point for the ai
 var NumSimultaneousUsers = 4;
-var firstConnection = true;
 var numberActiveUsers = 0;
 
 var serverStart =function(portToUse){
@@ -99,30 +98,12 @@ io.on('connection', function(socket){
       console.log('Closed-Normal');
       //Find and delete the entry
       var entry = findAIEntry(newAiSock);
-      console.log('Looking for entry - len = ' + availablePorts.length);
-      console.log('Port: ' + entry.cppPort);
-      console.log('Type of: ' + String(typeof(availablePorts)));
 
-      console.log('Printing Elements: ');
-      for (cnt =0; cnt<availableIndexes.length;cnt++)
-      {
-        console.log(availablePorts[availableIndexes[cnt]]);
-      }
-      
       //Find index of used port
       var portInd = availablePorts.indexOf(entry.cppPort);
-      console.log('Index of port: '+  portInd);
       var usrInd = users.indexOf(entry);
-      console.log('Index of usr: ' + usrInd);
       users.splice(usrInd,1);
       availableIndexes.push(portInd); //Push port as back available
-
-      console.log('Printing Elements: ');
-      for (cnt =0; cnt<availableIndexes.length;cnt++)
-      {
-        console.log(availablePorts[availableIndexes[cnt]]);
-      }
-      
     });
 
 

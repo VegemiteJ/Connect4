@@ -16,6 +16,8 @@ private:
     int numMoves;
     int terminatingMoveCount;
     Board* BoardEntity;
+    bool hasWon;
+    Move winningPlayer;
 
     Move RunMove(bool p1);
 

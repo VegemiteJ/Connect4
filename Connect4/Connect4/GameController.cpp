@@ -4,6 +4,7 @@
 #include "SocketHelper.h"
 
 #include <iostream>
+#include <thread>
 
 using namespace std;
 
@@ -13,12 +14,22 @@ GameController::GameController()
     P2 = nullptr;
     NetworkedGame = false;
     BoardEntity = nullptr;
+    hasWon = false;
+    winningPlayer = UNFINISHED;
 }
 
 void GameController::UpdateNetworkedPlayer(bool p1)
 {
     if (!NetworkedGame)
         return;
+
+    if (hasWon)
+    {
+        connection.sendMessage("-1");
+        std::this_thread::sleep_for(200ms);
+        connection.sendMessage(to_string(winningPlayer));
+        std::this_thread::sleep_for(200ms);
+    }
 
     if (P1IsNetworked && p1)
     {
@@ -63,6 +74,8 @@ Move GameController::PlayGame()
         winner = RunMove(true);
         if (winner != UNFINISHED)
         {
+            hasWon = true;
+            winningPlayer = winner;
             UpdateNetworkedPlayer(true);
             return winner;
         }
@@ -70,6 +83,8 @@ Move GameController::PlayGame()
         winner = RunMove(false);
         if (winner != UNFINISHED)
         {
+            hasWon = true;
+            winningPlayer = winner;
             UpdateNetworkedPlayer(true);
             return winner;
         }
