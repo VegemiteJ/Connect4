@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').createServer(app);
 var Server = require('socket.io');
-var io = new Server(21440);
+var io = new Server(21357);
 var exec = require('child_process').execFile;
 
 // Raw TCP Library - for cpp messages
@@ -10,14 +10,14 @@ var net = require('net');
 
 app.use(express.static('public'))
 
-http.listen(3001, function () {
-  console.log('Listening on port 3001!')
+http.listen(3000, function () {
+  console.log('Listening on port 3000!')
 })
 
 
 //Configuration
 //---------------------------------------------------------
-var cppPort = 21444;
+var cppPort = 30111;
 var NumSimultaneousUsers = 4;
 var firstConnection = true;
 var numberActiveUsers = 0;
@@ -66,6 +66,7 @@ io.on('connection', function(socket){
     //Retrieve the port to use
     var index = availableIndexes.splice(0,1); //extract entry at index 0
     var firstPort = availablePorts[index];    //Parse the port
+    console.log('Index: ' + index + ' Port: ' + firstPort);
 
     //Create the entry and push it to arr of active users
     var entry = new Object();
@@ -98,10 +99,30 @@ io.on('connection', function(socket){
       console.log('Closed-Normal');
       //Find and delete the entry
       var entry = findAIEntry(newAiSock);
-      var portInd = availablePorts.findIndex(entry.cppPort);  //Find index of used port
-      var usrInd = users.findIndex(entry);
+      console.log('Looking for entry - len = ' + availablePorts.length);
+      console.log('Port: ' + entry.cppPort);
+      console.log('Type of: ' + String(typeof(availablePorts)));
+
+      console.log('Printing Elements: ');
+      for (cnt =0; cnt<availableIndexes.length;cnt++)
+      {
+        console.log(availablePorts[availableIndexes[cnt]]);
+      }
+      
+      //Find index of used port
+      var portInd = availablePorts.indexOf(entry.cppPort);
+      console.log('Index of port: '+  portInd);
+      var usrInd = users.indexOf(entry);
+      console.log('Index of usr: ' + usrInd);
       users.splice(usrInd,1);
       availableIndexes.push(portInd); //Push port as back available
+
+      console.log('Printing Elements: ');
+      for (cnt =0; cnt<availableIndexes.length;cnt++)
+      {
+        console.log(availablePorts[availableIndexes[cnt]]);
+      }
+      
     });
 
 
@@ -118,7 +139,9 @@ io.on('connection', function(socket){
       console.log('A user disconnected');
       var entry = findJSEntry(socket);
       var aiSock = entry.aiSock;
+      console.log('Sending stop code to ai');
       sendToCpp(aiSock,-1);
+      console.log('Sent');
     });
 
   }
