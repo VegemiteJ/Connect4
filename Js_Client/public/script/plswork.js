@@ -8,7 +8,7 @@ var connection = false;
 //Try connection after 400ms
 var socket;
 setTimeout( function() {
-	socket = io('www.connect4.xyz:21357');
+	socket = io('192.168.1.100:32455');
 
 	socket.on('connection', function(){
 		console.log('ClientConnected')
