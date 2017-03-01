@@ -5,10 +5,10 @@ var width = 7;
 
 var connection = false;
 
-//Try connection after 3 seconds
+//Try connection after 400ms
 var socket;
 setTimeout( function() {
-	socket = io('http://www.connect4.xyz:21357');
+	socket = io('192.168.1.100:21440');
 
 	socket.on('connection', function(){
 		console.log('ClientConnected')

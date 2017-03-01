@@ -2,6 +2,9 @@ Info
 ------------------------------------
 Connect4 project using front and backend elements.
 
+Supports 4 simultaneous sessions by default. Aimed at being for a 4-core server machine - each user gets one ai and a 
+dedicated core to play against.
+
 Aim of the game is to get 4 of your tokens connected. They can be arranged vertically, horizontally or diagonally.
 
 Tech used:
