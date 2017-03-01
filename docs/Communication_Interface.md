@@ -1,12 +1,12 @@
 Communication Interface
---------------------------------------
+===========================
 3 parts
 1) JSClient - [JS]
 2) NodeJS Server - [Node]
 3) CPP ai Server - [CPP]
 
 Connection setup - On page request from User browser:
-=================
+-------------------------------------------
 - Node sets up server on 21357 for JS
 - Node serves board.html
 - Node tests ports until it finds an availble one - $ports          //At some point will switch to cpp spawning new threads to multiplex sockets
@@ -30,7 +30,7 @@ Keeps internal count of the number of active sockets - Spins up new ai whenever 
 On disconnect, MUST teardown cpp ai process, teardown sockets and release entry in mappings of [jssocket,cppsocket]
 
 Game In Progress
-=================
+-------------------------------------------
 JS:
 - Renders board and starts a connection after at least 300ms to allow the cpp server to start correctly
 - Connects to cpp server
@@ -44,7 +44,7 @@ JS:
         JS player or ai
 
 Networking Codes
-=================
+-------------------------------------------
 
 On connection: JS sends board size Number of Rows then Number of Columns
             
