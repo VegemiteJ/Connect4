@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').createServer(app);
 var Server = require('socket.io');
-var io = new Server(32455);
+var io = new Server(21357);
 var exec = require('child_process').execFile;
 
 // Raw TCP Library - for cpp messages
@@ -10,14 +10,13 @@ var net = require('net');
 
 app.use(express.static('public'))
 
-http.listen(3010, function () {
-  console.log('Listening on port 3010!')
+http.listen(3000, function () {
+  console.log('Listening on port 3000!')
 })
-
 
 //Configuration
 //---------------------------------------------------------
-var cppPort = 30455;          //Configures the starting point for the ai
+var cppPort = 30111;
 var NumSimultaneousUsers = 4;
 var numberActiveUsers = 0;
 
