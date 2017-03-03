@@ -117,11 +117,15 @@ io.on('connection', function(socket){
     //Whenever someone disconnects this piece of code executed
     socket.on('disconnect', function () {
       console.log('A user disconnected');
+      numberActiveUsers--;
       var entry = findJSEntry(socket);
-      var aiSock = entry.aiSock;
-      console.log('Sending stop code to ai');
-      sendToCpp(aiSock,-1);
-      console.log('Sent');
+      console.log('Entry present? ' + String(entry));
+      if (entry != -1) {
+        console.log('Sending stop code to ai');
+        var aiSock = entry.aiSock;
+        sendToCpp(aiSock,-1); //If ai has already disconnected, don't try sending
+        console.log('Sent');
+      }
     });
 
   }
@@ -138,6 +142,7 @@ function findJSEntry(sock)
     }
   }
   console.log('MISSING AI SOCKET???!??!?!?!?!?!?');
+  return -1;
 }
 
 function findAIEntry(sock)
@@ -151,6 +156,7 @@ function findAIEntry(sock)
     }
   }
   console.log('MISSING JS SOCKET???!??!?!?!?!?!?');
+  return -1;
 }
 
 //Data routers

@@ -1,11 +1,54 @@
 .column {
 	display: inline-block;
+	border: 0px solid black;
 }
 .row {
-	border: 1px solid black;
+	border: 2px solid black;
+}
+
+.circlered {
+	margin: auto;
+	margin-top: 5%;
+	width: 90%;
+	height: 90%;
+	border-radius: 50%;
+	background: #e62e00;
+	background: linear-gradient(to bottom right, #e62e00, #991f00);
+}
+
+.circleblue {
+	margin: auto;
+	margin-top: 5%;
+	width: 90%;
+	height: 90%;
+	border-radius: 50%;
+	background: #0074d9;
+	background: linear-gradient(to bottom right, #0074d9, #005299);
+}
+
+.boardWrapper {
+	left: 5%;
+	top: 5%;
+	width: 60%;
+	display: inline-block;
+	position: relative;
+	
+}
+.boardWrapper:after {
+	padding-top: 75%;
+	/* 4:3 ratio */
+	display: block;
+	content: '';
+	background: linear-gradient(to bottom right, #f2f2f2, #a6a6a6);
 }
 
 #boardgame {
-	width: 80%;
-	height: 80%;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	height: 95%;
+	/* fill parent */
+	/* let's see it! */
 }

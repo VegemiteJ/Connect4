@@ -4,6 +4,8 @@ var height = 6;
 var width = 7;
 
 var connection = false;
+var gameOver = 0;
+var winner = 0;
 
 //Try connection after 400ms
 var socket;
@@ -16,12 +18,37 @@ setTimeout( function() {
 	});
 
 	socket.on('message', function(data){
-		console.log(data);
-		if (!player1)
+		console.log('Received msg: ' + data);
+		
+		//Win state
+		if (parseInt(data) == -1 || gameOver > 0)
 		{
-			player1 = true;
-			var move = parseInt(data);
-			drawMove(0,move-1);
+			console.log('Game Over');
+			//Received winner
+			if (gameOver==1)
+			{
+				winner = parseInt(data);
+				console.log('Winner: ' + winner);
+			}
+			if (gameOver == 2)	//Plot winning move
+			{
+				var move = parseInt(data);
+				var moveColour = (winner == 1 ? 1 : 0);
+				console.log('Colour: ' + moveColour + ' move: ' + move);
+				if (winner == 2){
+					drawMove(moveColour, move-1);
+				}
+			}
+			gameOver++;
+		}
+		else
+		{
+			if (!player1)
+			{
+				player1 = true;
+				var move = parseInt(data);
+				drawMove(0,move-1);
+			}
 		}
 	});
 },400);
@@ -79,8 +106,16 @@ function drawMove(isRed, column) {
 	var slot = document.getElementById('row' + String(column * height + row));
 
 	if (isRed) {
-		slot.style.background = "url('images/red.png') no-repeat center center";
+		//slot.style.background = "url('images/red.png') no-repeat center center";
+		var circle = document.createElement('div');
+		circle.id = 'row' + String(i * height + j) + '_slot';
+		circle.className = 'circlered';
+		slot.appendChild(circle);
 	} else {
-		slot.style.background = "url('images/blue.png') no-repeat center center";
+		//slot.style.background = "url('images/blue.png') no-repeat center center";
+		var circle = document.createElement('div');
+		circle.id = 'row' + String(i * height + j) + '_slot';
+		circle.className = 'circleblue';
+		slot.appendChild(circle);
 	}
 }
