@@ -37,6 +37,10 @@ setTimeout( function() {
 				console.log('Colour: ' + moveColour + ' move: ' + move);
 				if (winner == 2){
 					drawMove(moveColour, move-1);
+					window.alert('AI won!');
+				}
+				else{
+					window.alert('Player won!');
 				}
 			}
 			gameOver++;

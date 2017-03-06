@@ -150,7 +150,6 @@ char* ServerSocketSet::receiveMessage() {
     std::string msg = std::string(toBuff);
     //std::cout << "iResult:[" << iResult << "], msg:[" << msg << "]" << std::endl;
     if (iResult > 0) {
-        printf("Bytes received: %d\n", iResult);
         toBuff = recvbuf;
         return toBuff;
     } else {		//Received zero bytes

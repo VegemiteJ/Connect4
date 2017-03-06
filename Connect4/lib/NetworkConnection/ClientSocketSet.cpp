@@ -83,7 +83,6 @@ int ClientSocketSet::sendMessage(std::string msg) {
 	char* sendbuf = (char*)msg.c_str();
 
     // Send an initial buffer
-    std::cout << "Sending msg:[" << sendbuf << "] of length:" << (int)strlen(sendbuf) << std::endl;
     iResult = send( ClientSocket, sendbuf, (int)strlen(sendbuf), 0 );
     if (iResult == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
@@ -92,8 +91,6 @@ int ClientSocketSet::sendMessage(std::string msg) {
         errorFlag = 5;
         return 0;
     }
-
-    printf("Bytes Sent: %d\n", iResult);
 
     //return number of bytes sent
     return iResult;
@@ -108,7 +105,6 @@ char* ClientSocketSet::receiveMessage(void) {
     std::string msg = std::string(toBuff);
     //std::cout << "iResult:[" << iResult << "], msg:[" << msg << "]" << std::endl;
     if (iResult > 0) {
-        printf("Bytes received: %d\n", iResult);
         toBuff = recvbuf;
         return toBuff;
     } else {		//Received zero bytes
