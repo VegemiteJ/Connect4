@@ -1,4 +1,6 @@
 #include "GameStateEvaluator.h"
+#include <iostream>
+using namespace std;
 
 #pragma region WinStatusImplementation
 
@@ -181,11 +183,90 @@ bool GameStateEvaluator::CheckWin(Board * state, Move p)
     return false;
 }
 
+///General algorithm is to find all empty spaces
+///	For every direction in the 8 move directions
+///		Follow that branch until connectLength tokens are seen
+///			Add this as the count for that position, continue for all other positions
+int GameStateEvaluator::CountN(Matrix* state, Move p, int connectLength)
+{
+	return 0;
+}
+
+///Given a location on the board, follow that desired token until it is as long as connectLength
+int GameStateEvaluator::CountNFromLocation(Matrix * rawState, int row, int col, Move p, int connectLength)
+{
+	int numberMatchesFound = 0;
+	
+	//Firstly search all 8 neighbours for the desired token
+	// Neighbour defined by [][][]
+	//						[][A][]
+	//						[][][]
+	//	Check within bounds of the board
+	
+	//Defines the enums to add to the current position, defining the next areas to check
+	int rowChkEnums[8] = {-1,-1,-1,0,0,1,1,1};
+	int colChkEnums[8] = {-1,0,1,-1,1,-1,0,1};
+
+	for (int i = 0; i < 8; i++)
+	{
+		int currRow = row + rowChkEnums[i];
+		int currCol = col + colChkEnums[i];
+		cout << "Evaluating Postion: " << currRow << "," << currCol << endl;
+		cout << "\tBounds? " << rawState->checkBounds(currRow, currCol) << endl;
+		//If either our of range of the board
+		if (!rawState->checkBounds(currRow, currCol)) {
+			continue;
+		}
+
+		//Now continue along that path, counting tokens
+		//	While count along this direction is less than or equal to connectLength
+		//		Also while within bounds
+		//		Also while token at that location == one we are checking
+		//	Direction is currRow+rowChkEnums[i], currCol+colChkEnums[i]
+		int count = 0;
+		while (rawState->checkBounds(currRow, currCol) &&
+			(*rawState)(currRow, currCol) == p &&
+			count < connectLength)
+		{
+			count++;
+		}
+
+		cout << "\tDone" << endl;
+		
+	}
+
+	return numberMatchesFound;
+}
+
+///Utility is zero sum
+///	Returns the count of player p 3 in a row - player 2 3 in a row
+int GameStateEvaluator::ComputeThreeInRow(Board * state, Move p)
+{
+	int NumRow = state->NumRow;
+	int NumCol = state->NumCol;
+	int MoveRow = state->MoveRow;
+	int MoveCol = state->MoveCol;
+	int ConnectLength = state->ConnectLength;
+	Matrix* rawState = state->StateAccess();
+
+	if (MoveCol == -1 || MoveRow == -1)
+		return 0;
+
+	int count3sP1 = CountN(rawState, p, 3);
+	int count3sP2 = CountN(rawState, ((p==1)?P2_MOVE:P1_MOVE), 3);
+
+	return count3sP1 - count3sP2;
+}
+
 #pragma endregion
 
-int GameStateEvaluator::ComputeUtility(Board * evaluationPosition, int _depth)
+///Idea is to compute all the various heuristics and to return the best linear combination
+///	TODO in future: apply the reinforcement learning component to learn the best combination of the heuristics
+int GameStateEvaluator::ComputeUtility(Board * evaluationPosition, Move p)
 {
-    return 0;
+	int threeStatUtil = ComputeThreeInRow(evaluationPosition, p);
+
+	return threeStatUtil;
 }
 
 int GameStateEvaluator::ComputeWinUtility(Board * evaluationPosition, Move p, Move player)

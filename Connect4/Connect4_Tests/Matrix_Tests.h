@@ -8,6 +8,50 @@ TEST(MatrixTests, Constructor)
     EXPECT_EQ(a.NumCol, 7);
 }
 
+TEST(MatrixTests, BoundsCheckVerify)
+{
+	Matrix a = Matrix(6, 7);
+	//rows exist in [0:5]
+	//cols exist in [0:6]
+
+	int row = 0;
+	int col = 0;
+	EXPECT_EQ(a.checkBounds(row, col), true);
+
+	row = -1;
+	col = 0;
+	EXPECT_EQ(a.checkBounds(row, col), false);
+
+	row = 0;
+	col = -1;
+	EXPECT_EQ(a.checkBounds(row, col), false);
+
+	row = -1;
+	col = -1;
+	EXPECT_EQ(a.checkBounds(row, col), false);
+
+	row = 4;
+	col = 4;
+	EXPECT_EQ(a.checkBounds(row, col), true);
+
+	row = 2;
+	col = 6;
+	EXPECT_EQ(a.checkBounds(row, col), true);
+
+	row = 2;
+	col = 7;
+	EXPECT_EQ(a.checkBounds(row, col), false);
+
+	row = 5;
+	col = 2;
+	EXPECT_EQ(a.checkBounds(row, col), true);
+
+	row = 6;
+	col = 2;
+	EXPECT_EQ(a.checkBounds(row, col), false);
+
+}
+
 TEST(MatrixTests, CopyAssignment)
 {
     Matrix a = Matrix(5, 6);

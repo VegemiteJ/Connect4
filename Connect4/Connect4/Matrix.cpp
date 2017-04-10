@@ -16,6 +16,12 @@ void swap(Matrix & first, Matrix & second)
 	swap(first.Value, second.Value);
 }
 
+bool Matrix::checkBounds(int row, int col)
+{
+	return (row >= 0 && row < NumRow &&
+			col >= 0 && col < NumCol);
+}
+
 int& Matrix::operator()(int row, int col)
 {
     int index = row*NumCol + col;

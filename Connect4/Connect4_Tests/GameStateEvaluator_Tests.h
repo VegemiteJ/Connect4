@@ -6,6 +6,14 @@
 
 #define DEBUG_PRINT false
 
+TEST(GameStateEvaluatorTests, CountNFromLocationVerify)
+{
+	Board a = Board(6, 6, 4);
+	GameStateEvaluator gse = GameStateEvaluator();
+
+	int value = gse.CountNFromLocation(a.StateAccess(), 0, 0, P1_MOVE, 3);
+}
+
 TEST(GameStateEvaluatorTests, VerticalWins)
 {
     Board a = Board(7, 6, 4);

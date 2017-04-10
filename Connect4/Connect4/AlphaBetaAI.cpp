@@ -84,7 +84,7 @@ int AlphaBetaAI::AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _m
         {
             (*CurrentBoard).UnMakeMove(_move + 1);
         }
-        return gse.ComputeUtility(CurrentBoard, _depth);
+        return gse.ComputeUtility(CurrentBoard, p);
     }
 
     //Recursion case:

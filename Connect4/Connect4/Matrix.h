@@ -9,6 +9,9 @@ public:
 	int NumRow;
 	int NumCol;
 
+	//Returns true if within bounds
+	bool checkBounds(int row, int col);
+
 	//Access via Matrix(row,col)
 	int& operator()(int row, int col);
     const int& operator()(int row, int col) const;
