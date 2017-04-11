@@ -6,12 +6,264 @@
 
 #define DEBUG_PRINT false
 
+TEST(GameStateEvaluatorPublicTest, Connect3Public)
+{
+	Board a = Board(6, 6, 4);
+	GameStateEvaluator gse = GameStateEvaluator();
+	int value;
+
+	//First test that 3 in middle yields 2
+	a.MakeMove(2, P1_MOVE);
+	a.MakeMove(3, P1_MOVE);
+	a.MakeMove(4, P1_MOVE);
+	value = gse.ComputeThreeInRow(&a, P1_MOVE);
+	EXPECT_EQ(value, 2);
+
+	//Check opponent has value -2
+	value = gse.ComputeThreeInRow(&a, P2_MOVE);
+	EXPECT_EQ(value, -2);
+
+	//Check P2 has 1 possible and P1 has two - expects P2 to have 1 utility, P1 to have -1
+	a = Board(6, 6, 4);
+	a.MakeMove(1, P2_MOVE);
+	a.MakeMove(2, P2_MOVE);
+	a.MakeMove(3, P2_MOVE);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(2, P1_MOVE);
+	a.MakeMove(3, P1_MOVE);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(2, P1_MOVE);
+	a.MakeMove(3, P1_MOVE);
+	value = gse.ComputeThreeInRow(&a, P1_MOVE);
+	EXPECT_EQ(value, 1);
+	value = gse.ComputeThreeInRow(&a, P2_MOVE);
+	EXPECT_EQ(value, -1);
+
+	//Now block P2 and check that P1 now has 3 possible
+	a.MakeMove(4, P1_MOVE);
+	value = gse.ComputeThreeInRow(&a, P1_MOVE);
+	EXPECT_EQ(value, 3);
+	value = gse.ComputeThreeInRow(&a, P2_MOVE);
+	EXPECT_EQ(value, -3);
+
+	//Check when both have 1 possible, net is 0
+	a = Board(6, 6, 4);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(1, P1_MOVE);
+
+	a.MakeMove(2, P2_MOVE);
+	a.MakeMove(2, P2_MOVE);
+	a.MakeMove(2, P2_MOVE);
+	value = gse.ComputeThreeInRow(&a, P1_MOVE);
+	EXPECT_EQ(value, 0);
+	value = gse.ComputeThreeInRow(&a, P2_MOVE);
+	EXPECT_EQ(value, 0);
+}
+
+TEST(GameStateEvaluatorTests, CountNTotal)
+{
+	Board a = Board(6, 6, 4);
+	GameStateEvaluator gse = GameStateEvaluator();
+	int value;
+
+	//Try entire bottom left filled, leaving one space -> expects 1
+	a.MakeMove(1, P2_MOVE);
+	a.MakeMove(2, P2_MOVE);
+	a.MakeMove(3, P2_MOVE);
+	value = gse.CountN(a.StateAccess(), P2_MOVE, 3);
+	EXPECT_EQ(value, 1);
+	value = gse.CountN(a.StateAccess(), P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+	value = gse.CountN(a.StateAccess(), P2_MOVE, 2);
+	EXPECT_EQ(value, 1);
+	value = gse.CountN(a.StateAccess(), P2_MOVE, 1);
+	EXPECT_EQ(value, 9);
+
+	//Try middle, leaving gap on either end
+	a = Board(6, 6, 4);
+	a.MakeMove(2, P1_MOVE);
+	a.MakeMove(3, P1_MOVE);
+	a.MakeMove(4, P1_MOVE);
+	value = gse.CountN(a.StateAccess(), P1_MOVE, 3);
+	EXPECT_EQ(value, 2);
+	//	Now modify board to block off one end with opponents move
+	a.MakeMove(5, P2_MOVE);
+	value = gse.CountN(a.StateAccess(), P1_MOVE, 3);
+	EXPECT_EQ(value, 1);
+	//	Now fully block off all possible c3 moves
+	a.MakeMove(1, P2_MOVE);
+	value = gse.CountN(a.StateAccess(), P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+}
+
 TEST(GameStateEvaluatorTests, CountNFromLocationVerify)
 {
 	Board a = Board(6, 6, 4);
 	GameStateEvaluator gse = GameStateEvaluator();
-
+	//Empty Board test
 	int value = gse.CountNFromLocation(a.StateAccess(), 0, 0, P1_MOVE, 3);
+	if (DEBUG_PRINT) {
+		cout << "Board: \t" << a.ToString() << endl;
+	}
+	EXPECT_EQ(value, 0);
+	
+	//One valid 3 in row test: bottom left to centre
+	a.MakeMove(1, P1_MOVE);
+	value = gse.CountNFromLocation(a.StateAccess(), 5, 0, P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+
+	a.MakeMove(2, P1_MOVE);
+	value = gse.CountNFromLocation(a.StateAccess(), 5, 0, P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+	
+	a.MakeMove(3, P1_MOVE);
+	if (DEBUG_PRINT) {
+		cout << "Board: \t" << a.ToString() << endl;
+	}
+	value = gse.CountNFromLocation(a.StateAccess(), 4, 0, P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+	value = gse.CountNFromLocation(a.StateAccess(), 4, 1, P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+	value = gse.CountNFromLocation(a.StateAccess(), 4, 2, P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+	value = gse.CountNFromLocation(a.StateAccess(), 4, 3, P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+	value = gse.CountNFromLocation(a.StateAccess(), 5, 3, P1_MOVE, 3);
+	EXPECT_EQ(value, 1);
+
+	//Testing differnt connect length + more than one connection from a single point
+	Board b = Board(6, 6, 4);
+	b.MakeMove(1, P1_MOVE);
+	b.MakeMove(2, P1_MOVE);
+	b.MakeMove(4, P1_MOVE);
+	b.MakeMove(5, P1_MOVE);
+	value = gse.CountNFromLocation(b.StateAccess(), 5, 2, P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+	value = gse.CountNFromLocation(b.StateAccess(), 5, 2, P1_MOVE, 2);
+	EXPECT_EQ(value, 2);
+
+	//Test vertical connect length
+	b = Board(6, 6, 4);
+	b.MakeMove(1, P1_MOVE);
+	b.MakeMove(1, P1_MOVE);
+	b.MakeMove(1, P1_MOVE);
+	value = gse.CountNFromLocation(b.StateAccess(), 2, 0, P1_MOVE, 3);
+	EXPECT_EQ(value, 1);
+	value = gse.CountNFromLocation(b.StateAccess(), 2, 1, P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+	value = gse.CountNFromLocation(b.StateAccess(), 3, 1, P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+	value = gse.CountNFromLocation(b.StateAccess(), 4, 1, P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+	value = gse.CountNFromLocation(b.StateAccess(), 5, 1, P1_MOVE, 3);
+	EXPECT_EQ(value, 0);
+
+	//Test diagonal connect length
+	//	Down to left
+	b = Board(6, 6, 4);
+	b.MakeMove(2, P1_MOVE);
+	b.MakeMove(2, P1_MOVE);
+	b.MakeMove(3, P2_MOVE);
+	b.MakeMove(3, P2_MOVE);
+	b.MakeMove(3, P1_MOVE);
+	b.MakeMove(4, P2_MOVE);
+	b.MakeMove(4, P2_MOVE);
+	b.MakeMove(4, P2_MOVE);
+	b.MakeMove(4, P1_MOVE);
+	value = gse.CountNFromLocation(b.StateAccess(), 5, 0, P1_MOVE, 3);
+	EXPECT_EQ(value, 1);
+	value = gse.CountNFromLocation(b.StateAccess(), 5, 0, P1_MOVE, 2);
+	EXPECT_EQ(value, 1);
+
+	//	Down to right
+	b = Board(6, 6, 4);
+	b.MakeMove(4, P1_MOVE);
+	b.MakeMove(4, P1_MOVE);
+	b.MakeMove(3, P2_MOVE);
+	b.MakeMove(3, P2_MOVE);
+	b.MakeMove(3, P1_MOVE);
+	b.MakeMove(2, P2_MOVE);
+	b.MakeMove(2, P2_MOVE);
+	b.MakeMove(2, P2_MOVE);
+	b.MakeMove(2, P1_MOVE);
+	value = gse.CountNFromLocation(b.StateAccess(), 5, 4, P1_MOVE, 3);
+	EXPECT_EQ(value, 1);
+
+	//	Up to left
+	b = Board(6, 6, 4);
+	b.MakeMove(5, P1_MOVE);
+	b.MakeMove(4, P1_MOVE);
+	b.MakeMove(4, P1_MOVE);
+	b.MakeMove(3, P2_MOVE);
+	b.MakeMove(3, P2_MOVE);
+	b.MakeMove(3, P1_MOVE);
+	b.MakeMove(2, P2_MOVE);
+	b.MakeMove(2, P2_MOVE);
+	b.MakeMove(2, P2_MOVE);
+	value = gse.CountNFromLocation(b.StateAccess(), 2, 1, P1_MOVE, 3);
+	EXPECT_EQ(value, 1);
+
+	//	Up to right
+	b = Board(6, 6, 4);
+	b.MakeMove(1, P1_MOVE);
+	b.MakeMove(2, P2_MOVE);
+	b.MakeMove(2, P1_MOVE);
+	b.MakeMove(3, P2_MOVE);
+	b.MakeMove(3, P2_MOVE);
+	b.MakeMove(3, P1_MOVE);
+	b.MakeMove(4, P2_MOVE);
+	b.MakeMove(4, P2_MOVE);
+	b.MakeMove(4, P2_MOVE);
+	value = gse.CountNFromLocation(b.StateAccess(), 2, 3, P1_MOVE, 3);
+	EXPECT_EQ(value, 1);
+
+	//Large test for surrounded point -> Expects 7
+	b = Board(6, 6, 4);
+	b.MakeMove(1, P1_MOVE);
+	b.MakeMove(1, P1_MOVE);
+	b.MakeMove(1, P1_MOVE);
+	b.MakeMove(1, P1_MOVE);
+	b.MakeMove(1, P1_MOVE);
+	b.MakeMove(1, P1_MOVE);
+
+	b.MakeMove(2, P1_MOVE);
+	b.MakeMove(2, P1_MOVE);
+	b.MakeMove(2, P1_MOVE);
+	b.MakeMove(2, P1_MOVE);
+	b.MakeMove(2, P1_MOVE);
+	b.MakeMove(2, P1_MOVE);
+
+	b.MakeMove(3, P1_MOVE);
+	b.MakeMove(3, P1_MOVE);
+
+	b.MakeMove(4, P1_MOVE);
+	b.MakeMove(4, P1_MOVE);
+	b.MakeMove(4, P1_MOVE);
+	b.MakeMove(4, P1_MOVE);
+	b.MakeMove(4, P1_MOVE);
+	b.MakeMove(4, P1_MOVE);
+
+	b.MakeMove(5, P1_MOVE);
+	b.MakeMove(5, P1_MOVE);
+	b.MakeMove(5, P1_MOVE);
+	b.MakeMove(5, P1_MOVE);
+	b.MakeMove(5, P1_MOVE);
+	b.MakeMove(5, P1_MOVE);
+	cout << b.ToString() << endl;
+	value = gse.CountNFromLocation(b.StateAccess(), 3, 2, P1_MOVE, 2);
+	EXPECT_EQ(value, 7);
+	value = gse.CountNFromLocation(b.StateAccess(), 2, 2, P1_MOVE, 2);
+	EXPECT_EQ(value, 6);
+	value = gse.CountNFromLocation(b.StateAccess(), 4, 2, P1_MOVE, 2);
+	EXPECT_EQ(value, 0);
+	//Test that P2 has no moves
+	value = gse.CountNFromLocation(b.StateAccess(), 3, 2, P2_MOVE, 2);
+	EXPECT_EQ(value, 0);
+	value = gse.CountNFromLocation(b.StateAccess(), 2, 2, P2_MOVE, 2);
+	EXPECT_EQ(value, 0);
+	value = gse.CountNFromLocation(b.StateAccess(), 4, 2, P2_MOVE, 2);
+	EXPECT_EQ(value, 0);
 }
 
 TEST(GameStateEvaluatorTests, VerticalWins)

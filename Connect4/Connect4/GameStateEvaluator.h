@@ -13,6 +13,7 @@ private:
 	
 	//Tests for ConnectN heuristic
 	FRIEND_TEST(GameStateEvaluatorTests, CountNFromLocationVerify);
+	FRIEND_TEST(GameStateEvaluatorTests, CountNTotal);
     #pragma endregion
 
     bool CheckVertical(Matrix* state, int row, int col, Move p, int ConnectLength, int NumRow, int NumCol);

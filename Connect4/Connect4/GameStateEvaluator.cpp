@@ -184,18 +184,32 @@ bool GameStateEvaluator::CheckWin(Board * state, Move p)
 }
 
 ///General algorithm is to find all empty spaces
-///	For every direction in the 8 move directions
-///		Follow that branch until connectLength tokens are seen
-///			Add this as the count for that position, continue for all other positions
 int GameStateEvaluator::CountN(Matrix* state, Move p, int connectLength)
 {
-	return 0;
+	int totalBoardCnt = 0;
+	//Iterate over board and for all empty spaces, evaluate utility
+	//	TODO: speedup via board storing all free positions on the board -> reference via lookup
+	for (int i = 0; i < state->NumRow; i++) {
+		for (int j = 0; j < state->NumCol; j++) {
+			if ((*state)(i, j) == NO_MOVE) {
+				totalBoardCnt += CountNFromLocation(state, i, j, p, connectLength);
+			}
+		}
+	}
+
+	return totalBoardCnt;
 }
 
 ///Given a location on the board, follow that desired token until it is as long as connectLength
 int GameStateEvaluator::CountNFromLocation(Matrix * rawState, int row, int col, Move p, int connectLength)
 {
+	//Initially handle the case where it is not passed a correct (empty) location
+	if ((*rawState)(row, col) != NO_MOVE) {
+		return 0;
+	}
+
 	int numberMatchesFound = 0;
+	//cout << "Called CNfrom Location with args: " << row << "," << col << "," << connectLength << endl;
 	
 	//Firstly search all 8 neighbours for the desired token
 	// Neighbour defined by [][][]
@@ -211,8 +225,8 @@ int GameStateEvaluator::CountNFromLocation(Matrix * rawState, int row, int col, 
 	{
 		int currRow = row + rowChkEnums[i];
 		int currCol = col + colChkEnums[i];
-		cout << "Evaluating Postion: " << currRow << "," << currCol << endl;
-		cout << "\tBounds? " << rawState->checkBounds(currRow, currCol) << endl;
+		//cout << "Evaluating Postion: " << currRow << "," << currCol << endl;
+		//cout << "\tBounds? " << rawState->checkBounds(currRow, currCol) << endl;
 		//If either our of range of the board
 		if (!rawState->checkBounds(currRow, currCol)) {
 			continue;
@@ -228,13 +242,20 @@ int GameStateEvaluator::CountNFromLocation(Matrix * rawState, int row, int col, 
 			(*rawState)(currRow, currCol) == p &&
 			count < connectLength)
 		{
+			currRow += rowChkEnums[i];
+			currCol += colChkEnums[i];
 			count++;
 		}
-
-		cout << "\tDone" << endl;
+		//cout << "\tFinal Count for this itr: " << count << endl;
+		//cout << "\tDone itr: " << i << endl;
 		
+		if (count == connectLength)
+		{
+			numberMatchesFound++;
+		}
 	}
 
+	//cout << "\tMatches Found:" << numberMatchesFound << endl;
 	return numberMatchesFound;
 }
 
