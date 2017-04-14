@@ -4,10 +4,33 @@
 #include "Board.h"
 #include "gtest/gtest.h"
 
+TEST(AlphaBetaTests, Chooses3)
+{
+    Board a = Board(6, 6, 4);
+    AlphaBetaAI ai = AlphaBetaAI(P2_MOVE);
+
+    a.MakeMove(1, P1_MOVE);
+    a.MakeMove(1, P1_MOVE);
+    a.MakeMove(6, P1_MOVE);
+    a.MakeMove(6, P1_MOVE);
+    ai.MaxDepth = 1;
+    a.MoveRow = -1;
+    a.MoveCol = -1;
+    a.LastMove = NO_MOVE;
+    ai.Play(&a);
+    int move = ai.GetBestMove();
+    cerr << "Move: " << move << endl;
+    bool equal = (move == 1 || move == 6);
+    int util = ai.BestUtility;
+    cerr << "Utility: " << util << endl;
+    EXPECT_EQ(equal, true);
+    EXPECT_EQ(util, 1);
+}
+
 TEST(AlphaBetaAITests, StackedBoard0Depth)
 {
 	Board a = Board(6, 6, 4);
-	AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
+	AlphaBetaAI ai = AlphaBetaAI(P2_MOVE);
 	ai.MaxDepth = 0;
 	a.MoveRow = -1;
 	a.MoveCol = -1;
@@ -27,20 +50,61 @@ TEST(AlphaBetaAITests, StackedBoard0Depth)
 	EXPECT_EQ(utility, 0);
 	
 	a.MakeMove(4, P1_MOVE);
+    cerr << "Board:\n" << a.ToString() << endl;
 	a.MoveRow = -1;
 	a.MoveCol = -1;
 	a.LastMove = NO_MOVE;
 	ai.Play(&a);
+    cout << ai.GetBestMove() << endl;
 	utility = ai.BestUtility;
 	EXPECT_EQ(utility, 2);
 
-	ai.MaxDepth = 0;
+	ai.MaxDepth = 1;
 	a.MoveRow = -1;
 	a.MoveCol = -1;
 	a.LastMove = NO_MOVE;
 	ai.Play(&a);
 	utility = ai.BestUtility;
-	EXPECT_EQ(utility, 2);
+	EXPECT_EQ(utility, 1);
+
+    //Opposite player
+    a = Board(6, 6, 4);
+    ai = AlphaBetaAI(P1_MOVE);
+
+    ai.MaxDepth = 0;
+    a.MoveRow = -1;
+    a.MoveCol = -1;
+    a.LastMove = NO_MOVE;
+    ai.Play(&a);
+    utility = ai.BestUtility;
+    EXPECT_EQ(utility, 0);
+
+    a.MakeMove(2, P2_MOVE);
+    a.MakeMove(3, P2_MOVE);
+    a.MoveRow = -1;
+    a.MoveCol = -1;
+    a.LastMove = NO_MOVE;
+    ai.Play(&a);
+    utility = ai.BestUtility;
+    EXPECT_EQ(utility, 0);
+
+    a.MakeMove(4, P2_MOVE);
+    cerr << "Board:\n" << a.ToString() << endl;
+    a.MoveRow = -1;
+    a.MoveCol = -1;
+    a.LastMove = NO_MOVE;
+    ai.Play(&a);
+    cout << ai.GetBestMove() << endl;
+    utility = ai.BestUtility;
+    EXPECT_EQ(utility, -2);
+
+    ai.MaxDepth = 1;
+    a.MoveRow = -1;
+    a.MoveCol = -1;
+    a.LastMove = NO_MOVE;
+    ai.Play(&a);
+    utility = ai.BestUtility;
+    EXPECT_EQ(utility, -1);
 }
 
 TEST(AlphaBetaAITests, InternalDepth0)

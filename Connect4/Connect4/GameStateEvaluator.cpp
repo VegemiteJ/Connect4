@@ -270,12 +270,9 @@ int GameStateEvaluator::ComputeThreeInRow(Board * state, Move p)
 	int ConnectLength = state->ConnectLength;
 	Matrix* rawState = state->StateAccess();
 
-	if (MoveCol == -1 || MoveRow == -1)
-		return 0;
-
-	int count3sP1 = CountN(rawState, p, 3);
-	int count3sP2 = CountN(rawState, ((p==1)?P2_MOVE:P1_MOVE), 3);
-
+	int count3sP1 = CountN(rawState, P1_MOVE, 3);
+	int count3sP2 = CountN(rawState, P2_MOVE, 3);
+    cerr << "Counts: " << count3sP1 << ", " << count3sP2 << endl;
 	return count3sP1 - count3sP2;
 }
 
@@ -286,7 +283,6 @@ int GameStateEvaluator::ComputeThreeInRow(Board * state, Move p)
 int GameStateEvaluator::ComputeUtility(Board * evaluationPosition, Move p)
 {
 	int threeStatUtil = ComputeThreeInRow(evaluationPosition, p);
-
 	return threeStatUtil;
 }
 

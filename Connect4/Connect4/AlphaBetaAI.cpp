@@ -84,7 +84,9 @@ int AlphaBetaAI::AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _m
         {
             (*CurrentBoard).UnMakeMove(_move + 1);
         }
-        return gse.ComputeUtility(CurrentBoard, p);
+        int util = gse.ComputeUtility(CurrentBoard, p);
+        cerr << "\tDepth: " << _depth << " util: " << util << endl;
+        return util;
     }
 
     //Recursion case:
@@ -114,6 +116,7 @@ int AlphaBetaAI::AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _m
         {
             costValue = AlphaBeta((*allValidMoves)[i], _depth - 1, _alpha, _beta, false, (p == P1_MOVE ? P2_MOVE : P1_MOVE));
             costValue = DepthNormalise(costValue);
+            cerr << "\t\tCost: " << costValue << " Best: " << bestValue << endl;
             printString(std::cout, 3, "Child " + to_string((*allValidMoves)[i]) + " of maximising parent: " +
                 to_string(_move) + " has cost: " + to_string(costValue) + "\n");
             if (costValue > bestValue)
