@@ -43,6 +43,7 @@ private:
     /// <param name="_maxPlayer">if set to <c>true</c> [maximum player].</param>
     /// <returns></returns>
     int AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _maxPlayer, Move p);
+	int AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer);
 
     void SwapTwoElements(int* a, int* b);
 

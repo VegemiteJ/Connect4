@@ -261,7 +261,7 @@ int GameStateEvaluator::CountNFromLocation(Matrix * rawState, int row, int col, 
 
 ///Utility is zero sum
 ///	Returns the count of player p 3 in a row - player 2 3 in a row
-int GameStateEvaluator::ComputeThreeInRow(Board * state, Move p)
+int GameStateEvaluator::ComputeThreeInRow(Board * state)
 {
 	int NumRow = state->NumRow;
 	int NumCol = state->NumCol;
@@ -280,14 +280,14 @@ int GameStateEvaluator::ComputeThreeInRow(Board * state, Move p)
 
 ///Idea is to compute all the various heuristics and to return the best linear combination
 ///	TODO in future: apply the reinforcement learning component to learn the best combination of the heuristics
-int GameStateEvaluator::ComputeUtility(Board * evaluationPosition, Move p)
+int GameStateEvaluator::ComputeUtility(Board * evaluationPosition)
 {
-	int threeStatUtil = ComputeThreeInRow(evaluationPosition, p);
+	int threeStatUtil = ComputeThreeInRow(evaluationPosition);
 	return threeStatUtil;
 }
 
-int GameStateEvaluator::ComputeWinUtility(Board * evaluationPosition, Move p, Move player)
+int GameStateEvaluator::ComputeWinUtility(Board * evaluationPosition, Move p)
 {
-    //Utility to return is +1000 if we won, -1000 if opponent won
-    return (p == player ? 1000 : -1000);
+    //Utility to return is +1000 if P1 won, -1000 if opponent won
+    return (p == P1_MOVE ? 1000 : -1000);
 }

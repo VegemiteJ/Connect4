@@ -28,9 +28,9 @@ private:
 public:
     bool CheckWin(Board* state, Move p);
 
-	int ComputeThreeInRow(Board* state, Move p);
+	int ComputeThreeInRow(Board* state);
 
-    int ComputeUtility(Board* evaluationPosition, Move p);
+    int ComputeUtility(Board* evaluationPosition);
 
-    int ComputeWinUtility(Board* evaluationPosition, Move p, Move player);
+    int ComputeWinUtility(Board* evaluationPosition, Move p);
 };

@@ -42,6 +42,7 @@ int AlphaBetaAI::DepthNormalise(int value)
     return value;
 }
 
+/*
 int AlphaBetaAI::AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _maxPlayer, Move p)
 {
     printString(std::cout, 2, "\n\nCalled AB Search at depth: " + to_string(_depth) + "\n");
@@ -80,11 +81,13 @@ int AlphaBetaAI::AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _m
     if (_depth == 0)
     {
         printString(std::cout, 2, "Terminal depth reached\n");
+		cerr << "\tMove: " << CurrentBoard->MoveCol << endl;
         if (!(_depth == MaxDepth && MakingFirstMoveOfGame))
         {
             (*CurrentBoard).UnMakeMove(_move + 1);
         }
         int util = gse.ComputeUtility(CurrentBoard, p);
+		cerr << "BOARD\n" << CurrentBoard->ToString() << endl;
         cerr << "\tDepth: " << _depth << " util: " << util << endl;
         return util;
     }
@@ -133,7 +136,7 @@ int AlphaBetaAI::AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _m
                 printString(std::cout, 2, "Number of valid moves: " + to_string(allValidMoves->size()) + "\n");
                 printString(std::cout, 2, to_string(i) + " Pruned branches  b: " + to_string(_beta) + " a: " + to_string(_alpha) + "\n");
                 int tempDepth = MaxDepth - _depth;
-                GlobalPrunes += 1 /*(double) powl(CurrentBoard->NumCol, tempDepth)*/;
+                GlobalPrunes += 1 /*(double) powl(CurrentBoard->NumCol, tempDepth);
                 break;
             }
             
@@ -164,7 +167,7 @@ int AlphaBetaAI::AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _m
                 printString(std::cout, 2, "Number of valid moves: " + to_string(allValidMoves->size()) + "\n");
                 printString(std::cout, 2, to_string(i) + " beta b: " + to_string(_beta) + " a: " + to_string(_alpha) + "\n");
                 int tempDepth = MaxDepth - _depth;
-                GlobalPrunes += 1 /*(double) powl(CurrentBoard->NumCol, tempDepth)*/;
+                GlobalPrunes += 1 /*(double) powl(CurrentBoard->NumCol, tempDepth);
                 break;
             }
             
@@ -178,6 +181,80 @@ int AlphaBetaAI::AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _m
         (*CurrentBoard).UnMakeMove(_move + 1);
     }
     return bestValue;
+}
+*/
+
+int AlphaBetaAI::AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer)
+{
+	//Check If P1 has won, return positive utlity
+	//Check if P2 has won, return negative utility
+
+	//Check if terminal depth reached, i.e. depth == 0
+
+	//Recursive Case
+	//Randomise child search order
+	//If max player do->
+	//Else ->
+	//For each child
+	//	Make move
+	//	Evaluate AB on that board
+	//	Unmake move
+	//	Check cost conditions
+	//	Check alpha beta
+	
+	if (gse.CheckWin(CurrentBoard, P1_MOVE)) {
+		return gse.ComputeWinUtility(CurrentBoard, P1_MOVE);
+	} 
+	else if (gse.CheckWin(CurrentBoard, P2_MOVE)) {
+		return gse.ComputeWinUtility(CurrentBoard, P2_MOVE);
+	}
+	if (_depth == 0) {
+		return gse.ComputeUtility(CurrentBoard);
+	}
+	//Recursion case
+	//===============================
+	int costValue;
+	int bestValue;
+	vector<int>* allValidMoves = CurrentBoard->GetAllValidMoves();
+	size_t numRandSwaps = allValidMoves->size();
+	for (size_t i = 0; i<numRandSwaps; i++) {
+		//Swap two random elements
+		int a = dice() % allValidMoves->size();
+		int b = dice() % allValidMoves->size();
+		SwapTwoElements(&(*allValidMoves)[a], &(*allValidMoves)[b]);
+	}
+
+	if (_maxPlayer) {
+		bestValue = -INF;
+		for (auto i : (*allValidMoves)) {
+			costValue = AlphaBeta(_depth - 1, _alpha, _beta, !_maxPlayer);
+			if (costValue > bestValue) {
+				bestValue = costValue;
+				BestMove = (_depth == MaxDepth ? (*allValidMoves)[i] : BestMove);
+			}
+			_alpha = (_alpha >= bestValue) ? _alpha : bestValue;
+			if (_beta <= _alpha) {
+				break;
+			}
+		}
+	}
+	else {
+		bestValue = INF;
+		for (auto i : (*allValidMoves)) {
+			costValue = AlphaBeta(_depth - 1, _alpha, _beta, !_maxPlayer);
+			if (costValue < bestValue) {
+				bestValue = costValue;
+				BestMove = (_depth == MaxDepth ? (*allValidMoves)[i] : BestMove);
+			}
+			_beta = (_beta <= bestValue) ? _beta : bestValue;
+			if (_beta <= _alpha) {
+				break;
+			}
+		}
+	}
+	delete allValidMoves;
+	
+	return bestValue;
 }
 
 void AlphaBetaAI::SwapTwoElements(int * a, int * b)

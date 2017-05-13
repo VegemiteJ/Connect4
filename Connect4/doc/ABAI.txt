@@ -1,0 +1,35 @@
+Current way:
+
+If Not First Move Of Game:
+	Unmake last move
+
+Make Move
+Check Wins
+If terminal depth -> Return best utility
+
+New Design:
+
+Base Case:
+	If any win in current position -> Return win status
+	If at terminal depth -> Return utility calculation
+
+Recursive case:
+	for all children
+		Make Move
+		Calculate AB(depth-1, alpha, beta, maxplayer as boolean)
+		Depth Normalise
+		Unmake Move
+
+		Check Cost Values and a,b
+
+
+
+O move -> Minimising player
+X move -> Maximising player
+Alpha represents the highest score found so far (in this branch)
+Beta reperesents the lowest score found so far (in this branch)
+
+AB(depth, alpha, beta, bool maximising)
+{
+	
+}

@@ -4,10 +4,10 @@
 #include "Board.h"
 #include "gtest/gtest.h"
 
-TEST(AlphaBetaTests, Chooses3)
+TEST(AlphaBetaAITests, Chooses3)
 {
     Board a = Board(6, 6, 4);
-    AlphaBetaAI ai = AlphaBetaAI(P2_MOVE);
+    AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
 
     a.MakeMove(1, P1_MOVE);
     a.MakeMove(1, P1_MOVE);
@@ -15,7 +15,7 @@ TEST(AlphaBetaTests, Chooses3)
     a.MakeMove(6, P1_MOVE);
     ai.MaxDepth = 1;
     a.MoveRow = -1;
-    a.MoveCol = -1;
+    a.MoveCol = 1;
     a.LastMove = NO_MOVE;
     ai.Play(&a);
     int move = ai.GetBestMove();
