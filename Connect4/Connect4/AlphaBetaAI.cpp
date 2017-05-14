@@ -188,7 +188,7 @@ int AlphaBetaAI::AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer)
 {
 	//Check If P1 has won, return positive utlity
 	//Check if P2 has won, return negative utility
-
+	//IF I am P1 -> call with maxplayer
 	//Check if terminal depth reached, i.e. depth == 0
 
 	//Recursive Case
@@ -201,7 +201,13 @@ int AlphaBetaAI::AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer)
 	//	Unmake move
 	//	Check cost conditions
 	//	Check alpha beta
-	
+	string indentlvl = "";
+	for (int i = 0; i < (MaxDepth - _depth); i++) {
+		indentlvl += "\t";
+	}
+	printString(std::cout, 2, indentlvl+"Called AB with d:" + to_string(_depth) + " alpha: " + to_string(_alpha) + " beta: " + to_string(_beta) + "\n");
+	printString(std::cout, 2, indentlvl + "Maximising: " + to_string(_maxPlayer)+"\n");
+	printString(std::cout, 3, CurrentBoard->ToString((MaxDepth - _depth)) + "\n");
 	if (gse.CheckWin(CurrentBoard, P1_MOVE)) {
 		return gse.ComputeWinUtility(CurrentBoard, P1_MOVE);
 	} 
@@ -209,7 +215,9 @@ int AlphaBetaAI::AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer)
 		return gse.ComputeWinUtility(CurrentBoard, P2_MOVE);
 	}
 	if (_depth == 0) {
-		return gse.ComputeUtility(CurrentBoard);
+		int util = gse.ComputeUtility(CurrentBoard);
+		printString(std::cout, 3, indentlvl + "util: " + to_string(util) + "\n");
+		return util;
 	}
 	//Recursion case
 	//===============================
@@ -227,10 +235,17 @@ int AlphaBetaAI::AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer)
 	if (_maxPlayer) {
 		bestValue = -INF;
 		for (auto i : (*allValidMoves)) {
+			CurrentBoard->MakeMove(i+1, P1_MOVE);
+			printString(std::cout, 3, indentlvl + "Making Move: " + to_string(i + 1) + "...\n");
 			costValue = AlphaBeta(_depth - 1, _alpha, _beta, !_maxPlayer);
+			CurrentBoard->UnMakeMove(i + 1);
 			if (costValue > bestValue) {
+				printString(std::cout, 3, indentlvl + "Higher value: " + to_string(costValue) + "\n");
 				bestValue = costValue;
-				BestMove = (_depth == MaxDepth ? (*allValidMoves)[i] : BestMove);
+				if (_depth == (MaxDepth)) {
+					BestMove = i;
+					printString(std::cout, 3, indentlvl + "Best Move: " + to_string(BestMove+1) + "\n");
+				}
 			}
 			_alpha = (_alpha >= bestValue) ? _alpha : bestValue;
 			if (_beta <= _alpha) {
@@ -241,10 +256,17 @@ int AlphaBetaAI::AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer)
 	else {
 		bestValue = INF;
 		for (auto i : (*allValidMoves)) {
+			CurrentBoard->MakeMove(i + 1, P2_MOVE);
+			printString(std::cout, 3, indentlvl + "Making Move: " + to_string(i + 1) + "...\n");
 			costValue = AlphaBeta(_depth - 1, _alpha, _beta, !_maxPlayer);
+			CurrentBoard->UnMakeMove(i+1);
 			if (costValue < bestValue) {
+				printString(std::cout, 3, indentlvl + "Lower value: " + to_string(costValue) + "\n");
 				bestValue = costValue;
-				BestMove = (_depth == MaxDepth ? (*allValidMoves)[i] : BestMove);
+				if (_depth == (MaxDepth)) {
+					BestMove = i;
+					printString(std::cout, 3, indentlvl + "Best Move: " + to_string(BestMove+1) + "\n");
+				}
 			}
 			_beta = (_beta <= bestValue) ? _beta : bestValue;
 			if (_beta <= _alpha) {
@@ -271,11 +293,14 @@ int AlphaBetaAI::GetBestMove()
 
 void AlphaBetaAI::Play(Board * _CurrentBoard)
 {
-    printString(std::cout, 2, "Making a play\n");
+	printString(std::cout, 1, "================================\n");
+	printString(std::cout, 1, "Making a play\n");
     //Copy of board for modifications
-    CurrentBoard = _CurrentBoard;;
+    CurrentBoard = _CurrentBoard;
 
     //Setup run
+	BestUtility = AlphaBeta(MaxDepth, INT_MIN, INT_MAX, (player == P1_MOVE));
+	/*
     bool MaxPlayer = (player != CurrentBoard->LastMove);
     Move playerMove = (player == P1_MOVE ? P2_MOVE : P1_MOVE);
     MakingFirstMoveOfGame = (CurrentBoard->MoveCol == -1);  //When making first move of the game -> set variable
@@ -292,16 +317,17 @@ void AlphaBetaAI::Play(Board * _CurrentBoard)
     printString(std::cout, 2, "UnMaking previous play\n");
 
     //Move to make is self
-    BestUtility = AlphaBeta(prevCol, MaxDepth, -9999999, 9999999, MaxPlayer, playerMove);
+	BestUtility = 0;//AlphaBeta(prevCol, MaxDepth, -9999999, 9999999, MaxPlayer, playerMove);
 
     //Remake original move
     if (!MakingFirstMoveOfGame)
     {
         CurrentBoard->MakeMove(prevCol + 1, lastMove);
     }
-
+	*/
     printString(std::cout,1, "Player 1: " + to_string(player == P1_MOVE) + "\n");
     printString(std::cout,1, "Utility: " + to_string(BestUtility) + "\n");
     printString(std::cout,1, "Explored: " + to_string(NodesExplored) + "\n");
     printString(std::cout,1, "Pruned: " + to_string(GlobalPrunes) + "\n");
+	printString(std::cout,1, "================================\n");
 }

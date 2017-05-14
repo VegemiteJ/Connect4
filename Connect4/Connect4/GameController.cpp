@@ -2,9 +2,12 @@
 #include "GameStateEvaluator.h"
 #include "DebugLogger.h"
 #include "SocketHelper.h"
+#include "AlphaBetaAI.h"
+#include "IterativeDeepenAI.h"
 
 #include <iostream>
 #include <thread>
+#include <typeinfo>
 
 using namespace std;
 
@@ -52,6 +55,15 @@ GameController::GameController(Player * _p1, Player * _p2, bool _NetworkGame, in
 
     numMoves = 0;
     terminatingMoveCount = BoardEntity->NumRow * BoardEntity->NumCol;
+	printString(std::cout, 0, "Player 1: " + string(typeid(*_p1).name())+"\n");
+	printString(std::cout, 0, "Player 2: " + string(typeid(*_p2).name()) + "\n");
+}
+
+GameController::GameController(Player * _p1, Player * _p2, int nRows, int nCols, bool _NetworkGame, int _port)
+	: GameController(_p1, _p2, _NetworkGame, _port)
+{
+	delete BoardEntity;
+	BoardEntity = new Board(nRows, nCols, 4);
 }
 
 Move GameController::PlayGame()
@@ -101,12 +113,20 @@ inline Move GameController::RunMove(bool p1)
     GameStateEvaluator gse = GameStateEvaluator();
     int movePos = -1;
 
-    //Player 1 makes a move
+    //Player 1/2 makes a move
     player->Play(BoardEntity);
     movePos = player->GetBestMove();
     BoardEntity->MakeMove(movePos, p);
     numMoves++;
     printString(cout, 0, BoardEntity->ToString());
+
+	//Find utility from both/either/none of the AIs
+	if (typeid(*player) == typeid(AlphaBetaAI) || typeid(*player) == typeid(IterativeDeepenAI)) {
+		//Very bad don't do this. Only works because BestUtility is always compiled/declared in the same order
+		AlphaBetaAI* tmpCast = static_cast<AlphaBetaAI*>(player);
+		printString(cout, 0, "Utility: " + to_string(tmpCast->BestUtility) + "\n");
+	}
+
     //Check if win
     if (gse.CheckWin(BoardEntity, p))
     {

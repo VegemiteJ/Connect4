@@ -272,7 +272,7 @@ int GameStateEvaluator::ComputeThreeInRow(Board * state)
 
 	int count3sP1 = CountN(rawState, P1_MOVE, 3);
 	int count3sP2 = CountN(rawState, P2_MOVE, 3);
-    cerr << "Counts: " << count3sP1 << ", " << count3sP2 << endl;
+    //cerr << "Counts: " << count3sP1 << ", " << count3sP2 << endl;
 	return count3sP1 - count3sP2;
 }
 
@@ -283,6 +283,7 @@ int GameStateEvaluator::ComputeThreeInRow(Board * state)
 int GameStateEvaluator::ComputeUtility(Board * evaluationPosition)
 {
 	int threeStatUtil = ComputeThreeInRow(evaluationPosition);
+	//return 0;
 	return threeStatUtil;
 }
 

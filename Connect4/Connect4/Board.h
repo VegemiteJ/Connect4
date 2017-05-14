@@ -67,6 +67,7 @@ public:
 #pragma region Print
 
 	string ToString();
+	string ToString(int indentLvl);
 
 #pragma endregion
 

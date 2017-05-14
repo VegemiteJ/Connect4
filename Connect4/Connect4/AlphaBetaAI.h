@@ -11,6 +11,19 @@
 
 class AlphaBetaAI : public Player
 {
+public:
+	int BestUtility;
+
+	AlphaBetaAI(Move _p);
+	void Reset();
+
+	int GetBestMove();
+	void Play(Board* _CurrentBoard);
+
+	int MaxDepth;
+
+	long GlobalPrunes;
+	long NodesExplored;
 private:
     AlphaBetaAI();
 
@@ -42,7 +55,7 @@ private:
     /// <param name="_beta">The beta.</param>
     /// <param name="_maxPlayer">if set to <c>true</c> [maximum player].</param>
     /// <returns></returns>
-    int AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _maxPlayer, Move p);
+    //int AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _maxPlayer, Move p);
 	int AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer);
 
     void SwapTwoElements(int* a, int* b);
@@ -56,18 +69,4 @@ private:
     FRIEND_TEST(AlphaBetaAITests, InternalDepth2_Part2);
     FRIEND_TEST(AlphaBetaAITests, InternalDepth2_Part3);
     #pragma endregion
-
-
-public:
-    AlphaBetaAI(Move _p);
-    void Reset();
-
-    int GetBestMove();
-    void Play(Board* _CurrentBoard);
-
-    int BestUtility;
-    int MaxDepth;
-
-    long GlobalPrunes;
-    long NodesExplored;
 };

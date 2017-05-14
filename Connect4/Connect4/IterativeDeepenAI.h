@@ -5,6 +5,14 @@
 
 class IterativeDeepenAI : public Player
 {
+public:
+	int BestUtility;
+
+	IterativeDeepenAI(Move _p);
+	IterativeDeepenAI(Move _p, int _startDepth);
+
+	void Play(Board* _CurrentBoard);
+	int GetBestMove();
 private:
     AlphaBetaAI ai;
 
@@ -13,13 +21,4 @@ private:
     //int BestMove; - Inherited from player
 
     double ExpectedTime(int numCols, int depth);
-
-public:
-    IterativeDeepenAI(Move _p);
-    IterativeDeepenAI(Move _p, int _startDepth);
-
-    void Play(Board* _CurrentBoard);
-    int GetBestMove();
-
-    int BestUtility;
 };

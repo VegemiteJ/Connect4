@@ -120,11 +120,15 @@ int ServerSocketSet::sendMessage(std::string msg) {
 	if(errorFlag!=0)
 		return -1;
 
-	char* sendBuf = new char[msg.length() + 1];	//Allocate the send buff
-	strcpy_s(sendBuf, msg.length()+1, msg.c_str());
+	if ((int)msg.length() < 0) {	//On large size, fail
+		return -1;
+	}
+
+	char* sendBuf = new char[msg.length()];	//Allocate the send buff
+	strcpy_s(sendBuf, msg.length(), msg.c_str());
     //std::cout << "Sending msg:[" << sendBuf << "] of length:" << (int)strlen(sendBuf) << std::endl;
 
-	iSendResult = send( ClientSocket, sendBuf, msg.length()+1, 0);
+	iSendResult = send( ClientSocket, sendBuf, (int)msg.length(), 0);
     if (iSendResult == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
         closesocket(ClientSocket);

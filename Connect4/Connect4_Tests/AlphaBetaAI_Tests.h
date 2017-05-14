@@ -114,7 +114,7 @@ TEST(AlphaBetaAITests, InternalDepth0)
     ai.MaxDepth = 0;
     ai.CurrentBoard = &a;
 
-    int utility = ai.AlphaBeta(0, 0, 0, 0, true, P1_MOVE);
+	int utility = ai.AlphaBeta(0, 0, 0, true);
     EXPECT_EQ(utility, 0);
 }
 
@@ -129,7 +129,7 @@ TEST(AlphaBetaAITests, InternalDepth1_Part1)
     a.MakeMove(2, P1_MOVE);
     a.MakeMove(3, P1_MOVE);
 
-    int utility = ai.AlphaBeta(3, 1, 0, 0, true, P1_MOVE);
+    int utility = ai.AlphaBeta(1, INT_MIN, INT_MAX, true);
     EXPECT_EQ(utility, 1000);
 }
 
@@ -144,7 +144,7 @@ TEST(AlphaBetaAITests, InternalDepth1_Part2)
     a.MakeMove(2, P2_MOVE);
     a.MakeMove(3, P2_MOVE);
 
-    int utility = ai.AlphaBeta(3, 1, 0, 0, true, P2_MOVE);
+    int utility = ai.AlphaBeta(1, INT_MIN, INT_MAX, false);
     EXPECT_EQ(utility, -1000);
 
     //Use a 4x3 board 
@@ -156,7 +156,7 @@ TEST(AlphaBetaAITests, InternalDepth1_Part2)
     a.MakeMove(1, P1_MOVE);
     a.MakeMove(2, P1_MOVE);
 
-    utility = ai.AlphaBeta(0, 1, -99999, 99999, true, P2_MOVE);
+    utility = ai.AlphaBeta(1, INT_MIN, INT_MAX, true);
     int move = ai.GetBestMove();
     cout << "Best Move is: " << move << endl;
     cout << "Utility is: " << utility << endl;

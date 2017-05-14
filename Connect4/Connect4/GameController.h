@@ -27,6 +27,7 @@ private:
 
 public:
     GameController(Player* _p1, Player* _p2, bool _NetworkGame, int _port);
+	GameController(Player* _p1, Player* _p2, int nRows, int nCols, bool _NetworkGame, int _port);
 
     Move PlayGame();
 };

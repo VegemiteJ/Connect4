@@ -159,6 +159,77 @@ string Board::ToString()
 	return result;
 }
 
+string Board::ToString(int indentLvl) 
+{
+	string indnt = "";
+	for (int i = 0; i < indentLvl; i++) {
+		indnt += "\t";
+	}
+	stringstream ss;
+	// x axis labels
+	ss << indnt;
+	ss << "    ";
+	for (int i = 1; i<NumCol + 1; i++)
+	{
+		ss << i << "   ";
+	}
+	ss << endl;
+
+	// Row separators
+	ss << indnt;
+	ss << "  --";
+	for (int i = 1; i < NumCol; i++)
+	{
+		ss << "----";
+	}
+	ss << "---";
+	ss << endl;
+
+	for (int x = 0; x < NumRow; x++)
+	{
+		// y axis labels
+		ss << indnt;
+		ss << x + 1 << " " << "| ";
+
+		// Column separators
+		for (int y = 0; y < NumCol; y++)
+		{
+			//Deduce the player who moved
+			string moveChar;
+			if ((*state)(x, y) == P1_MOVE)
+				moveChar = P1_MOVE_MARKER;
+			else if ((*state)(x, y) == P2_MOVE)
+				moveChar = P2_MOVE_MARKER;
+			else
+				moveChar = ' ';
+
+			if (moveChar == P1_MOVE_MARKER) {
+				ss << ANSI_RED;
+			}
+			else {
+				ss << ANSI_GREEN;
+			}
+
+			ss << moveChar << ANSI_RESET << " | ";
+		}
+
+		// Row separators
+		ss << endl;
+		ss << indnt;
+		ss << "  --";
+		for (int i = 1; i < NumCol; i++)
+		{
+			ss << "----";
+		}
+		ss << "---";
+		ss << endl;
+	}
+	string result = ss.str();
+	ss.clear();
+
+	return result;
+
+}
 
 Matrix * Board::StateAccess()
 {
