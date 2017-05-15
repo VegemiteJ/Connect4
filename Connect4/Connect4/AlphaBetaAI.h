@@ -16,7 +16,7 @@ public:
 
 	AlphaBetaAI(Move _p);
 	void Reset();
-
+	
 	int GetBestMove();
 	void Play(Board* _CurrentBoard);
 
@@ -62,11 +62,5 @@ private:
 
     #pragma region GoogleTests
     #include "gtest/gtest_prod.h"
-    FRIEND_TEST(AlphaBetaAITests, InternalDepth0);
-    FRIEND_TEST(AlphaBetaAITests, InternalDepth1_Part1);
-    FRIEND_TEST(AlphaBetaAITests, InternalDepth1_Part2);
-    FRIEND_TEST(AlphaBetaAITests, InternalDepth2_Part1);
-    FRIEND_TEST(AlphaBetaAITests, InternalDepth2_Part2);
-    FRIEND_TEST(AlphaBetaAITests, InternalDepth2_Part3);
     #pragma endregion
 };

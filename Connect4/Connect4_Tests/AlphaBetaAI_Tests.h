@@ -4,383 +4,297 @@
 #include "Board.h"
 #include "gtest/gtest.h"
 
-TEST(AlphaBetaAITests, Chooses3)
+/*
+Tests include:
+	XChooses 3 in a row with one choice
+	XChooses one of 3 in a row with two choices
+
+	XChooses win move with depth of 1
+
+	XChoose no move i.e. one utility on board of 3 symbols
+
+	XIdentifies zero utility on a depth of 1 with opponent in a 3-in a row condition
+
+	X2 win states - depth n, chooses the 'sooner' win state
+
+	XChooses move to stop opponent winning, utility zero
+	
+	X2 opponent win states, chooses move to stop opponent winning sooner
+
+	Correctly does not choose an invalid move - When all columns are full it terminates search
+		With move of -1, utility of the evaluated
+
+*/
+
+TEST(AlphaBetaAITests, Chooses3_One_Choice)
 {
     Board a = Board(6, 6, 4);
-    AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
-
     a.MakeMove(1, P1_MOVE);
     a.MakeMove(1, P1_MOVE);
-    a.MakeMove(6, P1_MOVE);
-    a.MakeMove(6, P1_MOVE);
-    ai.MaxDepth = 1;
-    a.MoveRow = -1;
-    a.MoveCol = 1;
-    a.LastMove = NO_MOVE;
+	AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
+	ai.MaxDepth = 1;
     ai.Play(&a);
     int move = ai.GetBestMove();
-    cerr << "Move: " << move << endl;
-    bool equal = (move == 1 || move == 6);
     int util = ai.BestUtility;
-    cerr << "Utility: " << util << endl;
-    EXPECT_EQ(equal, true);
-    EXPECT_EQ(util, 1);
+    EXPECT_EQ(move, 1);
+    EXPECT_EQ(util, 49);
+
+	a = Board(6, 6, 4);
+	a.MakeMove(4, P2_MOVE);
+	a.MakeMove(4, P2_MOVE);
+	ai = AlphaBetaAI(P2_MOVE);
+	ai.MaxDepth = 1;
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, 4);
+	EXPECT_EQ(util, -49);
 }
 
-TEST(AlphaBetaAITests, StackedBoard0Depth)
+TEST(AlphaBetaAITests, Chooses3_Two_Choice)
 {
 	Board a = Board(6, 6, 4);
-	AlphaBetaAI ai = AlphaBetaAI(P2_MOVE);
-	ai.MaxDepth = 0;
-	a.MoveRow = -1;
-	a.MoveCol = -1;
-	a.LastMove = NO_MOVE;
+	AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
+	ai.MaxDepth = 1;
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(6, P1_MOVE);
+	a.MakeMove(6, P1_MOVE);
 	ai.Play(&a);
+	int move = ai.GetBestMove();
+	bool equal = (move == 1 || move == 6);
+	int util = ai.BestUtility;
+	EXPECT_EQ(equal, true);
+	EXPECT_EQ(util, 49);
+}
 
-	int utility = ai.BestUtility;
-	EXPECT_EQ(utility, 0);
+TEST(AlphaBetaAITests, Chooses_Win_Move)
+{
+	Board a;
+	int move, util;
+	
+	a = Board(6, 6, 4);
+	AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
+	ai.MaxDepth = 1;
+	a.MakeMove(3, P1_MOVE);
+	a.MakeMove(3, P1_MOVE);
+	a.MakeMove(3, P1_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, 3);
+	EXPECT_EQ(util, 999);
 
+	a = Board(6, 6, 4);
+	ai = AlphaBetaAI(P2_MOVE);
+	ai.MaxDepth = 1;
+	a.MakeMove(3, P2_MOVE);
+	a.MakeMove(3, P2_MOVE);
+	a.MakeMove(3, P2_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, 3);
+	EXPECT_EQ(util, -999);
+}
+
+TEST(AlphaBetaAITests, Zero_Depth_Chooses_None)
+{
+	Board a;
+	int move, util;
+
+	a = Board(6, 6, 4);
+	AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
+	ai.MaxDepth = 0;
+	a.MakeMove(3, P1_MOVE);
+	a.MakeMove(3, P1_MOVE);
+	a.MakeMove(3, P1_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, INT_MIN);
+	EXPECT_EQ(util, 50);
+
+	a = Board(6, 6, 4);
+	ai = AlphaBetaAI(P2_MOVE);
+	ai.MaxDepth = 0;
+	a.MakeMove(3, P2_MOVE);
+	a.MakeMove(3, P2_MOVE);
+	a.MakeMove(3, P2_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, INT_MIN);
+	EXPECT_EQ(util, -50);
+}
+
+TEST(AlphaBetaAITests, Neutral_State_Identification)
+{
+	Board a;
+	int move, util;
+
+	a = Board(6, 6, 4);
+	AlphaBetaAI ai = AlphaBetaAI(P2_MOVE);
+	ai.MaxDepth = 1;
+	a.MakeMove(3, P1_MOVE);
+	a.MakeMove(3, P1_MOVE);
+	a.MakeMove(3, P1_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, 3);
+	EXPECT_EQ(util, 0);
+
+	a = Board(6, 6, 4);
+	ai = AlphaBetaAI(P1_MOVE);
+	ai.MaxDepth = 1;
+	a.MakeMove(3, P2_MOVE);
+	a.MakeMove(3, P2_MOVE);
+	a.MakeMove(3, P2_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, 3);
+	EXPECT_EQ(util, 0);
+}
+
+TEST(AlphaBetaAITests, Chooses_Sooner_Win_State)
+{
+	/*
+	| _ | _ | _ | _ | _ | _ |
+	| _ | X | X | _ | _ | _ |
+	| X | X | X | _ | O | _ |
+
+	Tests that this board state, P2 correctly blocks earlier win condition with correct evaluation
+		accounting for depth difference
+
+	Optimal next move 1:
+	| _ | _ | _ | _ | _ | _ |
+	| _ | X | X | _ | _ | _ |
+	| X | X | X | O | O | _ |
+
+	2:
+	| _ | _ | _ | _ | _ | _ |
+	| _ | X | X | X | _ | _ |
+	| X | X | X | O | O | _ |
+
+	3:
+	| _ | _ | _ | _ | _ | _ |  OR  | _ | _ | _ | _ | _ | _ |
+	| _ | X | X | X | O | _ |      | O | X | X | X | _ | _ |
+	| X | X | X | O | O | _ |      | X | X | X | O | O | _ | 
+
+	Forced Win 4:
+	| _ | _ | _ | _ | _ | _ |  OR  | _ | _ | _ | _ | _ | _ |
+	| X | X | X | X | O | _ |      | O | X | X | X | X | _ |
+	| X | X | X | O | O | _ |      | X | X | X | O | O | _ |
+	*/
+	Board a;
+	int move, util;
+
+	a = Board(6, 6, 4);
+	AlphaBetaAI ai1 = AlphaBetaAI(P1_MOVE);
+	ai1.MaxDepth = 5;
+	AlphaBetaAI ai2 = AlphaBetaAI(P2_MOVE);
+	ai2.MaxDepth = 5;
+
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(2, P1_MOVE);
 	a.MakeMove(2, P1_MOVE);
 	a.MakeMove(3, P1_MOVE);
-	a.MoveRow = -1;
-	a.MoveCol = -1;
-	a.LastMove = NO_MOVE;
-	ai.Play(&a);
-	utility = ai.BestUtility;
-	EXPECT_EQ(utility, 0);
-	
-	a.MakeMove(4, P1_MOVE);
-    cerr << "Board:\n" << a.ToString() << endl;
-	a.MoveRow = -1;
-	a.MoveCol = -1;
-	a.LastMove = NO_MOVE;
-	ai.Play(&a);
-    cout << ai.GetBestMove() << endl;
-	utility = ai.BestUtility;
-	EXPECT_EQ(utility, 2);
+	a.MakeMove(3, P1_MOVE);
+	a.MakeMove(5, P2_MOVE);
 
+	cout << a.ToString() << endl;
+
+	ai2.Play(&a);
+	move = ai2.GetBestMove();
+	util = ai2.BestUtility;
+	EXPECT_EQ(move, 4);
+	EXPECT_EQ(util, 996);
+}
+
+TEST(AlphaBetaAITests, Stops_Win_Zero_Util) {
+	Board a;
+	int move, util;
+
+	AlphaBetaAI ai = AlphaBetaAI(P2_MOVE);
 	ai.MaxDepth = 1;
-	a.MoveRow = -1;
-	a.MoveCol = -1;
-	a.LastMove = NO_MOVE;
+	a = Board(6, 6, 4);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(1, P1_MOVE);
 	ai.Play(&a);
-	utility = ai.BestUtility;
-	EXPECT_EQ(utility, 1);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, 1);
+	EXPECT_EQ(util, 0);
 
-    //Opposite player
-    a = Board(6, 6, 4);
-    ai = AlphaBetaAI(P1_MOVE);
-
-    ai.MaxDepth = 0;
-    a.MoveRow = -1;
-    a.MoveCol = -1;
-    a.LastMove = NO_MOVE;
-    ai.Play(&a);
-    utility = ai.BestUtility;
-    EXPECT_EQ(utility, 0);
-
-    a.MakeMove(2, P2_MOVE);
-    a.MakeMove(3, P2_MOVE);
-    a.MoveRow = -1;
-    a.MoveCol = -1;
-    a.LastMove = NO_MOVE;
-    ai.Play(&a);
-    utility = ai.BestUtility;
-    EXPECT_EQ(utility, 0);
-
-    a.MakeMove(4, P2_MOVE);
-    cerr << "Board:\n" << a.ToString() << endl;
-    a.MoveRow = -1;
-    a.MoveCol = -1;
-    a.LastMove = NO_MOVE;
-    ai.Play(&a);
-    cout << ai.GetBestMove() << endl;
-    utility = ai.BestUtility;
-    EXPECT_EQ(utility, -2);
-
-    ai.MaxDepth = 1;
-    a.MoveRow = -1;
-    a.MoveCol = -1;
-    a.LastMove = NO_MOVE;
-    ai.Play(&a);
-    utility = ai.BestUtility;
-    EXPECT_EQ(utility, -1);
+	ai = AlphaBetaAI(P1_MOVE);
+	ai.MaxDepth = 1;
+	a = Board(6, 6, 4);
+	a.MakeMove(4, P2_MOVE);
+	a.MakeMove(4, P2_MOVE);
+	a.MakeMove(4, P2_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, 4);
+	EXPECT_EQ(util, 0);
 }
 
-TEST(AlphaBetaAITests, InternalDepth0)
-{
-    Board a = Board(7, 6, 4);
-    AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
-    ai.MaxDepth = 0;
-    ai.CurrentBoard = &a;
+TEST(AlphaBetaAITests, Terminates_Early_On_No_More_Moves) {
+	Board a;
+	int move, util;
 
-	int utility = ai.AlphaBeta(0, 0, 0, true);
-    EXPECT_EQ(utility, 0);
-}
+	AlphaBetaAI ai = AlphaBetaAI(P2_MOVE);
+	ai.MaxDepth = 1;
+	a = Board(2, 2, 4);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(2, P1_MOVE);
+	a.MakeMove(2, P1_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, INT_MIN);
+	EXPECT_EQ(util, 0);
 
-TEST(AlphaBetaAITests, InternalDepth1_Part1)
-{
-    Board a = Board(7, 6, 4);
-    AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
-    ai.MaxDepth = 1;
-    ai.CurrentBoard = &a;
+	ai = AlphaBetaAI(P1_MOVE);
+	ai.MaxDepth = 1;
+	a = Board(2, 2, 4);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(2, P1_MOVE);
+	a.MakeMove(2, P1_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, INT_MIN);
+	EXPECT_EQ(util, 0);
 
-    a.MakeMove(1, P1_MOVE);
-    a.MakeMove(2, P1_MOVE);
-    a.MakeMove(3, P1_MOVE);
+	ai = AlphaBetaAI(P1_MOVE);
+	ai.MaxDepth = 1;
+	a = Board(2, 2, 4);
+	a.MakeMove(1, P2_MOVE);
+	a.MakeMove(1, P2_MOVE);
+	a.MakeMove(2, P2_MOVE);
+	a.MakeMove(2, P2_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, INT_MIN);
+	EXPECT_EQ(util, 0);
 
-    int utility = ai.AlphaBeta(1, INT_MIN, INT_MAX, true);
-    EXPECT_EQ(utility, 1000);
-}
-
-TEST(AlphaBetaAITests, InternalDepth1_Part2)
-{
-    Board a = Board(7, 6, 4);
-    AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
-    ai.MaxDepth = 1;
-    ai.CurrentBoard = &a;
-
-    a.MakeMove(1, P2_MOVE);
-    a.MakeMove(2, P2_MOVE);
-    a.MakeMove(3, P2_MOVE);
-
-    int utility = ai.AlphaBeta(1, INT_MIN, INT_MAX, false);
-    EXPECT_EQ(utility, -1000);
-
-    //Use a 4x3 board 
-    //  2 Moves for P1, 1 Move for P2, 1 Move for P1
-    a = Board(4, 3, 3);
-    ai = AlphaBetaAI(P1_MOVE);
-    ai.MaxDepth = 1;
-    ai.CurrentBoard = &a;
-    a.MakeMove(1, P1_MOVE);
-    a.MakeMove(2, P1_MOVE);
-
-    utility = ai.AlphaBeta(1, INT_MIN, INT_MAX, true);
-    int move = ai.GetBestMove();
-    cout << "Best Move is: " << move << endl;
-    cout << "Utility is: " << utility << endl;
-    EXPECT_EQ(move, 3);
-    EXPECT_EQ(utility, 999);
-    cout << a.ToString();
-
-    ai = AlphaBetaAI(P2_MOVE);
-    ai.CurrentBoard = &a;
-    ai.MaxDepth = 1;
-    utility = ai.AlphaBeta(0, 1, -99999, 99999, false, P2_MOVE);
-    move = ai.GetBestMove();
-    cout << "Best Move is: " << move << endl;
-    cout << "Utility is: " << utility << endl;
-    EXPECT_EQ(move, 3);
-    EXPECT_EQ(utility, -999);
-    cout << a.ToString();
-}
-
-TEST(AlphaBetaAITests, InternalDepth2_Part1)
-{
-    AlphaBetaAI ai;
-    Board a;
-    int utility[3];
-    int move[3];
-    int bestMove=0;
-    int bestUtility=-100000;
-
-    a = Board(4, 3, 3);
-    a.MakeMove(1, P1_MOVE);
-    a.MakeMove(2, P1_MOVE);
-    ai = AlphaBetaAI(P2_MOVE);
-    ai.MaxDepth = 2;
-    ai.CurrentBoard = &a;
-
-    cout << a.ToString();
-
-    for (int i = 0; i < 3; i++)
-    {
-        utility[i] = ai.AlphaBeta(i, 2, -99999, 99999, false, P2_MOVE);
-        move[i] = i;
-
-        if (utility[i] > bestUtility)
-        {
-            bestUtility = utility[i];
-            bestMove = move[i];
-        }
-    }
-    EXPECT_EQ(bestMove, 2);
-    EXPECT_EQ(bestUtility, 0);
-
-    a.MakeMove(bestMove, P2_MOVE);
-    cout << a.ToString();
-    cout << "Number of nodes explored: " << ai.NodesExplored << endl;
-    cout << "Number of nodes pruned: " << ai.GlobalPrunes << endl;
-}
-
-TEST(AlphaBetaAITests, InternalDepth2_Part2)
-{
-    AlphaBetaAI ai;
-    Board a;
-    int utility[3];
-    int move[3];
-    int bestMove = 0;
-    int bestUtility = -100000;
-
-    a = Board(4, 3, 3);
-    a.MakeMove(1, P1_MOVE);
-    a.MakeMove(2, P1_MOVE);
-    ai = AlphaBetaAI(P1_MOVE);
-    ai.MaxDepth = 2;
-    ai.CurrentBoard = &a;
-
-    cout << a.ToString();
-
-    for (int i = 0; i < 3; i++)
-    {
-        utility[i] = ai.AlphaBeta(i, 2, -99999, 99999, true, P1_MOVE);
-        move[i] = i;
-
-        if (utility[i] > bestUtility)
-        {
-            bestUtility = utility[i];
-            bestMove = move[i];
-        }
-    }
-    EXPECT_EQ(bestMove, 2);
-    EXPECT_EQ(bestUtility, 1000);
-
-    a.MakeMove(bestMove, P1_MOVE);
-    cout << a.ToString();
-    cout << "Number of nodes explored: " << ai.NodesExplored << endl;
-    cout << "Number of nodes pruned: " << ai.GlobalPrunes << endl;
-}
-
-TEST(AlphaBetaAITests, InternalDepth2_Part3)
-{
-    AlphaBetaAI ai;
-    Board a;
-    int utility[3];
-    int move[3];
-    int bestMove = 0;
-    int bestUtility = -100000;
-
-    a = Board(4, 3, 3);
-    a.MakeMove(2, P1_MOVE);
-    a.MakeMove(3, P1_MOVE);
-    ai = AlphaBetaAI(P1_MOVE);
-    ai.MaxDepth = 2;
-    ai.CurrentBoard = &a;
-
-    cout << a.ToString();
-
-    for (int i = 0; i < 3; i++)
-    {
-        utility[i] = ai.AlphaBeta(i, 8, -99999, 99999, true, P1_MOVE);
-        move[i] = i;
-
-        if (utility[i] > bestUtility)
-        {
-            bestUtility = utility[i];
-            bestMove = move[i];
-        }
-    }
-    EXPECT_EQ(bestMove, 0);
-    EXPECT_EQ(bestUtility, 1000);
-
-    a.MakeMove(bestMove+1, P1_MOVE);
-    cout << a.ToString();
-    cout << "Number of nodes explored: " << ai.NodesExplored << endl;
-    cout << "Number of nodes pruned: " << ai.GlobalPrunes << endl;
-}
-
-TEST(AlphaBetaAITests, PublicInterface)
-{
-    Board a = Board(4, 4, 3);
-    a.MakeMove(1, P1_MOVE);
-    a.MakeMove(2, P2_MOVE);
-    a.MakeMove(3, P1_MOVE);
-    a.MakeMove(4, P2_MOVE);
-    a.MakeMove(3, P1_MOVE);
-
-    cout << a.ToString();
-    AlphaBetaAI ai = AlphaBetaAI(P2_MOVE);
-    ai.Play(&a);
-
-    int move = ai.GetBestMove();
-    cout << "Best Move: " << move << endl;
-    a.MakeMove(move, P2_MOVE);
-    cout << a.ToString();
-
-    EXPECT_EQ(move, 3);
-}
-
-TEST(AlphaBetaAITests, PublicInterface_2)
-{
-    Board a = Board(4, 4, 3);
-    a.MakeMove(1, P1_MOVE);
-    a.MakeMove(2, P2_MOVE);
-    a.MakeMove(3, P1_MOVE);
-    a.MakeMove(4, P2_MOVE);
-    a.MakeMove(3, P1_MOVE);
-    a.MakeMove(4, P2_MOVE);
-
-    cout << a.ToString();
-    AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
-    ai.Play(&a);
-
-    int move = ai.GetBestMove();
-    cout << "Best Move: " << move << endl;
-    a.MakeMove(move, P1_MOVE);
-    cout << a.ToString();
-
-    EXPECT_EQ(move, 3);
-}
-
-TEST(AlphaBetaAITests, PublicInterface_3)
-{
-    Board a = Board(4, 4, 4);
-    a.MakeMove(1, P1_MOVE);
-    a.MakeMove(1, P1_MOVE);
-    a.MakeMove(1, P1_MOVE);
-    a.MakeMove(2, P2_MOVE);
-    a.MakeMove(3, P2_MOVE);
-    a.MakeMove(3, P1_MOVE);
-    a.MakeMove(3, P1_MOVE);
-    a.MakeMove(3, P2_MOVE);
-    a.MakeMove(4, P2_MOVE);
-    a.MakeMove(4, P2_MOVE);
-    a.MakeMove(4, P1_MOVE);
-
-    AlphaBetaAI ai = AlphaBetaAI(P2_MOVE);
-    cout << a.ToString();
-    ai.Play(&a);
-
-    int move = ai.GetBestMove();
-    cout << "Best Move: " << move << endl;
-    a.MakeMove(move, P2_MOVE);
-    cout << a.ToString();
-    EXPECT_EQ(move, 1);
-
-    a.MakeMove(2, P1_MOVE);
-    cout << a.ToString();
-    ai.Play(&a);
-
-    move = ai.GetBestMove();
-    cout << "Best Move: " << move << endl;
-    a.MakeMove(move, P2_MOVE);
-    cout << a.ToString();
-    EXPECT_NE(move, 1);
-    EXPECT_NE(move, 3);
-}
-
-TEST(AlphaBetaAITests, StartGame)
-{
-    Board a = Board(4, 4, 3);
-    AlphaBetaAI ai = AlphaBetaAI(P1_MOVE);
-    cout << a.ToString();
-
-    ai.Play(&a);
-
-    int moveSelected = ai.GetBestMove();
-    a.MakeMove(moveSelected, P1_MOVE);
-
-    cout << a.ToString();
-    cout << "Utility: " << ai.BestUtility << endl;
+	ai = AlphaBetaAI(P2_MOVE);
+	ai.MaxDepth = 1;
+	a = Board(2, 2, 4);
+	a.MakeMove(1, P2_MOVE);
+	a.MakeMove(1, P2_MOVE);
+	a.MakeMove(2, P2_MOVE);
+	a.MakeMove(2, P2_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, INT_MIN);
+	EXPECT_EQ(util, 0);
 }

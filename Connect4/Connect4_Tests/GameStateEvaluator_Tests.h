@@ -16,11 +16,11 @@ TEST(GameStateEvaluatorPublicTest, Connect3Public)
 	a.MakeMove(2, P1_MOVE);
 	a.MakeMove(3, P1_MOVE);
 	a.MakeMove(4, P1_MOVE);
-	value = gse.ComputeThreeInRow(&a, P1_MOVE);
+	value = gse.ComputeThreeInRow(&a);
 	EXPECT_EQ(value, 2);
 
 	//Check opponent has value 2
-	value = gse.ComputeThreeInRow(&a, P2_MOVE);
+	value = gse.ComputeThreeInRow(&a);
 	EXPECT_EQ(value, 2);
 
 	//Check P2 has 1 possible and P1 has two - expects P2 to have 1 utility, P1 to have -1
@@ -34,16 +34,12 @@ TEST(GameStateEvaluatorPublicTest, Connect3Public)
 	a.MakeMove(1, P1_MOVE);
 	a.MakeMove(2, P1_MOVE);
 	a.MakeMove(3, P1_MOVE);
-	value = gse.ComputeThreeInRow(&a, P1_MOVE);
-	EXPECT_EQ(value, 1);
-	value = gse.ComputeThreeInRow(&a, P2_MOVE);
+	value = gse.ComputeThreeInRow(&a);
 	EXPECT_EQ(value, 1);
 
 	//Now block P2 and check that P1 now has 3 possible
 	a.MakeMove(4, P1_MOVE);
-	value = gse.ComputeThreeInRow(&a, P1_MOVE);
-	EXPECT_EQ(value, 3);
-	value = gse.ComputeThreeInRow(&a, P2_MOVE);
+	value = gse.ComputeThreeInRow(&a);
 	EXPECT_EQ(value, 3);
 
 	//Check when both have 1 possible, net is 0
@@ -55,9 +51,7 @@ TEST(GameStateEvaluatorPublicTest, Connect3Public)
 	a.MakeMove(2, P2_MOVE);
 	a.MakeMove(2, P2_MOVE);
 	a.MakeMove(2, P2_MOVE);
-	value = gse.ComputeThreeInRow(&a, P1_MOVE);
-	EXPECT_EQ(value, 0);
-	value = gse.ComputeThreeInRow(&a, P2_MOVE);
+	value = gse.ComputeThreeInRow(&a);
 	EXPECT_EQ(value, 0);
 }
 

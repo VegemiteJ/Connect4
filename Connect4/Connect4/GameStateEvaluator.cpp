@@ -270,10 +270,17 @@ int GameStateEvaluator::ComputeThreeInRow(Board * state)
 	int ConnectLength = state->ConnectLength;
 	Matrix* rawState = state->StateAccess();
 
-	int count3sP1 = CountN(rawState, P1_MOVE, 3);
-	int count3sP2 = CountN(rawState, P2_MOVE, 3);
+	//Sanity check - When the length to win is small, calculate down to 2-connectedness
+	//	Counting 1 connectedness is not necessarilly useful at this stage - TODO: Investigate
+	if (ConnectLength <= 2) {
+		return 0;
+	}
+
+	int count3sP1 = CountN(rawState, P1_MOVE, ConnectLength-1);
+	int count3sP2 = CountN(rawState, P2_MOVE, ConnectLength-1);
     //cerr << "Counts: " << count3sP1 << ", " << count3sP2 << endl;
-	return count3sP1 - count3sP2;
+	int cntrFinal = count3sP1 - count3sP2;
+	return cntrFinal;
 }
 
 #pragma endregion
@@ -282,8 +289,7 @@ int GameStateEvaluator::ComputeThreeInRow(Board * state)
 ///	TODO in future: apply the reinforcement learning component to learn the best combination of the heuristics
 int GameStateEvaluator::ComputeUtility(Board * evaluationPosition)
 {
-	int threeStatUtil = ComputeThreeInRow(evaluationPosition);
-	//return 0;
+	int threeStatUtil = 50*ComputeThreeInRow(evaluationPosition);
 	return threeStatUtil;
 }
 
