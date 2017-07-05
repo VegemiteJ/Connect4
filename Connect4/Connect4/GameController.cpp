@@ -83,6 +83,7 @@ Move GameController::PlayGame()
 
     while (true)
     {
+		cerr << "Player1 going" << endl;
         winner = RunMove(true);
         if (winner != UNFINISHED)
         {
@@ -91,7 +92,7 @@ Move GameController::PlayGame()
             UpdateNetworkedPlayer(true);
             return winner;
         }
-
+		cerr << "Player 2 going" << endl;
         winner = RunMove(false);
         if (winner != UNFINISHED)
         {

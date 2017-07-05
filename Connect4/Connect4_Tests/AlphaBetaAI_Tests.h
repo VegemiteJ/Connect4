@@ -298,3 +298,58 @@ TEST(AlphaBetaAITests, Terminates_Early_On_No_More_Moves) {
 	EXPECT_EQ(move, INT_MIN);
 	EXPECT_EQ(util, 0);
 }
+
+TEST(AlphaBetaAITests, Chooses_Only_Valid_Columns) {
+	Board a;
+	int move, util;
+
+	AlphaBetaAI ai = AlphaBetaAI(P2_MOVE);
+	ai.MaxDepth = 1;
+	a = Board(2, 2, 4);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(2, P1_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, 2);
+	EXPECT_EQ(util, 0);
+
+	ai = AlphaBetaAI(P1_MOVE);
+	ai.MaxDepth = 1;
+	a = Board(2, 2, 4);
+	a.MakeMove(1, P1_MOVE);
+	a.MakeMove(2, P1_MOVE);
+	a.MakeMove(2, P1_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, 1);
+	EXPECT_EQ(util, 0);
+
+	ai = AlphaBetaAI(P1_MOVE);
+	ai.MaxDepth = 1;
+	a = Board(2, 3, 4);
+	a.MakeMove(1, P2_MOVE);
+	a.MakeMove(1, P2_MOVE);
+	a.MakeMove(2, P2_MOVE);
+	a.MakeMove(2, P2_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, 3);
+	EXPECT_EQ(util, 0);
+
+	ai = AlphaBetaAI(P2_MOVE);
+	ai.MaxDepth = 1;
+	a = Board(2, 3, 4);
+	a.MakeMove(1, P2_MOVE);
+	a.MakeMove(1, P2_MOVE);
+	a.MakeMove(3, P2_MOVE);
+	a.MakeMove(3, P2_MOVE);
+	ai.Play(&a);
+	move = ai.GetBestMove();
+	util = ai.BestUtility;
+	EXPECT_EQ(move, 2);
+	EXPECT_EQ(util, 0);
+}

@@ -5,7 +5,7 @@
 class HumanPlayer : public Player
 {
 private:
-    bool CheckValidMove(vector<int>* possibilities, int selected);
+    bool CheckValidMove(vector<int> &possibilities, int selected);
 
 public:
     int position;

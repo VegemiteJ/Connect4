@@ -8,3 +8,4 @@ extern int DEBUG_LVL;
 
 using namespace std;
 void printString(ostream &out, int debugLevel, string message);
+void printString(ostream &out, int debugLevel, int indentLvl, string message);

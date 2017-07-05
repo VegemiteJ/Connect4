@@ -61,13 +61,11 @@ int AlphaBetaAI::AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer)
 	//	Check alpha beta
 
 	//Debug Print statements - TODO: Move to debug printer
-	string indentlvl = "";
-	for (int i = 0; i < (MaxDepth - _depth); i++) {
-		indentlvl += "\t";
-	}
+	int indentlvl = MaxDepth - _depth;
+	NodesExplored++;
 
-	printString(std::cout, 2, indentlvl+"Called AB with d:" + to_string(_depth) + " alpha: " + to_string(_alpha) + " beta: " + to_string(_beta) + "\n");
-	printString(std::cout, 2, indentlvl + "Maximising: " + to_string(_maxPlayer)+"\n");
+	printString(std::cout, 2, indentlvl,"Called AB with d:" + to_string(_depth) + " alpha: " + to_string(_alpha) + " beta: " + to_string(_beta) + "\n");
+	printString(std::cout, 2, indentlvl,"Maximising: " + to_string(_maxPlayer)+"\n");
 	printString(std::cout, 3, CurrentBoard->ToString((MaxDepth - _depth)) + "\n");
 	if (gse.CheckWin(CurrentBoard, P1_MOVE)) {
 		return gse.ComputeWinUtility(CurrentBoard, P1_MOVE);
@@ -77,46 +75,45 @@ int AlphaBetaAI::AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer)
 	}
 
 	//Base case at expired depth OR when no more valid moves
-	vector<int>* allValidMoves = CurrentBoard->GetAllValidMoves();
-	if ((*allValidMoves).size() == 0) {
-		delete allValidMoves;
+	vector<int> allValidMoves = CurrentBoard->GetAllValidMoves();
+	if (allValidMoves.size() == 0) {
 		int util = gse.ComputeUtility(CurrentBoard);
-		printString(std::cout, 3, indentlvl + "Reached terminal move count - no more valid moves...\n");
-		printString(std::cout, 3, indentlvl + "util: " + to_string(util) + "\n");
+		printString(std::cout, 3, indentlvl,"Reached terminal move count - no more valid moves...\n");
+		printString(std::cout, 3, indentlvl,"util: " + to_string(util) + "\n");
 		return util;
 	}
 	if (_depth == 0) {
 		int util = gse.ComputeUtility(CurrentBoard);
-		printString(std::cout, 3, indentlvl + "util: " + to_string(util) + "\n");
+		printString(std::cout, 3, indentlvl,"util: " + to_string(util) + "\n");
 		return util;
 	}
 	//Recursion case
 	//===============================
 	int costValue;
 	int bestValue;
-	size_t numRandSwaps = allValidMoves->size();
+	size_t numRandSwaps = allValidMoves.size();
 	for (size_t i = 0; i<numRandSwaps; i++) {
 		//Swap two random elements
-		int a = dice() % allValidMoves->size();
-		int b = dice() % allValidMoves->size();
-		SwapTwoElements(&(*allValidMoves)[a], &(*allValidMoves)[b]);
+		int a = dice() % numRandSwaps;
+		int b = dice() % numRandSwaps;
+		SwapTwoElements(allValidMoves[a], allValidMoves[b]);
 	}
 
 	if (_maxPlayer) {
 		bestValue = -INF;
-		for (auto i : (*allValidMoves)) {
+		for (auto i : allValidMoves) {
 			CurrentBoard->MakeMove(i+1, P1_MOVE);
-			printString(std::cout, 3, indentlvl + "Making Move: " + to_string(i + 1) + "...\n");
+			printString(std::cout, 3, indentlvl, "Making Move: " + to_string(i + 1) + "...\n");
 			costValue = AlphaBeta(_depth - 1, _alpha, _beta, !_maxPlayer);
 			costValue = DepthNormalise(costValue);
 			CurrentBoard->UnMakeMove(i + 1);
-			printString(std::cout, 3, indentlvl + "Cost: " + to_string(costValue) + "\n");
+			printString(std::cout, 3, indentlvl, "Cost: " + to_string(costValue) + "\n");
 			if (costValue > bestValue) {
-				printString(std::cout, 3, indentlvl + "Higher value: " + to_string(costValue) + "\n");
+				printString(std::cout, 3, indentlvl, "Higher value: " + to_string(costValue) + "\n");
 				bestValue = costValue;
 				if (_depth == (MaxDepth)) {
 					BestMove = i;
-					printString(std::cout, 3, indentlvl + "Best Move: " + to_string(BestMove+1) + "\n");
+					printString(std::cout, 3, indentlvl, "Best Move: " + to_string(BestMove+1) + "\n");
 				}
 			}
 			_alpha = (_alpha >= bestValue) ? _alpha : bestValue;
@@ -127,19 +124,19 @@ int AlphaBetaAI::AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer)
 	}
 	else {
 		bestValue = INF;
-		for (auto i : (*allValidMoves)) {
+		for (auto i : allValidMoves) {
 			CurrentBoard->MakeMove(i + 1, P2_MOVE);
-			printString(std::cout, 3, indentlvl + "Making Move: " + to_string(i + 1) + "...\n");
+			printString(std::cout, 3, indentlvl, "Making Move: " + to_string(i + 1) + "...\n");
 			costValue = AlphaBeta(_depth - 1, _alpha, _beta, !_maxPlayer);
 			costValue = DepthNormalise(costValue);
 			CurrentBoard->UnMakeMove(i+1);
-			printString(std::cout, 3, indentlvl + "Cost: " + to_string(costValue) + "\n");
+			printString(std::cout, 3, indentlvl, "Cost: " + to_string(costValue) + "\n");
 			if (costValue < bestValue) {
-				printString(std::cout, 3, indentlvl + "Lower value: " + to_string(costValue) + "\n");
+				printString(std::cout, 3, indentlvl, "Lower value: " + to_string(costValue) + "\n");
 				bestValue = costValue;
 				if (_depth == (MaxDepth)) {
 					BestMove = i;
-					printString(std::cout, 3, indentlvl + "Best Move: " + to_string(BestMove+1) + "\n");
+					printString(std::cout, 3, indentlvl, "Best Move: " + to_string(BestMove+1) + "\n");
 				}
 			}
 			_beta = (_beta <= bestValue) ? _beta : bestValue;
@@ -148,16 +145,14 @@ int AlphaBetaAI::AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer)
 			}
 		}
 	}
-	//Free valid move array - TODO: In future versions this is const param on Board class, get in scope
-	delete allValidMoves;
 	return bestValue;
 }
 
-void AlphaBetaAI::SwapTwoElements(int * a, int * b)
+void AlphaBetaAI::SwapTwoElements(int &a, int &b)
 {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
+    int temp = a;
+	a = b;
+	b = temp;
 }
 ///Return the 1-indexed best move found
 int AlphaBetaAI::GetBestMove()
@@ -172,6 +167,7 @@ void AlphaBetaAI::Play(Board * _CurrentBoard)
     
 	//Copy of board for modifications
     CurrentBoard = _CurrentBoard;
+	NodesExplored = 0;
 	BestMove = INT_MAX;	//Reset to 0xefffffffffffff
 
     //Setup run

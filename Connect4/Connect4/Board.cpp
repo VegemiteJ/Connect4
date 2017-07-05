@@ -241,16 +241,19 @@ Matrix Board::CopyOfState()
 	return Matrix(*state);
 }
 
-vector<int>* Board::GetAllValidMoves()
+vector<int>& Board::GetAllValidMoves()
 {
-    vector<int>* validMoves = new vector<int>();
+	//Reset valid moves - TODO: Improve performance by updating this on MakeMove -> static lookup
+	//	vs a full populate every call - Currently O(columns) -> Also swap to a static vector of size numCols,
+	//		Using a cnt value
 
+	validMoves = vector<int>(); // Reset to new vector
     //Iterate across columns at row [0] checking they are empty
     for (int i = 0; i < NumCol; i++)
     {
         if ((*state)(0, i) == NO_MOVE)
         {
-            validMoves->push_back(i);
+            validMoves.push_back(i);
         }
     }
 

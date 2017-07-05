@@ -24,6 +24,7 @@ private:
 
     int* FilledColumns;
 
+	vector<int> validMoves;
     void CheckValid(Move p);
 
 public:
@@ -80,7 +81,7 @@ public:
 
 #pragma region MoveSemantics
 
-    vector<int>* GetAllValidMoves();
+    vector<int>& GetAllValidMoves();
     
 
     /// <summary>

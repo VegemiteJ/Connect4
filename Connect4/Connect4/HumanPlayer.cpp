@@ -4,11 +4,11 @@
 
 using namespace std;
 
-bool HumanPlayer::CheckValidMove(vector<int>* possibilities, int selected)
+bool HumanPlayer::CheckValidMove(vector<int> &possibilities, int selected)
 {
-    for (int i=0; i< (*possibilities).size(); i++)
+    for (int i=0; i< possibilities.size(); i++)
     {
-        if (selected == (*possibilities)[i])
+        if (selected == possibilities[i])
             return true;
     }
     return false;
@@ -30,12 +30,12 @@ void HumanPlayer::Play(Board* CurrentBoard)
 {
     //Generate a random move
     CopyOfGame = CurrentBoard;
-    vector<int>* validMoves = CopyOfGame->GetAllValidMoves();
+    vector<int> validMoves = CopyOfGame->GetAllValidMoves();
 
     default_random_engine generator;
-    uniform_int_distribution<int> distribution(0, validMoves->size()-1);
+    uniform_int_distribution<int> distribution(0, validMoves.size()-1);
     int move = distribution(generator);
-    BestMove = (*validMoves)[move];
+    BestMove = validMoves[move];
 
     //Notify the player for a move
     int selectedMove = -1;

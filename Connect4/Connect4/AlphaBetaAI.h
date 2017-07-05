@@ -13,7 +13,7 @@ class AlphaBetaAI : public Player
 {
 public:
 	int BestUtility;
-
+	size_t NodesExplored;
 	AlphaBetaAI(Move _p);
 	void Reset();
 	
@@ -23,7 +23,6 @@ public:
 	int MaxDepth;
 
 	long GlobalPrunes;
-	long NodesExplored;
 private:
     AlphaBetaAI();
 
@@ -58,7 +57,7 @@ private:
     //int AlphaBeta(int _move, int _depth, int _alpha, int _beta, bool _maxPlayer, Move p);
 	int AlphaBeta(int _depth, int _alpha, int _beta, bool _maxPlayer);
 
-    void SwapTwoElements(int* a, int* b);
+    void SwapTwoElements(int &a, int &b);
 
     #pragma region GoogleTests
     #include "gtest/gtest_prod.h"

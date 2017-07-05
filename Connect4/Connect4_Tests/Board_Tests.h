@@ -95,17 +95,14 @@ TEST(BoardTests, FilledColumns)
     cout << a.ToString();
     a.MakeMove(1, P1_MOVE);
     cout << a.ToString();
-
-    vector<int>* valid = a.GetAllValidMoves();
-    vector<int> validMoves = *valid;
+	
+    vector<int> validMoves = a.GetAllValidMoves();
     cout << "Valid Moves " << validMoves.size() << ": " << validMoves[0] << "," << validMoves[1] << endl;
     EXPECT_EQ(validMoves.size(), 2);
-    delete valid;
 
     a.MakeMove(3, P2_MOVE);
     a.MakeMove(3, P2_MOVE);
-    valid = a.GetAllValidMoves();
-    validMoves = *valid;
+    validMoves = a.GetAllValidMoves();
     EXPECT_EQ(validMoves.size(), 1);
 }
 

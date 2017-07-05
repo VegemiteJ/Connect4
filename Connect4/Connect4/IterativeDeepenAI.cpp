@@ -32,14 +32,16 @@ void IterativeDeepenAI::Play(Board * _CurrentBoard)
     high_resolution_clock::time_point runStart;
     high_resolution_clock::time_point runEnd;
     int itr = startDepth;
+	int depthCnt = 0;
     double realDuration = 0.0;
     double calculationTime = 2.0;
     double timeRemaining = calculationTime;
     int numberPossible = _CurrentBoard->NumCol * _CurrentBoard->NumRow;
+	cerr << "Moves possible condition: " << (itr) << " " << _CurrentBoard->NumMovesTotal << " <= " << numberPossible << endl;
     //Do a model whereby roughly if 5*LastRunTime < durationRemaining, run a search
-    while (3*realDuration < timeRemaining && (itr + _CurrentBoard->NumMovesTotal)<=numberPossible)
+    while (3*realDuration < timeRemaining && depthCnt + _CurrentBoard->NumMovesTotal < numberPossible)
     {
-        printString(std::cout, 1, "\nRunning for Depth " + to_string(itr) + "\n");
+        printString(std::cerr, 0, "\nRunning for Depth " + to_string(itr) + "\n");
         ai.MaxDepth = itr;
 
         runStart = high_resolution_clock::now();
@@ -49,11 +51,12 @@ void IterativeDeepenAI::Play(Board * _CurrentBoard)
         realDuration = ((double)runDuration) / 1000.0;
 
         BestUtility = ai.BestUtility;
-        BestMove = ai.GetBestMove();
+        BestMove = ai.GetBestMove();	//Already best+1
+		NodesExplored = ai.NodesExplored;
 
-        printString(std::cout, 1, "\tUtility: " + to_string(BestUtility) + "\n");
-        printString(std::cout, 1, "\tBestMove: " + to_string(BestMove) + "\n");
-        printString(std::cout, 1, "\tCalculated to depth " + to_string(itr) + " in: " + to_string(realDuration) + "s\n");
+        printString(std::cerr, 0, 1,"dUtility: " + to_string(BestUtility) + "\n");
+        printString(std::cerr, 0, 1,"dBestMove: " + to_string(BestMove) + "\n");
+        printString(std::cerr, 0, 1,"dCalculated to depth " + to_string(itr) + " in: " + to_string(realDuration) + "s\n");
         itr++;
 
         //Resetting
@@ -67,12 +70,13 @@ void IterativeDeepenAI::Play(Board * _CurrentBoard)
         auto durationSoFar = duration_cast<milliseconds>(runEnd - t1).count();
         double realDurationSoFar = ((double)durationSoFar) / 1000.0;
         timeRemaining = calculationTime - realDurationSoFar;
-        printString(std::cout, 1, "\tElapsed " + to_string(realDurationSoFar) + "s Remaining: " + to_string(timeRemaining) + "s\n");
+        printString(std::cerr, 0, 1,"Elapsed " + to_string(realDurationSoFar) + "s Remaining: " + to_string(timeRemaining) + "s\n");
     }
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(t2 - t1).count();
 
-    printString(std::cout, 1, "\tCalculated to depth " + to_string(itr-1) + " in: " + to_string((double)duration/1000.0) + "s\n");
+    printString(std::cerr, 0, 1,"Calculated to depth " + to_string(itr-1) + " in: " + to_string((double)duration/1000.0) + "s\n");
+	printString(std::cerr, 0, 1, "Evaluated " + to_string(NodesExplored) + " nodes\n");
 }
 
 int IterativeDeepenAI::GetBestMove()

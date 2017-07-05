@@ -7,7 +7,7 @@ class IterativeDeepenAI : public Player
 {
 public:
 	int BestUtility;
-
+	size_t NodesExplored;
 	IterativeDeepenAI(Move _p);
 	IterativeDeepenAI(Move _p, int _startDepth);
 
@@ -21,4 +21,8 @@ private:
     //int BestMove; - Inherited from player
 
     double ExpectedTime(int numCols, int depth);
+
+	#pragma region GoogleTest
+	#include "gtest/gtest_prod.h"
+	#pragma endregion
 };

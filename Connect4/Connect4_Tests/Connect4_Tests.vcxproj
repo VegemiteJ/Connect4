@@ -283,6 +283,7 @@
     <ClInclude Include="Board_Tests.h" />
     <ClInclude Include="GameStateEvaluator_Tests.h" />
     <ClInclude Include="HumanPlayer_Tests.h" />
+    <ClInclude Include="IterativeDeepenAI_Tests.h" />
     <ClInclude Include="Matrix_Tests.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
